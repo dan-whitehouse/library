@@ -2,22 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>org.ricone</groupId>
         <artifactId>library</artifactId>
+        <groupId>org.ricone</groupId>
         <version>2.0.0</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>authentication</artifactId>
+    <artifactId>config</artifactId>
 
     <properties>
         <spring.version>5.0.7.RELEASE</spring.version>
         <fasterxml.version>2.9.6</fasterxml.version>
     </properties>
 
-    <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
         <dependency>
@@ -46,13 +44,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>${fasterxml.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.4.0</version>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${fasterxml.version}</version>
+            <scope>compile</scope>
         </dependency>
-
     </dependencies>
 
     <build>

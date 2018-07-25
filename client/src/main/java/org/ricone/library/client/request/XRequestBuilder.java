@@ -57,6 +57,6 @@ public class XRequestBuilder extends PathVerifier {
 
 	@Override
 	boolean isMissingId(XPressRequest request) {
-		return !request.isServicePathType(ServicePathType.OBJECT) && !request.hasId();
+		return request.isServicePathType(ServicePathType.OBJECT) && !request.hasId();
 	}
 }
