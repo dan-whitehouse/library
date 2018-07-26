@@ -1,69 +1,69 @@
 package org.ricone.library.config.request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
-import java.io.Serializable;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"href", "token"})
-public class Endpoint implements Serializable {
-	@JsonProperty("href")
+public class Endpoint {
 	private String href;
-	@JsonProperty("token")
 	private String token;
-	private final static long serialVersionUID = -3410519710831695918L;
+	private LocalDateTime created;
+	private LocalDateTime expires;
 
 	public Endpoint() {
 	}
 
-	public Endpoint(String href, String token) {
-		super();
+	public Endpoint(String href, String token, LocalDateTime created, LocalDateTime expires) {
 		this.href = href;
 		this.token = token;
+		this.created = created;
+		this.expires = expires;
 	}
 
-	@JsonProperty("href")
 	public String getHref() {
 		return href;
 	}
-
-	@JsonProperty("href")
 	public void setHref(String href) {
 		this.href = href;
 	}
 
-	@JsonProperty("token")
 	public String getToken() {
 		return ConfigService.getInstance().getToken();
 	}
-
-	@JsonProperty("token")
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public LocalDateTime getCreated() {
+		return created;
+	}
+
+	public void setCreated(LocalDateTime created) {
+		this.created = created;
+	}
+
+	public LocalDateTime getExpires() {
+		return expires;
+	}
+
+	public void setExpires(LocalDateTime expires) {
+		this.expires = expires;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if(this == o) return true;
 		if(o == null || getClass() != o.getClass()) return false;
-
 		Endpoint endpoint = (Endpoint) o;
-
-		if(href != null ? !href.equals(endpoint.href) : endpoint.href != null) return false;
-		return token != null ? token.equals(endpoint.token) : endpoint.token == null;
+		return Objects.equals(href, endpoint.href) && Objects.equals(token, endpoint.token) && Objects.equals(created, endpoint.created) && Objects.equals(expires, endpoint.expires);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = href != null ? href.hashCode() : 0;
-		result = 31 * result + (token != null ? token.hashCode() : 0);
-		return result;
+		return Objects.hash(href, token, created, expires);
 	}
 
 	@Override
 	public String toString() {
-		return "Endpoint{" + "href='" + href + '\'' + ", token='" + token + '\'' + '}';
+		return "Endpoint{" + "href='" + href + '\'' + ", token='" + token + '\'' + ", created=" + created + ", expires=" + expires + '}';
 	}
 }

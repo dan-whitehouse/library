@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 public interface ConfigResponse<T> {
 	T getData();
 
+	void setData(T data);
+
 	String getRequestPath();
 
 	void setRequestPath(String requestPath);

@@ -1,10 +1,8 @@
 package org.ricone.library.config.request;
 
-import org.ricone.library.config.Credential;
-import org.ricone.library.config.Login;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.ricone.library.config.response.model.Credential;
+import org.ricone.library.config.response.model.Login;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,8 +15,6 @@ public class ConfigService {
     private String username;
     private String password;
     private String token;
-    private long ttl;
-    private LocalDateTime created;
     private Endpoint endpoint;
 
     private ConfigService() {
@@ -33,32 +29,50 @@ public class ConfigService {
         return SingletonHelper.INSTANCE;
     }
 
-
 	public void authenticate(String url, String username, String password) {
-		this.url = url;
+		this.url = appendSlashIfMissing(url);
 		this.username = username;
 		this.password = password;
 
-        HttpEntity<Credential> entity = new HttpEntity<>(new Credential(username, password));
 		try {
-			ResponseEntity<Login> login = restTemplate.exchange(url + ServicePath.GET_LOGIN.getValue(), HttpMethod.POST, entity, Login.class);
+			ResponseEntity<Login> login = restTemplate.exchange(this.url + ServicePath.GET_LOGIN.getValue(), HttpMethod.POST, getHttpEntity(), Login.class);
 			if(login.hasBody()) {
 				token = login.getBody().getId();
-				ttl = login.getBody().getTtl();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS[xxx][xx][X]");
-                created = LocalDateTime.parse(login.getBody().getCreated(), formatter);
-
-                endpoint = new Endpoint(url, token);
+				var created = LocalDateTime.parse(login.getBody().getCreated(), DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS[xxx][xx][X]"));
+				var expires = created.plusSeconds(login.getBody().getTtl());
+				endpoint = new Endpoint(url, token, created, expires);
 			}
 		}
 		catch (HttpClientErrorException e) {
 			e.printStackTrace();
+			System.out.print(e.getResponseHeaders());
 		}
 	}
 
-    public boolean isAuthenticated() {
-        return !isTokenExpired();
-    }
+	private HttpEntity<Credential> getHttpEntity() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new HttpEntity<>(new Credential(username, password), headers);
+	}
+
+	private boolean isTokenExpired() {
+		if(endpoint != null) {
+			try {
+				return endpoint.getExpires().isBefore(LocalDateTime.now());
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
+
+	private String appendSlashIfMissing(String url) {
+		if(url != null && url.endsWith("/")) {
+			return url;
+		}
+		return url = url + "/";
+	}
 
     String getToken() {
 		if(isTokenExpired()) {
@@ -67,19 +81,13 @@ public class ConfigService {
         return token;
     }
 
+	public boolean isAuthenticated() {
+		return !isTokenExpired();
+	}
+
     public Endpoint getEndpoint() {
         return endpoint;
     }
 
-    private boolean isTokenExpired() {
-        try {
-            LocalDateTime expiryDate = created.plusSeconds(ttl);
-            return expiryDate.isBefore(LocalDateTime.now());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
 
 }

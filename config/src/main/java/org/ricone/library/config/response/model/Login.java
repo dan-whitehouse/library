@@ -1,4 +1,4 @@
-package org.ricone.library.config;
+package org.ricone.library.config.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 

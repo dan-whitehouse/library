@@ -38,12 +38,6 @@ class ConfigPathBase implements ConfigPath {
 
 
 	@Override
-	public boolean containsRequestType(RequestType requestType) {
-		return false;
-		//return servicePath.getXPressRequestTypes().contains(requestType);
-	}
-
-	@Override
 	public boolean isServicePathType(ServicePathType servicePathType) {
 		return servicePath.getServicePathType().equals(servicePathType);
 	}

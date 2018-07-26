@@ -1,9 +1,6 @@
 package org.ricone.library.config.request;
 
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ConfigPathBuilder extends PathVerifier {
 	private ServicePath servicePath;
 	private String id;
@@ -32,11 +29,6 @@ public class ConfigPathBuilder extends PathVerifier {
 		}*/
 
 		return xPressRequest;
-	}
-
-	@Override
-	boolean isInvalidPath(ConfigPathBase request) {
-		return !request.containsRequestType(RequestType.GET);
 	}
 
 	@Override

@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppResponse implements ConfigResponse<App> {
-	private App data;
+public class AppsResponse implements ConfigResponse<App[]> {
+	private App[] data;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -28,16 +28,16 @@ public class AppResponse implements ConfigResponse<App> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public AppResponse() {
+	public AppsResponse() {
 	}
 
 	@Override
-	public App getData() {
+	public App[] getData() {
 		return data;
 	}
 
 	@Override
-	public void setData(App data) {
+	public void setData(App[] data) {
 		this.data = data;
 	}
 

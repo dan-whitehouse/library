@@ -1,17 +1,16 @@
 package org.ricone.library.config.request;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ricone.library.config.response.AppResponse;
+import org.ricone.library.config.response.AppsResponse;
 import org.ricone.library.config.response.ConfigResponse;
+import org.ricone.library.config.response.model.App;
 import org.springframework.http.*;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collections;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @project: client
@@ -24,45 +23,39 @@ public class ConfigRequest {
 
 	public ConfigRequest(Endpoint endpoint) {
 		this.endpoint = endpoint;
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setObjectMapper(mapper);
-
-		restTemplate = new RestTemplate();
-		restTemplate.setMessageConverters(Collections.singletonList(converter));
+		this.restTemplate = new RestTemplate();
 	}
 
 	/* REQUESTS */
 	public AppResponse getApp(ConfigPath request) {
-		return request(request, AppResponse.class);
+		return request(request, AppResponse.class, App.class);
 	}
 
+	public AppsResponse getApps(ConfigPath request) {
+		return request(request, AppsResponse.class, App[].class);
+	}
 
 	/* ACTUAL REQUEST */
-	private <T extends ConfigResponse> T request(ConfigPath request, Class<T> clazz) {
-		T data = null;
+	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE request(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
+		RESPONSE data = null;
 		String requestPath = getRequestPath(request);
 		HttpEntity httpEntity = getHttpEntity(request);
 		try {
-			ResponseEntity<T> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, clazz);
+			ResponseEntity<REQUEST> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, requestClass);
 			if(response.hasBody()) {
-				data = response.getBody();
-				assert data != null;
+				data = createResponseObject(responseClass, requestClass);
+				data.setData(response.getBody());
 				data.setRequestPath(requestPath);
 				data.setRequestHeaders(httpEntity.getHeaders());
 				data.setResponseStatus(response.getStatusCode());
 				data.setResponseHeaders(response.getHeaders());
 			}
 			else {
-				//data = setDataOnNoContent(clazz, requestPath, httpEntity, response);
+				data = setDataOnNoContent(responseClass, requestClass, requestPath, httpEntity, response);
 			}
 		}
 		catch (HttpClientErrorException e) {
-			e.printStackTrace();
-			//data = setDataOnError(clazz, requestPath, httpEntity, e);
+			data = setDataOnError(responseClass, requestClass, requestPath, httpEntity, e);
 		}
 		return data;
 	}
@@ -87,5 +80,52 @@ public class ConfigRequest {
 		headers.set(AUTHORIZATION, endpoint.getToken());
 		return new HttpEntity<>(headers);
 	}
+
+	/* CREATE GENERIC RESPONSE OBJECT */
+	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE createResponseObject(Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
+		RESPONSE data = null;
+		try {
+			data = responseClass.getDeclaredConstructor().newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+			e1.printStackTrace();
+		}
+		return data;
+	}
+
+	/* CREATE GENERIC RESPONSE OBJECT ON ERROR*/
+	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE setDataOnError(Class<RESPONSE> responseClass, Class<REQUEST> requestClass, String requestPath, HttpEntity httpEntity, HttpClientErrorException exception) {
+		RESPONSE data = null;
+		try {
+			data = responseClass.getDeclaredConstructor().newInstance();
+			data.setRequestPath(requestPath);
+			data.setRequestHeaders(httpEntity.getHeaders());
+			data.setResponseHeaders(exception.getResponseHeaders());
+			data.setResponseStatusText(exception.getStatusText());
+			data.setResponseStatus(exception.getStatusCode());
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+
+	/* CREATE GENERIC RESPONSE OBJECT ON EMPTY*/
+	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE setDataOnNoContent(Class<RESPONSE> responseClass, Class<REQUEST> requestClass, String requestPath, HttpEntity httpEntity, ResponseEntity<REQUEST> response) {
+		RESPONSE data = null;
+		try {
+			data = responseClass.getDeclaredConstructor().newInstance();
+			data.setRequestPath(requestPath);
+			data.setRequestHeaders(httpEntity.getHeaders());
+			data.setResponseHeaders(response.getHeaders());
+			data.setResponseStatusText(response.getStatusCode().getReasonPhrase());
+			data.setResponseStatus(response.getStatusCode());
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
+			e1.printStackTrace();
+		}
+		return data;
+	}
+
 
 }

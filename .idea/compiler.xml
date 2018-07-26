@@ -14,7 +14,7 @@
     <bytecodeTargetLevel>
       <module name="authentication" target="9" />
       <module name="client" target="9" />
-      <module name="config" target="9" />
+      <module name="config" target="10" />
       <module name="library" target="9" />
     </bytecodeTargetLevel>
   </component>

@@ -11,7 +11,5 @@ public interface ConfigPath {
 
     boolean hasId();
 
-    boolean containsRequestType(RequestType requestType);
-
     boolean isServicePathType(ServicePathType servicePathType);
 }
