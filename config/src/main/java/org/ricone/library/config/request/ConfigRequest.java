@@ -28,15 +28,15 @@ public class ConfigRequest {
 
 	/* REQUESTS */
 	public AppResponse getApp(ConfigPath request) {
-		return request(request, AppResponse.class, App.class);
+		return getRequest(request, AppResponse.class, App.class);
 	}
 
 	public AppsResponse getApps(ConfigPath request) {
-		return request(request, AppsResponse.class, App[].class);
+		return getRequest(request, AppsResponse.class, App[].class);
 	}
 
 	/* ACTUAL REQUEST */
-	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE request(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
+	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE getRequest(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
 		RESPONSE data = null;
 		String requestPath = getRequestPath(request);
 		HttpEntity httpEntity = getHttpEntity(request);
@@ -59,6 +59,7 @@ public class ConfigRequest {
 		}
 		return data;
 	}
+
 
 	/* GET URL */
 	private String getRequestPath(ConfigPath request) {
@@ -126,6 +127,4 @@ public class ConfigRequest {
 		}
 		return data;
 	}
-
-
 }

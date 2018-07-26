@@ -17,6 +17,9 @@ public class LoginTest {
             getApp(request);
             System.out.println("----------------");
             getApps(request);
+            System.out.println("----------------");
+            getAppsByDistrict(request);
+            System.out.println("----------------");
 
         }
         else {
@@ -32,6 +35,14 @@ public class LoginTest {
 
     private static void getApps(ConfigRequest request) {
         ConfigPath path = new ConfigPathBuilder(ServicePath.GET_APPS).build();
+        ConfigResponse<App[]> response = request.getApps(path);
+        for (App app : response.getData()) {
+            System.out.println(app.getId());
+        }
+    }
+
+    private static void getAppsByDistrict(ConfigRequest request) {
+        ConfigPath path = new ConfigPathBuilder(ServicePath.GET_APPS_BY_DISTRICT).id("530501").build();
         ConfigResponse<App[]> response = request.getApps(path);
         for (App app : response.getData()) {
             System.out.println(app.getId());

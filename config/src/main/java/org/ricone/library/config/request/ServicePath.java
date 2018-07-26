@@ -1,10 +1,12 @@
 package org.ricone.library.config.request;
 
 public enum ServicePath {
-	GET_LOGIN("users/login", ServicePathType.SINGLE),
 	GET_APP("app/{id}", ServicePathType.SINGLE),
-	GET_APPS("app", ServicePathType.SINGLE),
-	GET_APPS_BY_DISTRICT("district/{id}/app", ServicePathType.OBJECT);
+	GET_APPS("app", ServicePathType.OBJECT),
+	GET_APPS_BY_DISTRICT("district/{id}/app", ServicePathType.PREDICATE),
+	GET_APPS_BY_PROFILE("profile/{id}/app", ServicePathType.PREDICATE),
+	GET_APPS_BY_PROVIDER("provider/{id}/app", ServicePathType.PREDICATE),
+	GET_APPS_BY_VENDOR("vendor/{id}/app", ServicePathType.PREDICATE);
 
 	private final String value;
 	private ServicePathType servicePathType;

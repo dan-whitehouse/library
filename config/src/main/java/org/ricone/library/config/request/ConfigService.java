@@ -35,7 +35,7 @@ public class ConfigService {
 		this.password = password;
 
 		try {
-			ResponseEntity<Login> login = restTemplate.exchange(this.url + ServicePath.GET_LOGIN.getValue(), HttpMethod.POST, getHttpEntity(), Login.class);
+			ResponseEntity<Login> login = restTemplate.exchange(this.url + "users/login", HttpMethod.POST, getHttpEntity(), Login.class);
 			if(login.hasBody()) {
 				token = login.getBody().getId();
 				var created = LocalDateTime.parse(login.getBody().getCreated(), DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS[xxx][xx][X]"));
