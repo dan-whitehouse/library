@@ -1,9 +1,8 @@
 package org.ricone.library.config.request;
 
-import org.ricone.library.config.response.AppResponse;
-import org.ricone.library.config.response.AppsResponse;
-import org.ricone.library.config.response.ConfigResponse;
+import org.ricone.library.config.response.*;
 import org.ricone.library.config.response.model.App;
+import org.ricone.library.config.response.model.District;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -27,13 +26,12 @@ public class ConfigRequest {
 	}
 
 	/* REQUESTS */
-	public AppResponse getApp(ConfigPath request) {
-		return getRequest(request, AppResponse.class, App.class);
-	}
-
+	public AppResponse getApp(ConfigPath request) { return getRequest(request, AppResponse.class, App.class); }
 	public AppsResponse getApps(ConfigPath request) {
 		return getRequest(request, AppsResponse.class, App[].class);
 	}
+	public DistrictResponse getDistrict(ConfigPath request) { return getRequest(request, DistrictResponse.class, District.class); }
+	public DistrictsResponse getDistricts(ConfigPath request) { return getRequest(request, DistrictsResponse.class, District[].class); }
 
 	/* ACTUAL REQUEST */
 	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE getRequest(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
