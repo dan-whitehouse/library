@@ -32,7 +32,7 @@ public class XPress {
 		this.endpoint = endpoint;
 
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
 
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		converter.setObjectMapper(mapper);

@@ -9,14 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.config.response.model.App;
+import org.ricone.library.config.response.model.Apps;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppsResponse implements ConfigResponse<App[]> {
-	private App[] data;
+public class AppsResponse implements ConfigResponse<Apps> {
+	private Apps data;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -32,12 +32,12 @@ public class AppsResponse implements ConfigResponse<App[]> {
 	}
 
 	@Override
-	public App[] getData() {
+	public Apps getData() {
 		return data;
 	}
 
 	@Override
-	public void setData(App[] data) {
+	public void setData(Apps data) {
 		this.data = data;
 	}
 

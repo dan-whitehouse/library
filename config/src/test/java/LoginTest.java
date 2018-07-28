@@ -1,6 +1,9 @@
 import org.ricone.library.config.request.*;
 import org.ricone.library.config.response.ConfigResponse;
 import org.ricone.library.config.response.model.App;
+import org.ricone.library.config.response.model.Apps;
+import org.ricone.library.config.response.model.District;
+import org.ricone.library.config.response.model.Districts;
 
 public class LoginTest {
     private static final String url = System.getenv("config_url");
@@ -20,6 +23,10 @@ public class LoginTest {
             System.out.println("----------------");
             getAppsByDistrict(request);
             System.out.println("----------------");
+            getDistrict(request);
+            System.out.println("----------------");
+            getDistrictsByApp(request);
+            System.out.println("----------------");
 
         }
         else {
@@ -35,17 +42,32 @@ public class LoginTest {
 
     private static void getApps(ConfigRequest request) {
         ConfigPath path = new ConfigPathBuilder(ServicePath.GET_APPS).build();
-        ConfigResponse<App[]> response = request.getApps(path);
-        for (App app : response.getData()) {
+        ConfigResponse<Apps> response = request.getApps(path);
+        for (App app : response.getData().getApps()) {
             System.out.println(app.getId());
         }
     }
 
     private static void getAppsByDistrict(ConfigRequest request) {
         ConfigPath path = new ConfigPathBuilder(ServicePath.GET_APPS_BY_DISTRICT).id("530501").build();
-        ConfigResponse<App[]> response = request.getApps(path);
-        for (App app : response.getData()) {
+        ConfigResponse<Apps> response = request.getApps(path);
+        for (App app : response.getData().getApps()) {
             System.out.println(app.getId());
         }
+    }
+
+    private static void getDistrict(ConfigRequest request) {
+        ConfigPath path = new ConfigPathBuilder(ServicePath.GET_DISTRICT).id("530501").build();
+        ConfigResponse<District> response = request.getDistrict(path);
+        System.out.println(response.getData().getId() + " - " + response.getData().getName());
+    }
+
+    private static void getDistrictsByApp(ConfigRequest request) {
+        ConfigPath path = new ConfigPathBuilder(ServicePath.GET_DISTRICTS_BY_APP).id("CastleLearningOnline").build();
+        ConfigResponse<Districts> response = request.getDistricts(path);
+        for (District district : response.getData().getDistricts()) {
+            System.out.println(district.getId() + " - " + district.getName());
+        }
+        System.out.println(response.getXML());
     }
 }
