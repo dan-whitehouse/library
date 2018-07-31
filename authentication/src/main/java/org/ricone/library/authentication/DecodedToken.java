@@ -8,7 +8,7 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"application_id", "iat", "exp", "iss"})
-public class DecodedToken implements Serializable {
+class DecodedToken implements Serializable {
 	@JsonProperty("application_id")
 	private String applicationId;
 	@JsonProperty("iat")

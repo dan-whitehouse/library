@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.config.response.model.Profile;
 import org.ricone.library.config.response.model.Provider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -121,6 +120,6 @@ public class ProviderResponse implements ConfigResponse<Provider> {
 
 	@Override
 	public String toString() {
-		return "AppResponse{" + "data=" + data + '}';
+		return "ProviderResponse{" + "data=" + data + '}';
 	}
 }

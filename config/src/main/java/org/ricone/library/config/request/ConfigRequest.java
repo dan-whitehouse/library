@@ -46,6 +46,38 @@ public class ConfigRequest {
 		return requestList(request, DistrictsResponse.class, Districts.class, District.class);
 	}
 
+	public ProfileResponse getProfile(ConfigPath request) {
+		return request(request, ProfileResponse.class, Profile.class);
+	}
+
+	public ProfilesResponse getProfiles(ConfigPath request) {
+		return requestList(request, ProfilesResponse.class, Profiles.class, Profile.class);
+	}
+
+	public ProviderResponse getProvider(ConfigPath request) {
+		return request(request, ProviderResponse.class, Provider.class);
+	}
+
+	public ProvidersResponse getProviders(ConfigPath request) {
+		return requestList(request, ProvidersResponse.class, Providers.class, Provider.class);
+	}
+
+	public SchoolResponse getSchool(ConfigPath request) {
+		return request(request, SchoolResponse.class, School.class);
+	}
+
+	public SchoolsResponse getSchools(ConfigPath request) {
+		return requestList(request, SchoolsResponse.class, Schools.class, School.class);
+	}
+
+	public VendorResponse getVendor(ConfigPath request) {
+		return request(request, VendorResponse.class, Vendor.class);
+	}
+
+	public VendorsResponse getVendors(ConfigPath request) {
+		return requestList(request, VendorsResponse.class, Vendors.class, Vendor.class);
+	}
+
 	/* ACTUAL RESPONSE_OBJECT */
 	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE request(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
 		RESPONSE data;

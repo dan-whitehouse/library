@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.config.response.model.District;
 import org.ricone.library.config.response.model.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -121,6 +120,6 @@ public class ProfileResponse implements ConfigResponse<Profile> {
 
 	@Override
 	public String toString() {
-		return "AppResponse{" + "data=" + data + '}';
+		return "ProfileResponse{" + "data=" + data + '}';
 	}
 }

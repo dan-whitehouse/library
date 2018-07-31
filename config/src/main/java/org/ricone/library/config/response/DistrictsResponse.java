@@ -120,6 +120,6 @@ public class DistrictsResponse implements ConfigResponse<Districts> {
 
 	@Override
 	public String toString() {
-		return "AppResponse{" + "data=" + data + '}';
+		return "DistrictsResponse{" + "data=" + data + '}';
 	}
 }

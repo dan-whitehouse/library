@@ -10,7 +10,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "user_name", "token", "endpoint"})
-public class Login implements Serializable {
+class Login implements Serializable {
 	@JsonProperty("id")
 	private String id;
 	@JsonProperty("user_name")

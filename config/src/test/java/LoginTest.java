@@ -68,6 +68,6 @@ public class LoginTest {
         for (District district : response.getData().getDistricts()) {
             System.out.println(district.getId() + " - " + district.getName());
         }
-        System.out.println(response.getXML());
+		System.out.println(response.getRequestPath());
     }
 }

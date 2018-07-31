@@ -9,14 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.config.response.model.Apps;
+import org.ricone.library.config.response.model.Providers;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppsResponse implements ConfigResponse<Apps> {
-	private Apps data;
+public class ProvidersResponse implements ConfigResponse<Providers> {
+	private Providers data;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -28,16 +28,16 @@ public class AppsResponse implements ConfigResponse<Apps> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public AppsResponse() {
+	public ProvidersResponse() {
 	}
 
 	@Override
-	public Apps getData() {
+	public Providers getData() {
 		return data;
 	}
 
 	@Override
-	public void setData(Apps data) {
+	public void setData(Providers data) {
 		this.data = data;
 	}
 
@@ -120,6 +120,6 @@ public class AppsResponse implements ConfigResponse<Apps> {
 
 	@Override
 	public String toString() {
-		return "AppsResponse{" + "data=" + data + '}';
+		return "ProvidersResponse{" + "data=" + data + '}';
 	}
 }

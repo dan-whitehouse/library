@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.config.response.model.App;
 import org.ricone.library.config.response.model.District;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -121,6 +120,6 @@ public class DistrictResponse implements ConfigResponse<District> {
 
 	@Override
 	public String toString() {
-		return "AppResponse{" + "data=" + data + '}';
+		return "DistrictResponse{" + "data=" + data + '}';
 	}
 }
