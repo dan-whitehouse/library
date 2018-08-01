@@ -9,7 +9,11 @@ public interface ConfigPath {
 
     String getId();
 
+    String getPredicateId();
+
     boolean hasId();
+
+    boolean hasPredicateId();
 
     boolean isServicePathType(ServicePathType servicePathType);
 }

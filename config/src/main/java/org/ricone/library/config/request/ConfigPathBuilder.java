@@ -4,6 +4,7 @@ package org.ricone.library.config.request;
 public class ConfigPathBuilder extends PathVerifier {
 	private ServicePath servicePath;
 	private String id;
+	private String predicateId;
 
 	public ConfigPathBuilder(ServicePath servicePath) {
 		this.servicePath = servicePath;
@@ -14,10 +15,16 @@ public class ConfigPathBuilder extends PathVerifier {
 		return this;
 	}
 
+	public ConfigPathBuilder predicateId(String predicateId) {
+		this.predicateId = predicateId;
+		return this;
+	}
+
 	public ConfigPathBase build()  {
-		ConfigPathBase xPressRequest = new ConfigPathBase();
-		xPressRequest.setServicePath(this.servicePath);
-		xPressRequest.setId(this.id);
+		ConfigPathBase configPathBase = new ConfigPathBase();
+		configPathBase.setServicePath(this.servicePath);
+		configPathBase.setId(this.id);
+		configPathBase.setPredicateId(this.predicateId);
 
 		/*if(isInvalidPath(xPressRequest)) {
 			List<String> xPressRequestTypeValues = servicePath.getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
@@ -28,7 +35,7 @@ public class ConfigPathBuilder extends PathVerifier {
 			throw new MissingArgumentException(servicePath + " requires the refId method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
 		}*/
 
-		return xPressRequest;
+		return configPathBase;
 	}
 
 	@Override

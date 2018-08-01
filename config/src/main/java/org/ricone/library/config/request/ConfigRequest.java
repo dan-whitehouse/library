@@ -78,6 +78,14 @@ public class ConfigRequest {
 		return requestList(request, VendorsResponse.class, Vendors.class, Vendor.class);
 	}
 
+	public ProviderKVResponse getProviderKV(ConfigPath request) {
+		return request(request, ProviderKVResponse.class, ProviderKV.class);
+	}
+
+	public ProviderKVsResponse getProviderKVs(ConfigPath request) {
+		return requestList(request, ProviderKVsResponse.class, ProviderKVs.class, ProviderKV.class);
+	}
+
 	/* ACTUAL RESPONSE_OBJECT */
 	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE request(ConfigPath request, Class<RESPONSE> responseClass, Class<REQUEST> requestClass) {
 		RESPONSE data;
@@ -140,8 +148,13 @@ public class ConfigRequest {
 	/* GET URL */
 	private String getRequestPath(ConfigPath request) {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(endpoint.getHref());
-		if(!request.getServicePath().getServicePathType().equals(ServicePathType.OBJECT)) {
+		if(request.getServicePath().getServicePathType().equals(ServicePathType.SINGLE) || request.getServicePath().getServicePathType().equals(ServicePathType.PREDICATE)) {
 			builder.path(StringUtils.replace(request.getServicePath().getValue(), "{id}", request.getId()));
+		}
+		else if(request.getServicePath().getServicePathType().equals(ServicePathType.PREDICATE_WITH_ID)) {
+			String path = StringUtils.replace(request.getServicePath().getValue(), "{predicate_id}", request.getPredicateId());
+			path = StringUtils.replace(path, "{id}", request.getId());
+			builder.path(path);
 		}
 		else {
 			builder.path(request.getServicePath().getValue());

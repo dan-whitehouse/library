@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 class ConfigPathBase implements ConfigPath {
 	private ServicePath servicePath;
 	private String id;
+	private String predicateId;
 
 	ConfigPathBase() {
 	}
@@ -21,6 +22,8 @@ class ConfigPathBase implements ConfigPath {
 		this.id = id;
 	}
 
+	public void setPredicateId(String predicateId) { this.predicateId = predicateId; }
+
 	@Override
 	public ServicePath getServicePath() {
 		return this.servicePath;
@@ -32,10 +35,19 @@ class ConfigPathBase implements ConfigPath {
 	}
 
 	@Override
+	public String getPredicateId() {
+		return this.predicateId;
+	}
+
+	@Override
 	public boolean hasId() {
 		return StringUtils.hasText(id);
 	}
 
+	@Override
+	public boolean hasPredicateId() {
+		return StringUtils.hasText(predicateId);
+	}
 
 	@Override
 	public boolean isServicePathType(ServicePathType servicePathType) {
