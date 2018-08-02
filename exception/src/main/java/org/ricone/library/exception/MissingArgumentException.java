@@ -1,4 +1,4 @@
-package org.ricone.library.client.request.exception;
+package org.ricone.library.exception;
 
 /**
  * @project: client

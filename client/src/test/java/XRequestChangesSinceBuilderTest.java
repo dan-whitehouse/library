@@ -1,13 +1,13 @@
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.request.*;
-import org.ricone.library.client.request.exception.InvalidPathException;
-import org.ricone.library.client.request.exception.MissingArgumentException;
 import org.ricone.library.client.response.XResponse;
 import org.ricone.library.client.response.model.XLea;
 import org.ricone.library.client.response.model.XLeas;
 import org.ricone.library.client.response.model.XStaff;
 import org.ricone.library.client.response.model.XStaffs;
+import org.ricone.library.exception.InvalidPathException;
+import org.ricone.library.exception.MissingArgumentException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

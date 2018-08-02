@@ -1,10 +1,9 @@
 package org.ricone.library.client.request;
 
-import org.ricone.library.client.request.exception.InvalidPathException;
-import org.ricone.library.client.request.exception.MissingArgumentException;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.ricone.library.exception.MissingArgumentException;
+import org.ricone.library.exception.InvalidPathException;
 
 public class XRequestBuilder extends PathVerifier {
 	private ServicePath servicePath;

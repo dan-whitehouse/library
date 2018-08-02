@@ -1,7 +1,7 @@
 package org.ricone.library.client.request;
 
-import org.ricone.library.client.request.exception.InvalidPathException;
-import org.ricone.library.client.request.exception.MissingArgumentException;
+import org.ricone.library.exception.InvalidPathException;
+import org.ricone.library.exception.MissingArgumentException;
 
 import java.time.LocalDateTime;
 import java.util.List;
