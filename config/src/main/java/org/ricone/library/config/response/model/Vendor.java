@@ -106,4 +106,8 @@ public class Vendor implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "Vendor{" + "website='" + website + '\'' + ", status='" + status + '\'' + ", name='" + name + '\'' + ", id='" + id + '\'' + ", enabled=" + enabled + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

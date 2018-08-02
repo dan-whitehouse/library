@@ -40,6 +40,6 @@ public class ConfigPathBuilder extends PathVerifier {
 
 	@Override
 	boolean isMissingId(ConfigPathBase request) {
-		return request.isServicePathType(ServicePathType.OBJECT) && !request.hasId();
+		return request.isServicePathType(ServicePathType.MANY) && !request.hasId();
 	}
 }

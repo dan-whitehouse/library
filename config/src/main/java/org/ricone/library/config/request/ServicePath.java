@@ -2,33 +2,37 @@ package org.ricone.library.config.request;
 
 public enum ServicePath {
 
-	APIKVS_BY_DISTRICT("district/{id}/apikv", ServicePathType.PREDICATE),
+	APIKV_BY_DISTRICT("district/{predicate_id}/apikv/{id}", ServicePathType.MANY_WITH_PREDICATE),
+	APIKVS_BY_DISTRICT("district/{id}/apikv", ServicePathType.MANY_WITH_PREDICATE),
 	APIKV_BY_PROVIDER("provider/{predicate_id}/apikv/{id}", ServicePathType.SINGLE_WITH_PREDICATE),
-	APIKVS_BY_PROVIDER("provider/{id}/apikv", ServicePathType.PREDICATE),
+	APIKVS_BY_PROVIDER("provider/{id}/apikv", ServicePathType.MANY_WITH_PREDICATE),
 
 	APP("app/{id}", ServicePathType.SINGLE),
-	APPS("app", ServicePathType.OBJECT),
-	APPS_BY_DISTRICT("district/{id}/app", ServicePathType.PREDICATE),
-	APPS_BY_PROFILE("profile/{id}/app", ServicePathType.PREDICATE),
-	APPS_BY_PROVIDER("provider/{id}/app", ServicePathType.PREDICATE),
-	APPS_BY_VENDOR("vendor/{id}/app", ServicePathType.PREDICATE),
+	APPS("app", ServicePathType.MANY),
+	APPS_BY_DISTRICT("district/{id}/app", ServicePathType.MANY_WITH_PREDICATE),
+	APPS_BY_PROFILE("profile/{id}/app", ServicePathType.MANY_WITH_PREDICATE),
+	APPS_BY_PROVIDER("provider/{id}/app", ServicePathType.MANY_WITH_PREDICATE),
+	APPS_BY_VENDOR("vendor/{id}/app", ServicePathType.MANY_WITH_PREDICATE),
 	//
 	DISTRICT("district/{id}", ServicePathType.SINGLE),
-	DISTRICTS("district", ServicePathType.OBJECT),
-	DISTRICTS_BY_APP("app/{id}/district", ServicePathType.PREDICATE),
-	DISTRICTS_BY_PROVIDER("provider/{id}/district", ServicePathType.PREDICATE),
+	DISTRICTS("district", ServicePathType.MANY),
+	DISTRICTS_BY_APP("app/{id}/district", ServicePathType.MANY_WITH_PREDICATE),
+	DISTRICTS_BY_PROVIDER("provider/{id}/district", ServicePathType.MANY_WITH_PREDICATE),
 	//
 	PROFILE("profile/{id}", ServicePathType.SINGLE),
-	PROFILES("profile", ServicePathType.OBJECT),
+	PROFILES("profile", ServicePathType.MANY),
 	//
 	PROVIDER("provider/{id}", ServicePathType.SINGLE),
-	PROVIDERS("provider", ServicePathType.OBJECT),
-	PROVIDERS_BY_APP("app/{id}/provider", ServicePathType.PREDICATE),
-	PROVIDERS_BY_DISTRICT("district/{id}/provider", ServicePathType.PREDICATE),
+	PROVIDERS("provider", ServicePathType.MANY),
+	PROVIDERS_BY_APP("app/{id}/provider", ServicePathType.MANY_WITH_PREDICATE),
+	PROVIDERS_BY_DISTRICT("district/{id}/provider", ServicePathType.MANY_WITH_PREDICATE),
 	//
 	SCHOOL("school/{id}", ServicePathType.SINGLE),
-	SCHOOLS("school", ServicePathType.OBJECT),
-	SCHOOLS_BY_DISTRICT("district/{id}/school", ServicePathType.PREDICATE),
+	SCHOOLS("school", ServicePathType.MANY),
+	SCHOOLS_BY_DISTRICT("district/{id}/school", ServicePathType.MANY_WITH_PREDICATE),
+
+	VENDOR("vendor/{id}", ServicePathType.SINGLE),
+	VENDORS("vendor", ServicePathType.MANY),
 	;
 
 
