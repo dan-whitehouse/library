@@ -1,6 +1,5 @@
 package org.ricone.library.config.request2;
 
-
 import org.ricone.library.exception.MissingArgumentException;
 import org.springframework.http.HttpMethod;
 
@@ -82,9 +81,6 @@ public class ConfigPathBuilder extends PathVerifier {
 			return true;
 		}
 
-		if(!request.containsHttpMethodType(httpMethod)) {
-			return true;
-		}
-		return false;
+		return !request.containsHttpMethodType(httpMethod);
 	}
 }

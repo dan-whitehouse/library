@@ -23,6 +23,9 @@ public class Request2Test {
 			//headVendor(request);
 			//deleteVendor(request);
 
+            /* Test */
+            postVendors(request);
+
 			/* Errors */
 			//deleteVendors(request);
 			//optionsVendor(request);
@@ -42,6 +45,27 @@ public class Request2Test {
 		System.out.println(response.getData());
 	}
 
+
+	private static void postVendors(ConfigRequest request) throws MissingArgumentException {
+		Vendor vendor = new Vendor();
+		vendor.setId("PostVendor1");
+		vendor.setEnabled(true);
+		vendor.setName("PostVendor");
+		vendor.setStatus("N/A");
+
+		Vendor vendor2 = new Vendor();
+		vendor.setId("PostVendor2");
+		vendor.setEnabled(true);
+		vendor.setName("PostVendor2");
+		vendor.setStatus("N/A");
+
+		Vendor[] vendors = {vendor, vendor2};
+
+		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.POST).body(vendors).build();
+		ConfigResponse<Vendors> response = request.vendors(path);
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(response.getData());
+	}
 
 	private static void postVendor(ConfigRequest request) throws MissingArgumentException {
 		Vendor vendor = new Vendor();

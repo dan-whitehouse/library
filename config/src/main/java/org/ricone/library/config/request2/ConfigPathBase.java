@@ -17,17 +17,17 @@ class ConfigPathBase implements ConfigPath {
 	ConfigPathBase() {
 	}
 
-	public void setServicePath(ServicePath servicePath) { this.servicePath = servicePath; }
+	void setServicePath(ServicePath servicePath) { this.servicePath = servicePath; }
 
-	public void setHttpMethod(HttpMethod httpMethod) { this.httpMethod = httpMethod; }
+	void setHttpMethod(HttpMethod httpMethod) { this.httpMethod = httpMethod; }
 
-	public void setId(String id) {
+	void setId(String id) {
 		this.id = id;
 	}
 
-	public void setPredicateId(String predicateId) { this.predicateId = predicateId; }
+	void setPredicateId(String predicateId) { this.predicateId = predicateId; }
 
-	public void setBody(Object body) { this.body = body; }
+	void setBody(Object body) { this.body = body; }
 
 
 	@Override
@@ -72,6 +72,11 @@ class ConfigPathBase implements ConfigPath {
 	@Override
 	public boolean isServicePathType(ServicePathType servicePathType) {
 		return servicePath.getServicePathType().equals(servicePathType);
+	}
+
+	@Override
+	public boolean isHttpMethodType(HttpMethod httpMethod) {
+		return this.httpMethod.equals(httpMethod);
 	}
 
 	@Override

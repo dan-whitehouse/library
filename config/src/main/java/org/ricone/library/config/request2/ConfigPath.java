@@ -27,5 +27,7 @@ public interface ConfigPath {
 
     boolean isServicePathType(ServicePathType servicePathType);
 
+    boolean isHttpMethodType(HttpMethod httpMethod);
+
     boolean containsHttpMethodType(HttpMethod httpMethod);
 }

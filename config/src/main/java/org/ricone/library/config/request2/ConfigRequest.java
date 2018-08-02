@@ -27,17 +27,25 @@ public class ConfigRequest {
 	public ConfigRequest(Endpoint endpoint) {
 		this.endpoint = endpoint;
 		this.mapper = new ObjectMapper();
-		this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+		this.restTemplate = new RestTemplate(/*new HttpComponentsClientHttpRequestFactory()*/);
 	}
 
 	/* GET REQUESTS */
-
 	public VendorResponse vendor(ConfigPath request) {
-		if(!request.getHttpMethod().equals(HttpMethod.HEAD) && !request.getHttpMethod().equals(HttpMethod.DELETE)) {
-			return request(request, VendorResponse.class, Vendor.class);
+		if(request.isHttpMethodType(HttpMethod.HEAD) || request.isHttpMethodType(HttpMethod.DELETE)) {
+			return requestVoid(request, request.getHttpMethod(), VendorResponse.class, Vendor.class);
 		}
 		else {
-			return requestVoid(request, request.getHttpMethod(), VendorResponse.class, Vendor.class);
+			return request(request, VendorResponse.class, Vendor.class);
+		}
+	}
+
+	public VendorsResponse vendors(ConfigPath request) {
+		if(request.isHttpMethodType(HttpMethod.HEAD) || request.isHttpMethodType(HttpMethod.DELETE)) {
+			return requestVoid(request, request.getHttpMethod(), VendorsResponse.class, Vendors.class);
+		}
+		else {
+			return requestList(request, VendorsResponse.class, Vendors.class, Vendor.class);
 		}
 	}
 
