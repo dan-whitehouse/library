@@ -11,5 +11,9 @@ abstract class PathVerifier {
 	boolean isMissingId(ConfigPathBase request) {
 		return false;
 	}
+	boolean isMissingBody(ConfigPathBase request) {
+		return false;
+	}
+	boolean hasIllegalArgument(ConfigPathBase request) {return false;}
 	boolean isUnsupportedHttpMethod(ConfigPathBase request) {return false;}
 }

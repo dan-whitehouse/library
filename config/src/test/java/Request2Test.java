@@ -5,7 +5,7 @@ import org.ricone.library.config.response.model.Vendors;
 import org.ricone.library.exception.MissingArgumentException;
 import org.springframework.http.HttpMethod;
 
-public class Request2Test {
+class Request2Test {
 	private static final String url = System.getenv("config_url");
 	private static final String username = System.getenv("api_config_username");
 	private static final String password = System.getenv("api_config_password");
@@ -20,14 +20,16 @@ public class Request2Test {
 			//postVendor(request);
 			//putVendor(request);
 			//patchVendor(request);
+			//getVendors(request);
 			//getVendor(request);
 			//headVendor(request);
 			//deleteVendor(request);
 
             /* Test */
-            postVendors(request);
+            //postVendors(request);
 
 			/* Errors */
+			//postBS(request);
 			//deleteVendors(request);
 			//optionsVendor(request);
 
@@ -37,15 +39,19 @@ public class Request2Test {
 		}
 	}
 
-
+	private static void getVendors(ConfigRequest request) throws MissingArgumentException {
+		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.GET).build();
+		ConfigResponse<Vendors> response = request.vendors(path);
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
+		System.out.println(response.getData());
+	}
 
 	private static void getVendor(ConfigRequest request) throws MissingArgumentException {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.GET).id("PostVendor1").build();
 		ConfigResponse<Vendor> response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 		System.out.println(response.getData());
 	}
-
 
 	private static void postVendors(ConfigRequest request) throws MissingArgumentException {
 		Vendor vendor = new Vendor();
@@ -66,7 +72,7 @@ public class Request2Test {
 
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.POST).body(vendors).build();
 		ConfigResponse<Vendors> response = request.vendors(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 		System.out.println(response.getData());
 	}
 
@@ -79,7 +85,17 @@ public class Request2Test {
 
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.POST).body(vendor).build();
 		ConfigResponse<Vendor> response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
+		System.out.println(response.getData());
+	}
+
+	private static void postBS(ConfigRequest request) throws MissingArgumentException {
+		Endpoint endpoint = new Endpoint();
+		endpoint.setHref("test");
+
+		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.POST).body(endpoint).build();
+		ConfigResponse<Vendor> response = request.vendor(path);
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 		System.out.println(response.getData());
 	}
 
@@ -89,7 +105,7 @@ public class Request2Test {
 
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.PUT).id("PostVendor1").body(vendor).build();
 		ConfigResponse<Vendor> response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 		System.out.println(response.getData());
 	}
 
@@ -99,32 +115,31 @@ public class Request2Test {
 
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.PATCH).id("PostVendor1").body(vendor).build();
 		ConfigResponse<Vendor> response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 		System.out.println(response.getData());
 	}
 
 	private static void headVendor(ConfigRequest request) throws MissingArgumentException {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.HEAD).id("PostVendor1").build();
 		ConfigResponse response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 	}
 
 	private static void optionsVendor(ConfigRequest request) throws MissingArgumentException {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.OPTIONS).id("PostVendor1").build();
 		ConfigResponse response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 	}
-
 
 	private static void deleteVendor(ConfigRequest request) throws MissingArgumentException {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDOR, HttpMethod.DELETE).id("PostVendor1").build();
 		ConfigResponse response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 	}
 
 	private static void deleteVendors(ConfigRequest request) throws MissingArgumentException {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.DELETE).build();
 		ConfigResponse response = request.vendor(path);
-		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus());
+		System.out.println(path.getHttpMethod() + " " + response.getRequestPath() + " - " +  response.getResponseStatus() + " " + response.getResponseStatusText());
 	}
 }

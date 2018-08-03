@@ -38,19 +38,21 @@ public class ConfigPathBuilder extends PathVerifier {
 		configPathBase.setPredicateId(this.predicateId);
 		configPathBase.setBody(this.body);
 
-		/*if(isInvalidPath(xPressRequest)) {
-			List<String> xPressRequestTypeValues = servicePath.getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
-			throw new InvalidPathException(servicePath + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
-		}*/
-
 		if(isUnsupportedHttpMethod(configPathBase)) {
-			throw new UnsupportedOperationException("ServicePath " + servicePath + " does not allow the use of HttpMethod " + httpMethod);
+			throw new UnsupportedOperationException("ServicePath " + servicePath + " does not allow the use of HttpMethod." + httpMethod + " on " + this.getClass().getSimpleName());
+		}
+
+		if(hasIllegalArgument(configPathBase)) {
+			throw new IllegalArgumentException("ServicePath " + servicePath + " does not allow the body method to be set on " + this.getClass().getSimpleName() + " when using HttpMethod." + httpMethod);
 		}
 
 		if(isMissingId(configPathBase)) {
-			throw new MissingArgumentException("ServicePath " + servicePath + " requires the id method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
+			throw new MissingArgumentException("ServicePath " + servicePath + " requires the id method be set on " + this.getClass().getSimpleName() + ". Set a value or try a different ServicePath.");
 		}
 
+		if(isMissingBody(configPathBase)) {
+			throw new MissingArgumentException("ServicePath " + servicePath + " requires the body method be set on " + this.getClass().getSimpleName() + " when using HttpMethod " + httpMethod);
+		}
 		return configPathBase;
 	}
 
@@ -72,15 +74,29 @@ public class ConfigPathBuilder extends PathVerifier {
 	}
 
 	@Override
+	boolean isMissingBody(ConfigPathBase request) {
+		if(!request.hasBody()) {
+			return request.isHttpMethodType(HttpMethod.POST) || request.isHttpMethodType(HttpMethod.PUT) || request.isHttpMethodType(HttpMethod.PATCH);
+		}
+		return false;
+	}
+
+	@Override
+	boolean hasIllegalArgument(ConfigPathBase request) {
+		if(request.hasBody()) {
+			return request.isHttpMethodType(HttpMethod.GET) || request.isHttpMethodType(HttpMethod.DELETE) || request.isHttpMethodType(HttpMethod.HEAD);
+		}
+		return false;
+	}
+
+	@Override
 	boolean isUnsupportedHttpMethod(ConfigPathBase request) {
 		if(!request.hasHttpMethod()) {
 			return true;
 		}
-
 		if(request.getHttpMethod().equals(HttpMethod.OPTIONS) || request.getHttpMethod().equals(HttpMethod.TRACE)) {
 			return true;
 		}
-
 		return !request.containsHttpMethodType(httpMethod);
 	}
 }

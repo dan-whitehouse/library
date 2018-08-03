@@ -32,8 +32,7 @@ public class ConfigRequest {
 		this.endpoint = endpoint;
 		this.mapper = new ObjectMapper();
 		this.restTemplate = new RestTemplate();
-		restTemplate.setErrorHandler(new ErrorHandler());
-		//this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+		this.restTemplate.setErrorHandler(new ErrorHandler());
 	}
 
 	/* GET REQUESTS */
@@ -104,7 +103,6 @@ public class ConfigRequest {
 					data.setResponseHeaders(response.getHeaders());
 				}
 			}
-
 			else {
 				data = setDataOnNoContent(responseClass, requestPath, httpEntity, response);
 			}
@@ -172,7 +170,7 @@ public class ConfigRequest {
 		return new HttpEntity<>(headers);
 	}
 
-	/* CREATE GENERIC RESPONSE MANY */
+	/* CREATE GENERIC RESPONSE */
 	private <RESPONSE extends ConfigResponse<T>, T> RESPONSE createData(Class<RESPONSE> responseClass) {
 		RESPONSE data = null;
 		try {
@@ -184,7 +182,7 @@ public class ConfigRequest {
 		return data;
 	}
 
-	/* CREATE GENERIC RESPONSE_OBJECT MANY */
+	/* CREATE GENERIC RESPONSE_OBJECT */
 	private <RESPONSE_OBJECT> RESPONSE_OBJECT createResponseObject(Class<RESPONSE_OBJECT> responseObjectClass) {
 		RESPONSE_OBJECT data = null;
 		try {
@@ -196,7 +194,7 @@ public class ConfigRequest {
 		return data;
 	}
 
-	/* CREATE GENERIC RESPONSE MANY ON ERROR*/
+	/* CREATE GENERIC RESPONSE ON ERROR*/
 	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE setDataOnError(Class<RESPONSE> responseClass, String requestPath, HttpEntity httpEntity, HttpClientErrorException exception) {
 		RESPONSE data = null;
 		try {
@@ -213,7 +211,7 @@ public class ConfigRequest {
 		return data;
 	}
 
-	/* CREATE GENERIC RESPONSE MANY ON EMPTY*/
+	/* CREATE GENERIC RESPONSE ON EMPTY*/
 	private <RESPONSE extends ConfigResponse<REQUEST>, REQUEST> RESPONSE setDataOnNoContent(Class<RESPONSE> responseClass, String requestPath, HttpEntity httpEntity, ResponseEntity response) {
 		RESPONSE data = null;
 		try {
