@@ -1,10 +1,14 @@
 package org.ricone.library.config.request2;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ricone.library.config.response.*;
-import org.ricone.library.config.response.model.*;
+import org.ricone.library.config.response.ConfigResponse;
+import org.ricone.library.config.response.VendorResponse;
+import org.ricone.library.config.response.VendorsResponse;
+import org.ricone.library.config.response.model.ListWrapper;
+import org.ricone.library.config.response.model.Vendor;
+import org.ricone.library.config.response.model.Vendors;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +31,9 @@ public class ConfigRequest {
 	public ConfigRequest(Endpoint endpoint) {
 		this.endpoint = endpoint;
 		this.mapper = new ObjectMapper();
-		this.restTemplate = new RestTemplate(/*new HttpComponentsClientHttpRequestFactory()*/);
+		this.restTemplate = new RestTemplate();
+		restTemplate.setErrorHandler(new ErrorHandler());
+		//this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 	}
 
 	/* GET REQUESTS */
@@ -79,7 +85,7 @@ public class ConfigRequest {
 		String requestPath = getRequestPath(request);
 		HttpEntity httpEntity = getHttpEntity(request);
 		try {
-			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(requestPath, request.getHttpMethod(), httpEntity, String.class);
 			if(response.hasBody()) {
 				data = createData(responseClass);
 				if(data != null) {
@@ -98,6 +104,7 @@ public class ConfigRequest {
 					data.setResponseHeaders(response.getHeaders());
 				}
 			}
+
 			else {
 				data = setDataOnNoContent(responseClass, requestPath, httpEntity, response);
 			}
@@ -147,9 +154,19 @@ public class ConfigRequest {
 	private HttpEntity<?> getHttpEntity(ConfigPath request) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 		headers.set(AUTHORIZATION, endpoint.getToken());
 
 		if(request.hasBody()) {
+			if(request.getBody() instanceof ListWrapper) {
+				try {
+					String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(((ListWrapper) request.getBody()).getList());
+					return new HttpEntity<>(json, headers);
+				}
+				catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+			}
 			return new HttpEntity<>(request.getBody(), headers);
 		}
 		return new HttpEntity<>(headers);

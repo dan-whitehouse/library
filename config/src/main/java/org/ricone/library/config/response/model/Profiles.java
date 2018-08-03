@@ -22,6 +22,11 @@ public class Profiles implements ListWrapper<Profile> {
 	}
 
 	@Override
+	public List<Profile> getList() {
+		return profiles;
+	}
+
+	@Override
 	public void setList(List<Profile> list) {
 		profiles = list;
 	}

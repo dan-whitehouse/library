@@ -22,6 +22,9 @@ public class Schools implements ListWrapper<School> {
 	}
 
 	@Override
+	public List<School> getList() { return schools; }
+
+	@Override
 	public void setList(List<School> list) {
 		schools = list;
 	}

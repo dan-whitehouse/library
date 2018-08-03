@@ -22,6 +22,9 @@ public class Providers implements ListWrapper<Provider> {
 	}
 
 	@Override
+	public List<Provider> getList() { return providers; }
+
+	@Override
 	public void setList(List<Provider> list) {
 		providers = list;
 	}

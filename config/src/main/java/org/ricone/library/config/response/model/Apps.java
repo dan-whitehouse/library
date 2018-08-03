@@ -22,6 +22,11 @@ public class Apps implements ListWrapper<App> {
 	}
 
 	@Override
+	public List<App> getList() {
+		return apps;
+	}
+
+	@Override
 	public void setList(List<App> list) {
 		apps = list;
 	}

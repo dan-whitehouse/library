@@ -22,6 +22,11 @@ public class Districts implements ListWrapper<District> {
 	}
 
 	@Override
+	public List<District> getList() {
+		return districts;
+	}
+
+	@Override
 	public void setList(List<District> list) {
 		districts = list;
 	}

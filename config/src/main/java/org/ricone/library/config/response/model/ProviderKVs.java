@@ -22,6 +22,9 @@ public class ProviderKVs implements ListWrapper<ProviderKV> {
 	}
 
 	@Override
+	public List<ProviderKV> getList() { return providerKVs; }
+
+	@Override
 	public void setList(List<ProviderKV> list) {
 		providerKVs = list;
 	}

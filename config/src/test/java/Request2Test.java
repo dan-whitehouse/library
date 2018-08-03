@@ -1,6 +1,7 @@
 import org.ricone.library.config.request2.*;
 import org.ricone.library.config.response.ConfigResponse;
-import org.ricone.library.config.response.model.*;
+import org.ricone.library.config.response.model.Vendor;
+import org.ricone.library.config.response.model.Vendors;
 import org.ricone.library.exception.MissingArgumentException;
 import org.springframework.http.HttpMethod;
 
@@ -54,12 +55,14 @@ public class Request2Test {
 		vendor.setStatus("N/A");
 
 		Vendor vendor2 = new Vendor();
-		vendor.setId("PostVendor2");
-		vendor.setEnabled(true);
-		vendor.setName("PostVendor2");
-		vendor.setStatus("N/A");
+		vendor2.setId("PostVendor2");
+		vendor2.setEnabled(true);
+		vendor2.setName("PostVendor2");
+		vendor2.setStatus("N/A");
 
-		Vendor[] vendors = {vendor, vendor2};
+		Vendors vendors = new Vendors();
+		vendors.getVendors().add(vendor);
+		vendors.getVendors().add(vendor2);
 
 		ConfigPath path = new ConfigPathBuilder(ServicePath.VENDORS, HttpMethod.POST).body(vendors).build();
 		ConfigResponse<Vendors> response = request.vendors(path);
