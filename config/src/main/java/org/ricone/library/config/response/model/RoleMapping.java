@@ -92,4 +92,8 @@ public class RoleMapping implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "RoleMapping{" + "id=" + id + ", principalType='" + principalType + '\'' + ", principalId='" + principalId + '\'' + ", roleId=" + roleId + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

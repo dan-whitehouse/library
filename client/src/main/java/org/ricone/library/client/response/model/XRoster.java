@@ -10,9 +10,12 @@ package org.ricone.library.client.response.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"@refId", "courseRefId", "courseTitle", "sectionRefId", "subject", "schoolRefId", "schoolSectionId", "schoolYear", "sessionCode", "schoolCalendarRefId", "meetingTimes", "students", "primaryStaff", "otherStaffs"})
+@JsonPropertyOrder({"@refId", "courseRefId", "courseTitle", "sectionRefId", "subject", "schoolRefId", "schoolSectionId", "schoolYear", "meetingTimes", "students", "primaryStaff", "otherStaffs", "metadata"})
 @JsonRootName(value = "xRoster")
 public class XRoster {
 	@JsonProperty("@refId")
@@ -32,10 +35,6 @@ public class XRoster {
 	private String schoolSectionId;
 	@JsonProperty("schoolYear")
 	private String schoolYear;
-	@JsonProperty("sessionCode")
-	private String sessionCode;
-	@JsonProperty("schoolCalendarRefId")
-	private String schoolCalendarRefId;
 	@JsonProperty("meetingTimes")
 	private MeetingTimes meetingTimes;
 	@JsonProperty("students")
@@ -44,12 +43,13 @@ public class XRoster {
 	private PrimaryStaff primaryStaff;
 	@JsonProperty("otherStaffs")
 	private OtherStaffs otherStaffs;
+	@JsonProperty("metadata")
+	private Metadata metadata;
 
 	public XRoster() {
 	}
 
-	public XRoster(String refId, String courseRefId, String courseTitle, String sectionRefId, String subject, String schoolRefId, String schoolSectionId, String schoolYear, String sessionCode, String schoolCalendarRefId, MeetingTimes meetingTimes, Students students, PrimaryStaff primaryStaff, OtherStaffs otherStaffs) {
-		super();
+	public XRoster(String refId, String courseRefId, String courseTitle, String sectionRefId, String subject, String schoolRefId, String schoolSectionId, String schoolYear, MeetingTimes meetingTimes, Students students, PrimaryStaff primaryStaff, OtherStaffs otherStaffs, Metadata metadata) {
 		this.refId = refId;
 		this.courseRefId = courseRefId;
 		this.courseTitle = courseTitle;
@@ -58,12 +58,11 @@ public class XRoster {
 		this.schoolRefId = schoolRefId;
 		this.schoolSectionId = schoolSectionId;
 		this.schoolYear = schoolYear;
-		this.sessionCode = sessionCode;
-		this.schoolCalendarRefId = schoolCalendarRefId;
 		this.meetingTimes = meetingTimes;
 		this.students = students;
 		this.primaryStaff = primaryStaff;
 		this.otherStaffs = otherStaffs;
+		this.metadata = metadata;
 	}
 
 	@JsonProperty("@refId")
@@ -147,26 +146,6 @@ public class XRoster {
 		this.schoolYear = schoolYear;
 	}
 
-	@JsonProperty("sessionCode")
-	public String getSessionCode() {
-		return sessionCode;
-	}
-
-	@JsonProperty("sessionCode")
-	public void setSessionCode(String sessionCode) {
-		this.sessionCode = sessionCode;
-	}
-
-	@JsonProperty("schoolCalendarRefId")
-	public String getSchoolCalendarRefId() {
-		return schoolCalendarRefId;
-	}
-
-	@JsonProperty("schoolCalendarRefId")
-	public void setSchoolCalendarRefId(String schoolCalendarRefId) {
-		this.schoolCalendarRefId = schoolCalendarRefId;
-	}
-
 	@JsonProperty("meetingTimes")
 	public MeetingTimes getMeetingTimes() {
 		return meetingTimes;
@@ -207,8 +186,67 @@ public class XRoster {
 		this.otherStaffs = otherStaffs;
 	}
 
+	@JsonProperty("metadata")
+	public Metadata getMetadata() {
+		return metadata;
+	}
+
+	@JsonProperty("metadata")
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+
+	@JsonIgnore
+	public boolean isEmptyObject() {
+		return Stream.of(refId, courseRefId, courseTitle, sectionRefId, subject, schoolRefId, schoolSectionId, schoolYear, meetingTimes, students, primaryStaff, otherStaffs, metadata).allMatch(Objects::isNull);
+	}
+
 	@Override
 	public String toString() {
-		return "XRoster{" + "refId='" + refId + '\'' + ", courseRefId='" + courseRefId + '\'' + ", courseTitle='" + courseTitle + '\'' + ", sectionRefId='" + sectionRefId + '\'' + ", subject='" + subject + '\'' + ", schoolRefId='" + schoolRefId + '\'' + ", schoolSectionId='" + schoolSectionId + '\'' + ", schoolYear='" + schoolYear + '\'' + ", sessionCode='" + sessionCode + '\'' + ", schoolCalendarRefId='" + schoolCalendarRefId + '\'' + ", meetingTimes=" + meetingTimes + ", students=" + students + ", primaryStaff=" + primaryStaff + ", otherStaffs=" + otherStaffs + '}';
+		return "XRoster{" + "refId='" + refId + '\'' + ", courseRefId='" + courseRefId + '\'' + ", courseTitle='" + courseTitle + '\'' + ", sectionRefId='" + sectionRefId + '\'' + ", subject='" + subject + '\'' + ", schoolRefId='" + schoolRefId + '\'' + ", schoolSectionId='" + schoolSectionId + '\'' + ", schoolYear='" + schoolYear + '\'' + ", meetingTimes=" + meetingTimes + ", students=" + students + ", primaryStaff=" + primaryStaff + ", otherStaffs=" + otherStaffs + ", metadata=" + metadata + '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(!(o instanceof XRoster)) return false;
+
+		XRoster xRoster = (XRoster) o;
+
+		if(refId != null ? !refId.equals(xRoster.refId) : xRoster.refId != null) return false;
+		if(courseRefId != null ? !courseRefId.equals(xRoster.courseRefId) : xRoster.courseRefId != null) return false;
+		if(courseTitle != null ? !courseTitle.equals(xRoster.courseTitle) : xRoster.courseTitle != null) return false;
+		if(sectionRefId != null ? !sectionRefId.equals(xRoster.sectionRefId) : xRoster.sectionRefId != null)
+			return false;
+		if(subject != null ? !subject.equals(xRoster.subject) : xRoster.subject != null) return false;
+		if(schoolRefId != null ? !schoolRefId.equals(xRoster.schoolRefId) : xRoster.schoolRefId != null) return false;
+		if(schoolSectionId != null ? !schoolSectionId.equals(xRoster.schoolSectionId) : xRoster.schoolSectionId != null)
+			return false;
+		if(schoolYear != null ? !schoolYear.equals(xRoster.schoolYear) : xRoster.schoolYear != null) return false;
+		if(meetingTimes != null ? !meetingTimes.equals(xRoster.meetingTimes) : xRoster.meetingTimes != null)
+			return false;
+		if(students != null ? !students.equals(xRoster.students) : xRoster.students != null) return false;
+		if(primaryStaff != null ? !primaryStaff.equals(xRoster.primaryStaff) : xRoster.primaryStaff != null)
+			return false;
+		if(otherStaffs != null ? !otherStaffs.equals(xRoster.otherStaffs) : xRoster.otherStaffs != null) return false;
+		return metadata != null ? metadata.equals(xRoster.metadata) : xRoster.metadata == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = refId != null ? refId.hashCode() : 0;
+		result = 31 * result + (courseRefId != null ? courseRefId.hashCode() : 0);
+		result = 31 * result + (courseTitle != null ? courseTitle.hashCode() : 0);
+		result = 31 * result + (sectionRefId != null ? sectionRefId.hashCode() : 0);
+		result = 31 * result + (subject != null ? subject.hashCode() : 0);
+		result = 31 * result + (schoolRefId != null ? schoolRefId.hashCode() : 0);
+		result = 31 * result + (schoolSectionId != null ? schoolSectionId.hashCode() : 0);
+		result = 31 * result + (schoolYear != null ? schoolYear.hashCode() : 0);
+		result = 31 * result + (meetingTimes != null ? meetingTimes.hashCode() : 0);
+		result = 31 * result + (students != null ? students.hashCode() : 0);
+		result = 31 * result + (primaryStaff != null ? primaryStaff.hashCode() : 0);
+		result = 31 * result + (otherStaffs != null ? otherStaffs.hashCode() : 0);
+		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
+		return result;
 	}
 }

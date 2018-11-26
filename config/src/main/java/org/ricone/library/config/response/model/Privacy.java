@@ -218,4 +218,8 @@ public class Privacy implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "Privacy{" + "protection='" + protection + '\'' + ", otherPurpose='" + otherPurpose + '\'' + ", location='" + location + '\'' + ", appId='" + appId + '\'' + ", purpose='" + purpose + '\'' + ", encryption='" + encryption + '\'' + ", expirationDate='" + expirationDate + '\'' + ", correction='" + correction + '\'' + ", disposal='" + disposal + '\'' + ", protectionSubContractors='" + protectionSubContractors + '\'' + ", id=" + id + ", retention='" + retention + '\'' + ", privacyPolicy='" + privacyPolicy + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

@@ -232,4 +232,8 @@ public class Contact implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "Contact{" + "county='" + county + '\'' + ", department='" + department + '\'' + ", districtId='" + districtId + '\'' + ", street='" + street + '\'' + ", name='" + name + '\'' + ", mobilePhone='" + mobilePhone + '\'' + ", officePhone='" + officePhone + '\'' + ", state='" + state + '\'' + ", email='" + email + '\'' + ", city='" + city + '\'' + ", zip='" + zip + '\'' + ", fax='" + fax + '\'' + ", title='" + title + '\'' + ", id=" + id + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

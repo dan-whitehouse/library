@@ -470,4 +470,8 @@ public class School implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "School{" + "adminLastName='" + adminLastName + '\'' + ", locStreet='" + locStreet + '\'' + ", stateLocId='" + stateLocId + '\'' + ", orgTypeCode='" + orgTypeCode + '\'' + ", districtId='" + districtId + '\'' + ", adminFirstName='" + adminFirstName + '\'' + ", enabled=" + enabled + ", locState='" + locState + '\'' + ", orgTypeLong='" + orgTypeLong + '\'' + ", adminPhone='" + adminPhone + '\'' + ", locName='" + locName + '\'' + ", schoolYear='" + schoolYear + '\'' + ", tier2='" + tier2 + '\'' + ", lastStatusDate='" + lastStatusDate + '\'' + ", locID='" + locID + '\'' + ", id='" + id + '\'' + ", tier1='" + tier1 + '\'' + ", locStatus='" + locStatus + '\'' + ", locOpen='" + locOpen + '\'' + ", locAddress2='" + locAddress2 + '\'' + ", institutionCode='" + institutionCode + '\'' + ", locCity='" + locCity + '\'' + ", adminName='" + adminName + '\'' + ", stateCo='" + stateCo + '\'' + ", parentDistName='" + parentDistName + '\'' + ", countyName='" + countyName + '\'' + ", locAddress='" + locAddress + '\'' + ", orgSubType='" + orgSubType + '\'' + ", locZip4='" + locZip4 + '\'' + ", locZip='" + locZip + '\'' + ", locClose='" + locClose + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

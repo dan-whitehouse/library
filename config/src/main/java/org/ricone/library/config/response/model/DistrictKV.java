@@ -92,4 +92,8 @@ public class DistrictKV implements Serializable {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public String toString() {
+        return "DistrictKV{" + "id=" + id + ", districtId='" + districtId + '\'' + ", value='" + value + '\'' + ", field='" + field + '\'' + ", additionalProperties=" + additionalProperties + '}';
+    }
 }

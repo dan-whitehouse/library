@@ -92,4 +92,8 @@ public class ProviderKV implements Serializable {
         this.additionalProperties.put(name, value);
     }
 
+    @Override
+    public String toString() {
+        return "ProviderKV{" + "id=" + id + ", providerId='" + providerId + '\'' + ", value='" + value + '\'' + ", field='" + field + '\'' + ", additionalProperties=" + additionalProperties + '}';
+    }
 }

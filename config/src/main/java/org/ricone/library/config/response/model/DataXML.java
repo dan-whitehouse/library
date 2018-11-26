@@ -50,4 +50,8 @@ public class DataXML implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "DataXML{" + "xml='" + xml + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

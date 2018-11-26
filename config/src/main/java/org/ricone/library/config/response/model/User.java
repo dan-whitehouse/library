@@ -162,4 +162,8 @@ public class User implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "User{" + "email='" + email + '\'' + ", userType='" + userType + '\'' + ", providerId='" + providerId + '\'' + ", districtId='" + districtId + '\'' + ", vendorId='" + vendorId + '\'' + ", realm='" + realm + '\'' + ", username='" + username + '\'' + ", emailVerified=" + emailVerified + ", id=" + id + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

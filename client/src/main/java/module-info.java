@@ -16,4 +16,6 @@ module org.ricone.library.client {
 
 	exports org.ricone.library.client.response to com.fasterxml.jackson.databind;
 	exports org.ricone.library.client.response.model to com.fasterxml.jackson.databind;
+
+	//See https://stackify.com/java-xml-jackson/
 }

@@ -85,4 +85,8 @@ public class Credential implements Serializable
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Credential{" + "username='" + username + '\'' + ", password='" + password + '\'' + ", additionalProperties=" + additionalProperties + '}';
+    }
 }

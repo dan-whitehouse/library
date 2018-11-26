@@ -14,23 +14,23 @@ public class LoginTest {
 		if(configService.isAuthenticated()) {
 			ConfigRequest request = new ConfigRequest(configService.getEndpoint());
 
-			//getApp(request);
-			//System.out.println("----------------");
-            /*getApps(request);
+			getApp(request);
+			System.out.println("----------------");
+            getApps(request);
             System.out.println("----------------");
             getAppsByDistrict(request);
             System.out.println("----------------");
             getDistrict(request);
             System.out.println("----------------");
             getDistrictsByApp(request);
-            System.out.println("----------------");*/
-			//getProviderKV(request);
-			//System.out.println("----------------");
-           /* getProviderKVs(request);
-            System.out.println("----------------");*/
-			postVendor(request);
-			putVendor(request);
-			deleteVendor(request);
+            System.out.println("----------------");
+			getProviderKV(request);
+			System.out.println("----------------");
+            getProviderKVs(request);
+            System.out.println("----------------");
+			//postVendor(request);
+			//putVendor(request);
+			//deleteVendor(request);
 
 		}
 		else {
@@ -41,7 +41,7 @@ public class LoginTest {
 	private static void getApp(ConfigRequest request) {
 		ConfigPath path = new ConfigPathBuilder(ServicePath.APP).id("CastleLearningOnline").build();
 		ConfigResponse<App> response = request.getApp(path);
-		System.out.println(response.getData().getId());
+		System.out.println(response.getData().toString());
 	}
 
 	private static void getApps(ConfigRequest request) {

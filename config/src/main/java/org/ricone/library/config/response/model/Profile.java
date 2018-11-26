@@ -106,4 +106,8 @@ public class Profile implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "Profile{" + "name='" + name + '\'' + ", title='" + title + '\'' + ", id='" + id + '\'' + ", description='" + description + '\'' + ", filterType='" + filterType + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

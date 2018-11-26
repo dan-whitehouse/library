@@ -92,4 +92,8 @@ public class SIS implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "SIS{" + "districtId='" + districtId + '\'' + ", value='" + value + '\'' + ", id=" + id + ", field='" + field + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

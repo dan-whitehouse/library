@@ -106,4 +106,8 @@ public class DAA implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "DAA{" + "id=" + id + ", districtId='" + districtId + '\'' + ", value='" + value + '\'' + ", field='" + field + '\'' + ", appId='" + appId + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

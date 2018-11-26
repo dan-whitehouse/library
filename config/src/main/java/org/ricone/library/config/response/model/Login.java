@@ -138,4 +138,8 @@ public class Login implements Serializable {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Login{" + "id='" + id + '\'' + ", ttl=" + ttl + ", created='" + created + '\'' + ", userId=" + userId + ", roles=" + roles + ", additionalProperties=" + additionalProperties + '}';
+    }
 }

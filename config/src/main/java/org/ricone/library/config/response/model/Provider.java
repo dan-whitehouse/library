@@ -134,4 +134,8 @@ public class Provider implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "Provider{" + "sftpPassword='" + sftpPassword + '\'' + ", sftpUsername='" + sftpUsername + '\'' + ", href='" + href + '\'' + ", webminUsername='" + webminUsername + '\'' + ", name='" + name + '\'' + ", webminPassword='" + webminPassword + '\'' + ", id='" + id + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }

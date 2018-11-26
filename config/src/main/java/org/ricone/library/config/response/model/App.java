@@ -421,4 +421,8 @@ public class App implements Serializable {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "App{" + "longDescription=" + longDescription + ", type=" + type + ", name='" + name + '\'' + ", permTemplate='" + permTemplate + '\'' + ", status='" + status + '\'' + ", profileId='" + profileId + '\'' + ", tags='" + tags + '\'' + ", licenseName='" + licenseName + '\'' + ", includeExitedStudents=" + includeExitedStudents + ", providerSecret='" + providerSecret + '\'' + ", siteUrl='" + siteUrl + '\'' + ", vendorId='" + vendorId + '\'' + ", iconUrl='" + iconUrl + '\'' + ", sisId='" + sisId + '\'' + ", _public=" + _public + ", severityLevelDataAPI='" + severityLevelDataAPI + '\'' + ", shortDescription=" + shortDescription + ", title='" + title + '\'' + ", id='" + id + '\'' + ", password='" + password + '\'' + ", additionalProperties=" + additionalProperties + '}';
+    }
 }

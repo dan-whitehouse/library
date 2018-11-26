@@ -10,9 +10,12 @@ package org.ricone.library.client.response.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"@refId", "name", "otherNames", "localId", "otherIds", "address", "phoneNumber", "otherPhoneNumbers", "email", "otherEmails", "sex", "employerType", "relationships"})
+@JsonPropertyOrder({"@refId", "name", "otherNames", "localId", "otherIds", "address", "phoneNumber", "otherPhoneNumbers", "email", "otherEmails", "sex", "employerType", "relationships", "metadata"})
 @JsonRootName(value = "xContact")
 public class XContact {
 	@JsonProperty("@refId")
@@ -42,12 +45,13 @@ public class XContact {
 	private String employerType;
 	@JsonProperty("relationships")
 	private Relationships relationships;
+	@JsonProperty("metadata")
+	private Metadata metadata;
 
 	public XContact() {
 	}
 
-	public XContact(String refId, Name name, OtherNames otherNames, String localId, OtherIds otherIds, Address address, PhoneNumber phoneNumber, OtherPhoneNumbers otherPhoneNumbers, Email email, OtherEmails otherEmails, String sex, String employerType, Relationships relationships) {
-		super();
+	public XContact(String refId, Name name, OtherNames otherNames, String localId, OtherIds otherIds, Address address, PhoneNumber phoneNumber, OtherPhoneNumbers otherPhoneNumbers, Email email, OtherEmails otherEmails, String sex, String employerType, Relationships relationships, Metadata metadata) {
 		this.refId = refId;
 		this.name = name;
 		this.otherNames = otherNames;
@@ -61,6 +65,7 @@ public class XContact {
 		this.sex = sex;
 		this.employerType = employerType;
 		this.relationships = relationships;
+		this.metadata = metadata;
 	}
 
 	@JsonProperty("@refId")
@@ -194,8 +199,68 @@ public class XContact {
 		this.relationships = relationships;
 	}
 
+	@JsonProperty("metadata")
+	public Metadata getMetadata() {
+		return metadata;
+	}
+
+	@JsonProperty("metadata")
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+
+	@JsonIgnore
+	public boolean isEmptyObject() {
+		return Stream.of(refId, name, otherNames, localId, otherIds, address, phoneNumber, otherPhoneNumbers, email, otherEmails, sex, employerType, relationships, metadata).allMatch(Objects::isNull);
+	}
+
 	@Override
 	public String toString() {
-		return "XContact{" + "refId='" + refId + '\'' + ", name=" + name + ", otherNames=" + otherNames + ", localId='" + localId + '\'' + ", otherIds=" + otherIds + ", address=" + address + ", phoneNumber=" + phoneNumber + ", otherPhoneNumbers=" + otherPhoneNumbers + ", email=" + email + ", otherEmails=" + otherEmails + ", sex='" + sex + '\'' + ", employerType='" + employerType + '\'' + ", relationships=" + relationships + '}';
+		return "XContact{" + "refId='" + refId + '\'' + ", name=" + name + ", otherNames=" + otherNames + ", localId='" + localId + '\'' + ", otherIds=" + otherIds + ", address=" + address + ", phoneNumber=" + phoneNumber + ", otherPhoneNumbers=" + otherPhoneNumbers + ", email=" + email + ", otherEmails=" + otherEmails + ", sex='" + sex + '\'' + ", employerType='" + employerType + '\'' + ", relationships=" + relationships + ", metadata=" + metadata + '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(!(o instanceof XContact)) return false;
+
+		XContact xContact = (XContact) o;
+
+		if(refId != null ? !refId.equals(xContact.refId) : xContact.refId != null) return false;
+		if(name != null ? !name.equals(xContact.name) : xContact.name != null) return false;
+		if(otherNames != null ? !otherNames.equals(xContact.otherNames) : xContact.otherNames != null) return false;
+		if(localId != null ? !localId.equals(xContact.localId) : xContact.localId != null) return false;
+		if(otherIds != null ? !otherIds.equals(xContact.otherIds) : xContact.otherIds != null) return false;
+		if(address != null ? !address.equals(xContact.address) : xContact.address != null) return false;
+		if(phoneNumber != null ? !phoneNumber.equals(xContact.phoneNumber) : xContact.phoneNumber != null) return false;
+		if(otherPhoneNumbers != null ? !otherPhoneNumbers.equals(xContact.otherPhoneNumbers) : xContact.otherPhoneNumbers != null)
+			return false;
+		if(email != null ? !email.equals(xContact.email) : xContact.email != null) return false;
+		if(otherEmails != null ? !otherEmails.equals(xContact.otherEmails) : xContact.otherEmails != null) return false;
+		if(sex != null ? !sex.equals(xContact.sex) : xContact.sex != null) return false;
+		if(employerType != null ? !employerType.equals(xContact.employerType) : xContact.employerType != null)
+			return false;
+		if(relationships != null ? !relationships.equals(xContact.relationships) : xContact.relationships != null)
+			return false;
+		return metadata != null ? metadata.equals(xContact.metadata) : xContact.metadata == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = refId != null ? refId.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (otherNames != null ? otherNames.hashCode() : 0);
+		result = 31 * result + (localId != null ? localId.hashCode() : 0);
+		result = 31 * result + (otherIds != null ? otherIds.hashCode() : 0);
+		result = 31 * result + (address != null ? address.hashCode() : 0);
+		result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+		result = 31 * result + (otherPhoneNumbers != null ? otherPhoneNumbers.hashCode() : 0);
+		result = 31 * result + (email != null ? email.hashCode() : 0);
+		result = 31 * result + (otherEmails != null ? otherEmails.hashCode() : 0);
+		result = 31 * result + (sex != null ? sex.hashCode() : 0);
+		result = 31 * result + (employerType != null ? employerType.hashCode() : 0);
+		result = 31 * result + (relationships != null ? relationships.hashCode() : 0);
+		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
+		return result;
 	}
 }

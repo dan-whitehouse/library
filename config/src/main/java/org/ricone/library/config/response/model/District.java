@@ -246,4 +246,8 @@ public class District implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "District{" + "county='" + county + '\'' + ", dnsFriendlyName='" + dnsFriendlyName + '\'' + ", city='" + city + '\'' + ", fedEntityId='" + fedEntityId + '\'' + ", province='" + province + '\'' + ", enabled=" + enabled + ", id='" + id + '\'' + ", fedBypassApi='" + fedBypassApi + '\'' + ", fedBypassLinking='" + fedBypassLinking + '\'' + ", postcode='" + postcode + '\'' + ", officePhone='" + officePhone + '\'' + ", name='" + name + '\'' + ", providerId='" + providerId + '\'' + ", status='" + status + '\'' + ", street='" + street + '\'' + ", additionalProperties=" + additionalProperties + '}';
+	}
 }
