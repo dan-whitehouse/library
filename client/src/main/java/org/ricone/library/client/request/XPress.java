@@ -110,6 +110,11 @@ public class XPress {
 		return requestLastPage(request);
 	}
 
+	public XLastPageResponse getXLastPage(XRequest request) {
+		return requestLastPage2(request);
+	}
+
+
 	/* ACTUAL REQUEST */
 	private <T extends XResponse> T request(XRequest request, Class<T> clazz) {
 		T data = null;
@@ -151,6 +156,32 @@ public class XPress {
 		}
 		catch (Exception e) {
 			System.out.println("request error: " + e.getMessage());
+		}
+		return data;
+	}
+
+	private XLastPageResponse requestLastPage2(XRequest request) {
+		XLastPageResponse data = null;
+		String requestPath = getRequestPath(request);
+		HttpEntity httpEntity = getHttpEntity(request);
+		try {
+			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, String.class);
+
+			String value = response.getHeaders().getFirst("navigationLastPage");
+			if(StringUtils.hasText(value)) {
+				data = new XLastPageResponse(NumberUtils.parseNumber(value, Integer.class));
+				data.setRequestPath(requestPath);
+				data.setRequestHeaders(httpEntity.getHeaders());
+				data.setResponseStatus(response.getStatusCode());
+				data.setResponseHeaders(response.getHeaders());
+			}
+			else {
+				data = setDataOnNoContent(XLastPageResponse.class, requestPath, httpEntity, response);
+			}
+		}
+		catch (HttpClientErrorException e) {
+			e.printStackTrace();
+			data = setDataOnError(XLastPageResponse.class, requestPath, httpEntity, e);
 		}
 		return data;
 	}
@@ -219,7 +250,7 @@ public class XPress {
 		return data;
 	}
 
-	private <T extends XResponse> T setDataOnNoContent(Class<T> clazz, String requestPath, HttpEntity httpEntity, ResponseEntity<T> response) {
+	private <T extends XResponse> T setDataOnNoContent(Class<T> clazz, String requestPath, HttpEntity httpEntity, ResponseEntity response) {
 		T data = null;
 		try {
 			data = clazz.getDeclaredConstructor().newInstance();

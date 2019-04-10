@@ -1,6 +1,7 @@
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.request.*;
+import org.ricone.library.client.response.XLastPageResponse;
 import org.ricone.library.client.response.XResponse;
 import org.ricone.library.client.response.model.XLea;
 import org.ricone.library.client.response.model.XLeas;
@@ -81,9 +82,23 @@ public class XRequestBuilderTest {
 		}
 	}
 
+
+	private static void getXLastPage(XPress xPress) throws MissingArgumentException, InvalidPathException {
+		System.out.println("/* getXLeasWithPaging */");
+		int pageSize = 2;
+
+		XLastPageResponse lastPageResponse = xPress.getXLastPage(new XRequestLastPageBuilder(ServicePath.GET_XLEAS).pageSize(pageSize).build());
+		Integer lastPage = lastPageResponse.getData();
+
+
+		XResponse<Integer> lastPageResponse2 = xPress.getXLastPage(new XRequestLastPageBuilder(ServicePath.GET_XLEAS).pageSize(pageSize).build());
+		Integer lastPage2 = lastPageResponse2.getData();
+
+	}
+
 	private static void printResponse(XResponse response) {
 		System.out.println("\tRequest Path: " + response.getRequestPath());
-		//System.out.println("\tRequest Headers: " + response.getRequestHeaders());
+		System.out.println("\tRequest Headers: " + response.getRequestHeaders());
 		System.out.println("\tResponse Status: " + response.getResponseStatus());
 		System.out.println("\tResponse Headers: " + response.getResponseHeaders());
 		System.out.println("\tResponse Data: " + response.getData());
