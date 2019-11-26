@@ -1,37 +1,69 @@
 package org.ricone.library.client.request;
 
+import org.springframework.util.StringUtils;
+
 /**
  * @project: client
  * @author: Dan on 6/28/2018.
  */
-public interface XRequest {
-	ServicePath getServicePath();
+public abstract class XRequest {
+	abstract ServicePath getServicePath();
 
-	String getId();
+	abstract void setServicePath(ServicePath servicePath);
 
-	IdType getIdType();
+	abstract String getId();
 
-	Integer getSchoolYear();
+	abstract void setId(String id);
 
-	PagingInfo getPagingInfo();
+	abstract IdType getIdType();
 
-	AUPPType getAuppType();
+	abstract void setIdType(IdType idType);
 
-	ChangesSince getChangesSince();
+	abstract Integer getSchoolYear();
 
-	boolean hasId();
+	abstract void setSchoolYear(Integer schoolYear);
 
-	boolean hasIdType();
+	abstract PagingInfo getPagingInfo();
 
-	boolean hasPaging();
+	abstract void setPagingInfo(PagingInfo pagingInfo);
 
-	boolean hasSchoolYear();
+	abstract AUPPType getAuppType();
 
-	boolean hasAUPP();
+	abstract void setAuppType(AUPPType auppType);
 
-	boolean hasChangesSince();
+	abstract ChangesSince getChangesSince();
 
-	boolean containsRequestType(RequestType requestType);
+	abstract void setChangesSince(ChangesSince changesSince);
 
-	boolean isServicePathType(ServicePathType servicePathType);
+	boolean hasId() {
+		return StringUtils.hasText(getId());
+	}
+
+	boolean hasIdType() {
+		return getIdType() != null;
+	}
+
+	boolean hasPaging() {
+		return getPagingInfo() != null;
+	}
+
+	boolean hasSchoolYear() {
+		return getSchoolYear() != null;
+	}
+
+	boolean hasAUPP() {
+		return getAuppType() != null;
+	}
+
+	boolean hasChangesSince() {
+		return getChangesSince() != null;
+	}
+
+	boolean containsRequestType(RequestType requestType) {
+		return getServicePath().getXPressRequestTypes().contains(requestType);
+	}
+
+	boolean isServicePathType(ServicePathType servicePathType) {
+		return getServicePath().getServicePathType().equals(servicePathType);
+	}
 }

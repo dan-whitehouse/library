@@ -31,41 +31,40 @@ public class XRequestLastPageBuilder extends PathVerifier {
 		return this;
 	}
 
-	public XPressRequest build() throws InvalidPathException, MissingArgumentException, IllegalArgumentException {
-		XPressRequest xPressRequest = new XPressRequest();
-		xPressRequest.setServicePath(this.servicePath);
-		xPressRequest.setPagingInfo(this.pagingInfo);
-		xPressRequest.setId(this.id);
-		xPressRequest.setSchoolYear(this.schoolYear);
+	public XRequest build() throws InvalidPathException, MissingArgumentException, IllegalArgumentException {
+		XRequest request = new XPressRequest();
+		request.setServicePath(this.servicePath);
+		request.setPagingInfo(this.pagingInfo);
+		request.setId(this.id);
+		request.setSchoolYear(this.schoolYear);
 
-		if(isInvalidPath(xPressRequest)) {
+		if(isInvalidPath(request)) {
 			List<String> xPressRequestTypeValues = servicePath.getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
 			throw new InvalidPathException(servicePath + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
 		}
 
-		if(isMissingId(xPressRequest)) {
+		if(isMissingId(request)) {
 			throw new MissingArgumentException(servicePath + " requires the refId method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
 		}
 
-		if(isMissingPagingInfo(xPressRequest)) {
+		if(isMissingPagingInfo(request)) {
 			throw new MissingArgumentException(servicePath + " requires the pagingInfo method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
 		}
-
-		return xPressRequest;
+		return request;
 	}
 
 	@Override
-	public boolean isInvalidPath(XPressRequest request) {
+	boolean isInvalidPath(XRequest request) {
 		return !request.containsRequestType(RequestType.BASIC);
 	}
 
 	@Override
-	public boolean isMissingPagingInfo(XPressRequest request) {
+	boolean isMissingPagingInfo(XRequest request) {
 		return !request.hasPaging();
 	}
 
 	@Override
-	public boolean isMissingId(XPressRequest request) {
+	boolean isMissingId(XRequest request) {
 		return !request.isServicePathType(ServicePathType.OBJECT) && !request.hasId();
 	}
 }

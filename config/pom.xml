@@ -66,6 +66,18 @@
             <artifactId>woodstox-core</artifactId>
             <version>5.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.ricone</groupId>
+            <artifactId>exception</artifactId>
+            <version>2.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ricone</groupId>
+            <artifactId>exception</artifactId>
+            <version>2.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

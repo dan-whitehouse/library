@@ -4,44 +4,43 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.response.*;
+import org.ricone.library.exception.InternalException;
 import org.springframework.http.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @project: client
  * @author: Dan on 6/30/2018.
  */
 public class XPress {
-	private RestTemplate restTemplate;
 	private Endpoint endpoint;
-	private final String AUTHORIZATION = "Authorization";
-	private final String BEARER = "Bearer "; //Keep whitespace @ end of string
-	private final String PAGE_NUMBER = "navigationPage";
-	private final String PAGE_SIZE = "navigationPageSize";
-	private final String SCHOOL_YEAR = "SchoolYear";
+	private RestTemplate restTemplate;
 
 	public XPress(Endpoint endpoint) {
-		this.endpoint = endpoint;
-
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		converter.setObjectMapper(mapper);
 
-		restTemplate = new RestTemplate();
-		restTemplate.setMessageConverters(Collections.singletonList(converter));
+		this.endpoint = endpoint;
+		this.restTemplate = new RestTemplate();
+		this.restTemplate.setErrorHandler(new XResponseErrorHandler());
+		this.restTemplate.setMessageConverters(Collections.singletonList(converter));
 	}
 
-	/* REQUESTS */
+	/* PUBLIC REQUESTS */
 	public XLeaResponse getXLea(XRequest request) {
 		return request(request, XLeaResponse.class);
 	}
@@ -111,12 +110,14 @@ public class XPress {
 	}
 
 	public XLastPageResponse getXLastPage(XRequest request) {
-		return requestLastPage2(request);
+		return requestLastPageResponse(request);
 	}
 
-
-	/* ACTUAL REQUEST */
+	/* PRIVATE REQUEST */
 	private <T extends XResponse> T request(XRequest request, Class<T> clazz) {
+		//Before doing anything, make sure that the request path can return the response object.
+		verifyRequestAndResponse(request, clazz);
+
 		T data = null;
 		String requestPath = getRequestPath(request);
 		HttpEntity httpEntity = getHttpEntity(request);
@@ -135,8 +136,10 @@ public class XPress {
 			}
 		}
 		catch (HttpClientErrorException e) {
-			e.printStackTrace();
 			data = setDataOnError(clazz, requestPath, httpEntity, e);
+		}
+		catch(HttpStatusCodeException c) {
+			System.out.println("TEST TEST TEST");
 		}
 		return data;
 	}
@@ -160,12 +163,12 @@ public class XPress {
 		return data;
 	}
 
-	private XLastPageResponse requestLastPage2(XRequest request) {
+	private XLastPageResponse requestLastPageResponse(XRequest request) {
 		XLastPageResponse data = null;
 		String requestPath = getRequestPath(request);
 		HttpEntity httpEntity = getHttpEntity(request);
 		try {
-			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.HEAD, httpEntity, String.class);
 
 			String value = response.getHeaders().getFirst("navigationLastPage");
 			if(StringUtils.hasText(value)) {
@@ -216,19 +219,20 @@ public class XPress {
 	private HttpEntity<?> getHttpEntity(XRequest request) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set(AUTHORIZATION, BEARER + endpoint.getToken());
+		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+		headers.set("Authorization", "Bearer " + endpoint.getToken());
 
 		if(request.hasIdType()) {
 			headers.set("IdType", request.getIdType().getValue());
 		}
 
 		if(request.hasPaging()) {
-			headers.set(PAGE_NUMBER, request.getPagingInfo().getPageNumber().toString());
-			headers.set(PAGE_SIZE, request.getPagingInfo().getPageSize().toString());
+			headers.set("navigationPage", request.getPagingInfo().getPageNumber().toString());
+			headers.set("navigationPageSize", request.getPagingInfo().getPageSize().toString());
 		}
 
 		if(request.hasSchoolYear()) {
-			headers.set(SCHOOL_YEAR, request.getSchoolYear().toString());
+			headers.set("SchoolYear", request.getSchoolYear().toString());
 		}
 		return new HttpEntity<>(headers);
 	}
@@ -260,9 +264,16 @@ public class XPress {
 			data.setResponseStatusText(response.getStatusCode().getReasonPhrase());
 			data.setResponseStatus(response.getStatusCode());
 		}
-		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-			e1.printStackTrace();
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
 		}
 		return data;
+	}
+
+	private <T extends XResponse> void verifyRequestAndResponse(XRequest request, Class<T> clazz) {
+		if(!request.getServicePath().getResponseClass().equals(clazz)) {
+			throw new IllegalArgumentException("ServicePath: " + request.getServicePath() + " requires that the response return: " + request.getServicePath().getResponseClass().getCanonicalName()
+					+ ", however the response will return: " + clazz.getCanonicalName());
+		}
 	}
 }

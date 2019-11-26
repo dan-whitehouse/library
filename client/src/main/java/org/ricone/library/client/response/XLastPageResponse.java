@@ -8,19 +8,12 @@
 package org.ricone.library.client.response;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.client.response.model.XStudent;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class XLastPageResponse implements XResponse<Integer> {
+public class XLastPageResponse extends XResponse<Integer> {
 
 	private Integer lastPage;
 	@JsonIgnore

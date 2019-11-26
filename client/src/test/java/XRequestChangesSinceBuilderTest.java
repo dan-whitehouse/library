@@ -47,27 +47,36 @@ public class XRequestChangesSinceBuilderTest {
 	}
 
 	private static void testXRequestBuilder(XPress xPress) throws MissingArgumentException, InvalidPathException {
-		XRequest request = new XRequestBuilder(ServicePath.GET_XLEA_BY_REFID).id("5776DEB4-A6C8-43B1-AB08-CD5B95983177").build();
+		XRequest request = new XRequestBuilder(ServicePath.GET_XLEA_BY_REFID)
+				.id("5776DEB4-A6C8-43B1-AB08-CD5B95983177")
+				.build();
 		XResponse<XLea> response = xPress.getXLea(request);
 		System.out.println(response.getResponseStatus());
 		System.out.println(response.getData().getRefId() + " - " + response.getData().getLeaName());
 	}
 
 	private static void testXRequestLastPageBuilder(XPress xPress) throws MissingArgumentException, InvalidPathException {
-		XRequest request = new XRequestLastPageBuilder(ServicePath.GET_XCOURSES).pageSize(20).build();
+		XRequest request = new XRequestLastPageBuilder(ServicePath.GET_XCOURSES)
+				.pageSize(20)
+				.build();
 		Integer response = xPress.getLastPage(request);
 		System.out.println(response);
 	}
 
 	private static void testXRequestIdBuilder(XPress xPress) throws MissingArgumentException, InvalidPathException {
-		XRequest request = new XRequestIdBuilder(ServicePath.GET_XLEA_BY_ID).id("111111130777").idType(IdType.BEDS).build();
+		XRequest request = new XRequestIdBuilder(ServicePath.GET_XLEA_BY_ID)
+				.id("111111130777")
+				.idType(IdType.BEDS)
+				.build();
 		XResponse<XLea> response = xPress.getXLea(request);
 		System.out.println(response.getResponseStatus());
 		System.out.println(response.getData().getRefId() + " - " + response.getData().getLeaName());
 	}
 
 	private static void testXRequestChangesSinceBuilder(XPress xPress) throws MissingArgumentException, InvalidPathException {
-		XRequest request = new XRequestChangesSinceBuilder(ServicePath.GET_XLEAS).changesSince(LocalDateTime.now()).build();
+		XRequest request = new XRequestChangesSinceBuilder(ServicePath.GET_XLEAS)
+				.changesSince(LocalDateTime.now())
+				.build();
 		XResponse<XLeas> response = xPress.getXLeas(request);
 		System.out.println(response.getResponseStatus());
 		for (XLea xLea : response.getData().getXLeas()) {
@@ -76,7 +85,10 @@ public class XRequestChangesSinceBuilderTest {
 	}
 
 	private static void testXRequestProvisioningBuilder(XPress xPress) throws MissingArgumentException, InvalidPathException {
-		XRequest request = new XRequestProvisioningBuilder(ServicePath.GET_XSTAFFS_BY_XSCHOOL_REFID).id("114345B6-744B-43FE-9979-2BDC67EC273E").auppType(AUPPType.GET).build();
+		XRequest request = new XRequestProvisioningBuilder(ServicePath.GET_XSTAFFS_BY_XSCHOOL_REFID)
+				.id("114345B6-744B-43FE-9979-2BDC67EC273E")
+				.auppType(AUPPType.GET)
+				.build();
 		XResponse<XStaffs> response = xPress.getXStaffs(request);
 		System.out.println(response.getResponseStatus());
 		for (XStaff xStaff : response.getData().getXStaff()) {

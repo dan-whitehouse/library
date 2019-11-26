@@ -30,32 +30,32 @@ public class XRequestBuilder extends PathVerifier {
 		return this;
 	}
 
-	public XPressRequest build() throws InvalidPathException, MissingArgumentException, IllegalArgumentException {
-		XPressRequest xPressRequest = new XPressRequest();
-		xPressRequest.setServicePath(this.servicePath);
-		xPressRequest.setPagingInfo(this.pagingInfo);
-		xPressRequest.setId(this.id);
-		xPressRequest.setSchoolYear(this.schoolYear);
+	public XRequest build() throws InvalidPathException, MissingArgumentException, IllegalArgumentException {
+		XRequest request = new XPressRequest();
+		request.setServicePath(this.servicePath);
+		request.setPagingInfo(this.pagingInfo);
+		request.setId(this.id);
+		request.setSchoolYear(this.schoolYear);
 
-		if(isInvalidPath(xPressRequest)) {
+		if(isInvalidPath(request)) {
 			List<String> xPressRequestTypeValues = servicePath.getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
-			throw new InvalidPathException(servicePath + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
+			throw new InvalidPathException("ServicePath: " + servicePath + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
 		}
 
-		if(isMissingId(xPressRequest)) {
-			throw new MissingArgumentException(servicePath + " requires the refId method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
+		if(isMissingId(request)) {
+			throw new MissingArgumentException("ServicePath: " + servicePath + " requires the id method be set on " + this.getClass().getCanonicalName() + ". Set a value or try a different ServicePath.");
 		}
-
-		return xPressRequest;
+		return request;
 	}
 
 	@Override
-	boolean isInvalidPath(XPressRequest request) {
+	boolean isInvalidPath(XRequest request) {
 		return !request.containsRequestType(RequestType.BASIC);
 	}
 
 	@Override
-	boolean isMissingId(XPressRequest request) {
-		return request.isServicePathType(ServicePathType.OBJECT) && !request.hasId();
+	boolean isMissingId(XRequest request) {
+		return  (request.isServicePathType(ServicePathType.SINGLE) && !request.hasId()) ||
+				(request.isServicePathType(ServicePathType.PREDICATE) && !request.hasId()) ;
 	}
 }

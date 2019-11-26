@@ -1,32 +1,61 @@
 package org.ricone.library.client.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public interface XResponse<T> {
-	T getData();
+public abstract class XResponse<T> {
+	public abstract T getData();
 
-	String getRequestPath();
+	public abstract String getRequestPath();
 
-	void setRequestPath(String requestPath);
+	public abstract void setRequestPath(String requestPath);
 
-	HttpHeaders getRequestHeaders();
+	public abstract HttpHeaders getRequestHeaders();
 
-	void setRequestHeaders(HttpHeaders requestHeaders);
+	public abstract void setRequestHeaders(HttpHeaders requestHeaders);
 
-	HttpStatus getResponseStatus();
+	public abstract HttpStatus getResponseStatus();
 
-	void setResponseStatus(HttpStatus status);
+	public abstract void setResponseStatus(HttpStatus status);
 
-	String getResponseStatusText();
+	public abstract String getResponseStatusText();
 
-	void setResponseStatusText(String statusText);
+	public abstract void setResponseStatusText(String statusText);
 
-	HttpHeaders getResponseHeaders();
+	public abstract HttpHeaders getResponseHeaders();
 
-	void setResponseHeaders(HttpHeaders responseHeaders);
+	public abstract void setResponseHeaders(HttpHeaders responseHeaders);
 
-	String getJSON();
+	public String getJSON() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+		mapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
 
-	String getXML();
+		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+		try {
+			return writer.writeValueAsString(getData());
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String getXML() {
+		XmlMapper mapper = new XmlMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		try {
+			return mapper.writeValueAsString(getData());
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

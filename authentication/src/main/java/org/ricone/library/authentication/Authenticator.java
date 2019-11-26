@@ -10,10 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Authenticator {
 	private RestTemplate restTemplate;
@@ -62,7 +59,7 @@ public class Authenticator {
 		try {
 			ResponseEntity<Login> login = restTemplate.exchange(url, HttpMethod.POST, entity, Login.class);
 			if(login.hasBody()) {
-				token = login.getBody().getToken();
+				token = Objects.requireNonNull(login.getBody()).getToken();
 				endpoints = login.getBody().getEndpoints();
 				decodedToken = mapper.readValue(new String(Base64.getDecoder().decode(JWT.decode(token).getPayload())), DecodedToken.class);
 			}
@@ -126,8 +123,9 @@ public class Authenticator {
 
 	private boolean willTokenExpire() {
 		try {
-			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(decodedToken.getExp()), ZoneId.systemDefault()).plusMinutes(5);
-			return expiryDate.isBefore(LocalDateTime.now());
+			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(decodedToken.getExp()), ZoneId.systemDefault()).minusMinutes(10);
+			return LocalDateTime.now().isAfter(expiryDate);
+			//return expiryDate.isBefore(LocalDateTime.now());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

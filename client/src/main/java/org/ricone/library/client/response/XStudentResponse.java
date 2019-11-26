@@ -8,12 +8,6 @@
 package org.ricone.library.client.response;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.ricone.library.client.response.model.XStudent;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +15,7 @@ import org.springframework.http.HttpStatus;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"xStudent"})
-public class XStudentResponse implements XResponse<XStudent> {
+public class XStudentResponse extends XResponse<XStudent> {
 
 	@JsonProperty("xStudent")
 	private XStudent xStudent;
@@ -107,33 +101,6 @@ public class XStudentResponse implements XResponse<XStudent> {
 	@Override
 	public void setResponseHeaders(HttpHeaders responseHeaders) {
 		this.responseHeaders = responseHeaders;
-	}
-
-	@Override
-	public String getJSON() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		try {
-			return writer.writeValueAsString(xStudent);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public String getXML() {
-		XmlMapper mapper = new XmlMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		try {
-			return mapper.writeValueAsString(xStudent);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override

@@ -1,12 +1,6 @@
 package org.ricone.library.client.response;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.ricone.library.client.response.model.XLea;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"xLea"})
-public class XLeaResponse implements XResponse<XLea> {
+public class XLeaResponse extends XResponse<XLea> {
 	@JsonProperty("xLea")
 	private XLea xLea;
 	@JsonIgnore
@@ -99,33 +93,6 @@ public class XLeaResponse implements XResponse<XLea> {
 	@Override
 	public void setResponseHeaders(HttpHeaders responseHeaders) {
 		this.responseHeaders = responseHeaders;
-	}
-
-	@Override
-	public String getJSON() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		try {
-			return writer.writeValueAsString(xLea);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public String getXML() {
-		XmlMapper mapper = new XmlMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		try {
-			return mapper.writeValueAsString(xLea);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override

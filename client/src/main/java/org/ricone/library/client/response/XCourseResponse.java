@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"xCourse"})
-public class XCourseResponse implements XResponse<XCourse> {
+public class XCourseResponse extends XResponse<XCourse> {
 	@JsonProperty("xCourse")
 	private XCourse xCourse;
 	@JsonIgnore
@@ -107,33 +107,6 @@ public class XCourseResponse implements XResponse<XCourse> {
 	@Override
 	public void setResponseHeaders(HttpHeaders responseHeaders) {
 		this.responseHeaders = responseHeaders;
-	}
-
-	@Override
-	public String getJSON() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		try {
-			return writer.writeValueAsString(xCourse);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public String getXML() {
-		XmlMapper mapper = new XmlMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		try {
-			return mapper.writeValueAsString(xCourse);
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override

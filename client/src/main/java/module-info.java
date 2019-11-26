@@ -11,6 +11,7 @@ module org.ricone.library.client {
 	requires com.fasterxml.jackson.dataformat.xml;
 	requires org.ricone.library.authentication;
 	requires org.ricone.library.exception;
+	requires org.apache.commons.io;
 
 	opens org.ricone.library.client.response.model to com.fasterxml.jackson.databind;
 

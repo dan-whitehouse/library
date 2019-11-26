@@ -1,12 +1,10 @@
 package org.ricone.library.client.request;
 
-import org.springframework.util.StringUtils;
-
 /**
  * @project: client
  * @author: Dan on 6/28/2018.
  */
-class XPressRequest implements XRequest {
+class XPressRequest extends XRequest {
 	private ServicePath servicePath;
 	private String id;
 	private IdType idType;
@@ -22,26 +20,32 @@ class XPressRequest implements XRequest {
 		this.servicePath = servicePath;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	@Override
 	public void setIdType(IdType idType) {
 		this.idType = idType;
 	}
 
+	@Override
 	public void setSchoolYear(Integer schoolYear) {
 		this.schoolYear = schoolYear;
 	}
 
+	@Override
 	public void setPagingInfo(PagingInfo pagingInfo) {
 		this.pagingInfo = pagingInfo;
 	}
 
+	@Override
 	public void setAuppType(AUPPType auppType) {
 		this.auppType = auppType;
 	}
 
+	@Override
 	public void setChangesSince(ChangesSince changesSince) {
 		this.changesSince = changesSince;
 	}
@@ -79,45 +83,5 @@ class XPressRequest implements XRequest {
 	@Override
 	public ChangesSince getChangesSince() {
 		return this.changesSince;
-	}
-
-	@Override
-	public boolean hasId() {
-		return StringUtils.hasText(id);
-	}
-
-	@Override
-	public boolean hasIdType() {
-		return idType != null;
-	}
-
-	@Override
-	public boolean hasPaging() {
-		return pagingInfo != null;
-	}
-
-	@Override
-	public boolean hasSchoolYear() {
-		return schoolYear != null;
-	}
-
-	@Override
-	public boolean hasAUPP() {
-		return auppType != null;
-	}
-
-	@Override
-	public boolean hasChangesSince() {
-		return changesSince != null;
-	}
-
-	@Override
-	public boolean containsRequestType(RequestType requestType) {
-		return servicePath.getXPressRequestTypes().contains(requestType);
-	}
-
-	@Override
-	public boolean isServicePathType(ServicePathType servicePathType) {
-		return servicePath.getServicePathType().equals(servicePathType);
 	}
 }

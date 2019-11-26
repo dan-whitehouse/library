@@ -5,39 +5,22 @@ package org.ricone.library.client.request;
  * @author: Dan on 6/28/2018.
  */
 abstract class PathVerifier {
-	boolean isInvalidPath(XPressRequest request) {
+	boolean isInvalidPath(XRequest request) {
 		return false;
 	}
-
-	;
-
-	boolean isMissingId(XPressRequest request) {
+	boolean isMissingId(XRequest request) {
 		return false;
 	}
-
-	;
-
-	boolean isMissingIdType(XPressRequest request) {
+	boolean isMissingIdType(XRequest request) {
 		return false;
 	}
-
-	;
-
-	boolean isMissingChangesSince(XPressRequest request) {
+	boolean isMissingChangesSince(XRequest request) {
 		return false;
 	}
-
-	;
-
-	boolean isMissingAUPPType(XPressRequest request) {
+	boolean isMissingAUPPType(XRequest request) {
 		return false;
 	}
-
-	;
-
-	boolean isMissingPagingInfo(XPressRequest request) {
+	boolean isMissingPagingInfo(XRequest request) {
 		return false;
 	}
-
-	;
 }
