@@ -13,10 +13,10 @@ module org.ricone.library.client {
 	requires org.ricone.library.exception;
 	requires org.apache.commons.io;
 
-	opens org.ricone.library.client.response.model to com.fasterxml.jackson.databind;
+	opens org.ricone.library.client.xpress.response.model to com.fasterxml.jackson.databind;
 
-	exports org.ricone.library.client.response to com.fasterxml.jackson.databind;
-	exports org.ricone.library.client.response.model to com.fasterxml.jackson.databind;
+	exports org.ricone.library.client.xpress.response to com.fasterxml.jackson.databind;
+	exports org.ricone.library.client.xpress.response.model to com.fasterxml.jackson.databind;
 
 	//See https://stackify.com/java-xml-jackson/
 }

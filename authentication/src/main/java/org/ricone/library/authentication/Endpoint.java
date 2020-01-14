@@ -62,7 +62,7 @@ public class Endpoint implements Serializable {
 
 	@JsonProperty("token")
 	public String getToken() {
-		return Authenticator.getInstance().getToken();
+		return Authenticator2.getInstance().getToken();
 	}
 
 	@JsonProperty("token")
