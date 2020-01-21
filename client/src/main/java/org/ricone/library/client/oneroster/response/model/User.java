@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,53 +18,38 @@ import java.util.stream.Stream;
 public class User extends Base implements Serializable {
 	private final static long serialVersionUID = 1500791574718760163L;
 	@JsonProperty("username")
-	@ApiModelProperty(position = 5, value = "", example = "")
 	private String username;
 	@JsonProperty("userIds")
 	@JacksonXmlElementWrapper(localName = "userIds") @JacksonXmlProperty(localName = "userId")
-	@ApiModelProperty(position = 6, value = "This is the set of external user identifiers that should be used for this user, if for some reason the sourcedId cannot be used. This might be some other machine-readable identifier that is used for this person", example = "")
 	private List<UserId> userIds = new ArrayList<>();
 	@JsonProperty("enabledUser")
-	@ApiModelProperty(position = 7, value = "This field is used to determine whether or not the record is active in the local system. 'false' denotes that the record is active but system access is curtailed according to the local administration rules", example = "")
 	private Boolean enabledUser;
 	@JsonProperty("givenName")
-	@ApiModelProperty(position = 8, value = "", example = "Daniel")
 	private String givenName;
 	@JsonProperty("familyName")
-	@ApiModelProperty(position = 9, value = "", example = "Whitehouse")
 	private String familyName;
 	@JsonProperty("middleName")
-	@ApiModelProperty(position = 10, value = "", example = "David")
 	private String middleName;
 	@JsonProperty("role")
-	@ApiModelProperty(position = 11, value = "", example = "")
 	private RoleType role;
 	@JsonProperty("identifier")
-	@ApiModelProperty(position = 12, value = "", example = "")
 	private String identifier;
 	@JsonProperty("email")
-	@ApiModelProperty(position = 13, value = "", example = "daniel.whitehouse@school.org")
 	private String email;
 	@JsonProperty("sms")
-	@ApiModelProperty(position = 14, value = "", example = "")
 	private String sms;
 	@JsonProperty("phone")
-	@ApiModelProperty(position = 15, value = "", example = "")
 	private String phone;
 	@JsonProperty("agents")
 	@JacksonXmlElementWrapper(localName = "agents") @JacksonXmlProperty(localName = "agent")
-	@ApiModelProperty(position = 16, value = "Links to other people i.e. a User 'sourcedId'", example = "")
 	private List<GUIDRef> agents = new ArrayList<>();
 	@JsonProperty("orgs")
 	@JacksonXmlElementWrapper(localName = "orgs") @JacksonXmlProperty(localName = "org")
-	@ApiModelProperty(position = 17, value = "Links to orgs. In most cases, this is a single link to a school, but could be to a district or national org. People might also be linked to multiple organizations", example = "")
 	private List<GUIDRef> orgs = new ArrayList<>();
 	@JsonProperty("grades")
 	@JacksonXmlElementWrapper(localName = "grades") @JacksonXmlProperty(localName = "grade")
-	@ApiModelProperty(position = 18, value = "Grade(s) for which a user with role 'student' is enrolled", example = "09", notes = "https://ceds.ed.gov/CEDSElementDetails.aspx?TermId=7100")
 	private List<String> grades = new ArrayList<>();
 	@JsonProperty("password")
-	@ApiModelProperty(position = 19, value = "", example = "")
 	private String password;
 
 	/**

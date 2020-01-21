@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,32 +20,25 @@ public class AcademicSession extends Base implements Serializable {
 	private final static long serialVersionUID = 5476752215341220106L;
 
 	@JsonProperty("title")
-	@ApiModelProperty(position = 5, value = "", example = "Spring Term")
 	private String title;
 
 	@JsonProperty("startDate")
-	@ApiModelProperty(position = 6, value = "", example = "2019-01-01")
 	private LocalDate startDate;
 
 	@JsonProperty("endDate")
-	@ApiModelProperty(position = 7, value = "", example = "2019-04-30")
 	private LocalDate endDate;
 
 	@JsonProperty("type")
-	@ApiModelProperty(position = 8, value = "The set of permitted tokens for the type of academic session")
 	private SessionType type;
 
 	@JsonProperty("parent")
-	@ApiModelProperty(position = 9, value = "Link to parent AcademicSession i.e. an AcademicSession 'sourcedId'")
 	private GUIDRef parent;
 
 	@JsonProperty("children")
 	@JacksonXmlElementWrapper(localName = "children") @JacksonXmlProperty(localName = "child")
-	@ApiModelProperty(position = 10, value = "Links to children AcademicSession i.e. an AcademicSession 'sourcedId'")
 	private List<GUIDRef> children = new ArrayList<>();
 
 	@JsonProperty("schoolYear")
-	@ApiModelProperty(position = 11, value = "The school year for the academic session. This year should include the school year end", example = "2019")
 	private Integer schoolYear;
 
 	/**

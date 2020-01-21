@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,20 +18,15 @@ import java.util.stream.Stream;
 public class Org extends Base implements Serializable {
 	private final static long serialVersionUID = -1025191997431202352L;
 	@JsonProperty("name")
-	@ApiModelProperty(position = 5, value = "", example = "Albany High School")
 	private String name;
 	@JsonProperty("type")
-	@ApiModelProperty(position = 6, value = "The set of permitted tokens for the type of organization")
 	private OrgType type;
 	@JsonProperty("identifier")
-	@ApiModelProperty(position = 7, value = "Human readable identifier for this org")
 	private String identifier;
 	@JsonProperty("parent")
-	@ApiModelProperty(position = 8, value = "Link to Org i.e. the parent Org 'sourcedId'")
 	private GUIDRef parent;
 	@JsonProperty("children")
 	@JacksonXmlElementWrapper(localName = "children") @JacksonXmlProperty(localName = "child")
-	@ApiModelProperty(position = 9, value = "Link to Org i.e. the child Org 'sourcedId'")
 	private List<GUIDRef> children = new ArrayList<>();
 
 	/**

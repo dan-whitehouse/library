@@ -1,21 +1,19 @@
 package org.ricone.library.client.oneroster.request;
 
-import org.ricone.library.client.oneroster.request.order.Field;
-
 public class Sorting {
-	private Field field;
+	private IField field;
 	private SortOrder orderBy;
 
-	public Sorting(Field field, SortOrder orderBy) {
+	public Sorting(IField field, SortOrder orderBy) {
 		this.field = field;
 		this.orderBy = orderBy;
 	}
 
-	public Field getField() {
+	public IField getField() {
 		return field;
 	}
 
-	public void setField(Field field) {
+	public void setField(IField field) {
 		this.field = field;
 	}
 

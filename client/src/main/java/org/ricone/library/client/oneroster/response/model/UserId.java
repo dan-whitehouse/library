@@ -3,7 +3,6 @@ package org.ricone.library.client.oneroster.response.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,10 +11,8 @@ import java.io.Serializable;
 public class UserId implements Serializable {
 	private final static long serialVersionUID = -4197544761658759008L;
 	@JsonProperty("type")
-	@ApiModelProperty(position = 1, value = "", example = "")
 	private String type;
 	@JsonProperty("identifier")
-	@ApiModelProperty(position = 5, value = "", example = "")
 	private String identifier;
 
 	/**

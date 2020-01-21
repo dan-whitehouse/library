@@ -3,7 +3,6 @@ package org.ricone.library.client.oneroster.response.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -13,16 +12,12 @@ import java.time.ZonedDateTime;
 public abstract class Base implements Serializable {
 	private final static long serialVersionUID = 602595453201771641L;
 	@JsonProperty("sourcedId")
-	@ApiModelProperty(position = 1, value = "", example = "02e23746-2b23-40d4-ba98-24afe6cf187e")
 	private String sourcedId;
 	@JsonProperty("status")
-	@ApiModelProperty(position = 2, value = "The set of permitted tokens for the type of status", example = "active")
 	private StatusType status;
 	@JsonProperty("dateLastModified")
-	@ApiModelProperty(position = 3, value = "", example = "2019-06-27T18:25:43.511Z")
 	private ZonedDateTime dateLastModified;
 	@JsonProperty("metadata")
-	@ApiModelProperty(position = 4, value = "")
 	private Metadata metadata;
 
 	/**
@@ -46,7 +41,6 @@ public abstract class Base implements Serializable {
 	}
 
 	@JsonProperty("sourcedId")
-	@ApiModelProperty(position = -4)
 	public String getSourcedId() {
 		return sourcedId;
 	}
@@ -57,7 +51,6 @@ public abstract class Base implements Serializable {
 	}
 
 	@JsonProperty("status")
-	@ApiModelProperty(position = -3)
 	public StatusType getStatus() {
 		return status;
 	}
@@ -68,7 +61,6 @@ public abstract class Base implements Serializable {
 	}
 
 	@JsonProperty("dateLastModified")
-	@ApiModelProperty(position = -2)
 	public ZonedDateTime getDateLastModified() {
 		return dateLastModified;
 	}
@@ -79,7 +71,6 @@ public abstract class Base implements Serializable {
 	}
 
 	@JsonProperty("metadata")
-	@ApiModelProperty(position = -1)
 	public Metadata getMetadata() {
 		return metadata;
 	}

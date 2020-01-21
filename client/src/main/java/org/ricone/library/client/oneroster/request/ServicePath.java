@@ -1,8 +1,7 @@
 package org.ricone.library.client.oneroster.request;
 
 import org.ricone.library.client.oneroster.response.model.*;
-import org.ricone.library.client.xpress.request.RequestType;
-import org.ricone.library.client.xpress.request.ServicePathType;
+import org.ricone.library.client.oneroster.request.ServicePathType;
 
 import java.lang.Class;
 import java.util.List;
@@ -36,19 +35,19 @@ public enum ServicePath {
 	GET_Enrollment_By_SourcedId("enrollments/{id}", ServicePathType.SINGLE,  EnrollmentResponse.class),
 	GET_Enrollments("enrollments", ServicePathType.OBJECT,  EnrollmentsResponse.class),
 	GET_Enrollments_By_School_SourcedId("schools/{id}/enrollments", ServicePathType.PREDICATE,  EnrollmentsResponse.class),
-	GET_Enrollments_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/enrollments", ServicePathType.PREDICATE,  EnrollmentsResponse.class),
+	GET_Enrollments_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/enrollments", ServicePathType.PREDICATES,  EnrollmentsResponse.class),
 
 	GET_Users_By_SourcedId("users/{id}", ServicePathType.SINGLE,  UserResponse.class),
 	GET_Users("users", ServicePathType.OBJECT,  UsersResponse.class),
 	GET_Teacher_By_SourcedId("teachers/{id}", ServicePathType.SINGLE,  UserResponse.class),
 	GET_Teachers("teachers", ServicePathType.OBJECT,  UsersResponse.class),
 	GET_Teachers_By_School_SourcedId("schools/{id}/teachers", ServicePathType.PREDICATE,  UsersResponse.class),
-	GET_Teachers_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/teachers", ServicePathType.PREDICATE,  UsersResponse.class),
+	GET_Teachers_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/teachers", ServicePathType.PREDICATES,  UsersResponse.class),
 	GET_Teachers_By_Class_SourcedId("classes/{id}/teachers", ServicePathType.PREDICATE,  UsersResponse.class),
 	GET_Student_By_SourcedId("students/{id}", ServicePathType.SINGLE,  UserResponse.class),
 	GET_Students("students", ServicePathType.OBJECT,  UsersResponse.class),
 	GET_Students_By_School_SourcedId("schools/{id}/students", ServicePathType.PREDICATE,  UsersResponse.class),
-	GET_Students_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/students", ServicePathType.PREDICATE,  UsersResponse.class),
+	GET_Students_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/students", ServicePathType.PREDICATES,  UsersResponse.class),
 	GET_Students_By_Class_SourcedId("classes/{id}/students", ServicePathType.PREDICATE,  UsersResponse.class),
 
 	GET_Demographics_By_SourcedId("demographics/{id}", ServicePathType.SINGLE,  UserResponse.class),

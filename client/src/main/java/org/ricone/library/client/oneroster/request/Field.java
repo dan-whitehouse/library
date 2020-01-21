@@ -1,29 +1,25 @@
-package org.ricone.library.client.oneroster.request.order;
+package org.ricone.library.client.oneroster.request;
 
-public enum FieldType implements Field {
-	SourcedId("sourcedId"),
-	Status("status"),
-	DateLastModified("dateLastModified"),
-	Metadata("metadata");
+public enum Field implements IField {
+	sourcedId("sourcedId"),
+	status("status"),
+	dateLastModified("dateLastModified"),
+	metadata("metadata");
 
 	private final String value;
-	FieldType(String value) {this.value = value;}
+	Field(String value) {this.value = value;}
 
 	@Override
 	public String getValue() {
 		return value;
 	}
 
-	enum Orgs implements Field {
+	public enum Orgs implements IField {
 		name("name"),
 		type("type"),
-		identifier("identifier"),
-		grades("grades"),
-		subjects("subjects"),
-		org("orgs"),
-		subjectCodes("subjectCodes");
+		identifier("identifier");
 
-		enum Parent implements Field {
+		public enum Parent implements IField {
 			href("parent.href"),
 			sourcedId("parent.sourcedId"),
 			type("parent.identifier");
@@ -37,7 +33,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Children implements Field {
+		public enum Children implements IField {
 			href("children.href"),
 			sourcedId("children.sourcedId"),
 			type("children.identifier");
@@ -61,13 +57,13 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum AcademicSessions implements Field {
+	public enum AcademicSessions implements IField {
 		title("title"),
 		startDate("startDate"),
 		endDate("endDate"),
 		type("type");
 
-		enum Parent implements Field {
+		public enum Parent implements IField {
 			href("parent.href"),
 			sourcedId("parent.sourcedId"),
 			type("parent.identifier");
@@ -81,7 +77,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Children implements Field {
+		public enum Children implements IField {
 			href("children.href"),
 			sourcedId("children.sourcedId"),
 			type("children.identifier");
@@ -104,14 +100,14 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum Courses implements Field {
+	public enum Courses implements IField {
 		title("title"),
 		courseCode("courseCode"),
 		grades("grades"),
 		subjects("subjects"),
 		subjectCodes("subjectCodes");
 
-		enum SchoolYear implements Field {
+		public enum SchoolYear implements IField {
 			href("schoolYear.href"),
 			sourcedId("schoolYear.sourcedId"),
 			type("schoolYear.identifier");
@@ -125,7 +121,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Org implements Field {
+		public enum Org implements IField {
 			href("org.href"),
 			sourcedId("org.sourcedId"),
 			type("org.identifier");
@@ -148,7 +144,7 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum Classes implements Field {
+	public enum Classes implements IField {
 		title("title"),
 		classCode("classCode"),
 		classType("classType"),
@@ -158,7 +154,7 @@ public enum FieldType implements Field {
 		subjectCodes("subjectCodes"),
 		periods("periods");
 
-		enum Course implements Field {
+		public enum Course implements IField {
 			href("course.href"),
 			sourcedId("course.sourcedId"),
 			type("course.identifier");
@@ -172,7 +168,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum School implements Field {
+		public enum School implements IField {
 			href("school.href"),
 			sourcedId("school.sourcedId"),
 			type("school.identifier");
@@ -186,7 +182,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Terms implements Field {
+		public enum Terms implements IField {
 			href("terms.href"),
 			sourcedId("terms.sourcedId"),
 			type("terms.identifier");
@@ -209,13 +205,13 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum Enrollments implements Field {
+	public enum Enrollments implements IField {
 		role("role"),
 		primary("primary"),
 		beginDate("beginDate"),
 		endDate("endDate");
 
-		enum User implements Field {
+		public enum User implements IField {
 			href("user.href"),
 			sourcedId("user.sourcedId"),
 			type("user.identifier");
@@ -229,7 +225,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Clazz implements Field {
+		public enum Clazz implements IField {
 			href("class.href"),
 			sourcedId("class.sourcedId"),
 			type("class.identifier");
@@ -243,7 +239,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum School implements Field {
+		public enum School implements IField {
 			href("school.href"),
 			sourcedId("school.sourcedId"),
 			type("school.identifier");
@@ -267,7 +263,7 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum Users implements Field {
+	public enum Users implements IField {
 		username("username"),
 		enabledUser("enabledUser"),
 		givenName("givenName"),
@@ -281,7 +277,7 @@ public enum FieldType implements Field {
 		grades("grades"),
 		password("password");
 
-		enum UserIds implements Field {
+		public enum UserIds implements IField {
 			type("userIds.type"),
 			identifier("userIds.identifier");
 
@@ -294,7 +290,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Agents implements Field {
+		public enum Agents implements IField {
 			href("agents.href"),
 			sourcedId("agents.sourcedId"),
 			type("agents.identifier");
@@ -308,7 +304,7 @@ public enum FieldType implements Field {
 			}
 		}
 
-		enum Orgs implements Field {
+		public enum Orgs implements IField {
 			href("orgs.href"),
 			sourcedId("orgs.sourcedId"),
 			type("orgs.identifier");
@@ -331,7 +327,7 @@ public enum FieldType implements Field {
 		}
 	}
 
-	enum Demographics implements Field {
+	public enum Demographics implements IField {
 		birthDate("birthDate"),
 		sex("sex"),
 		americanIndianOrAlaskaNative("americanIndianOrAlaskaNative"),

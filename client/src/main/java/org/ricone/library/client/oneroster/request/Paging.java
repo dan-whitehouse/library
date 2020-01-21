@@ -14,15 +14,15 @@ public class Paging {
 
 	}
 
-	Integer getLimit() {
+	public Integer getLimit() {
 		return limit;
 	}
 
-	void setLimit(Integer limit) {
+	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
 
-	Integer getOffset() {
+	public Integer getOffset() {
 		return offset;
 	}
 

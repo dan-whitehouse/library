@@ -1,21 +1,19 @@
 package org.ricone.library.client.oneroster.request;
 
-import org.ricone.library.client.oneroster.request.order.Field;
-
 import java.util.List;
 
 public class FieldSelection {
-	private List<Field> fields;
+	private List<IField> fields;
 
-	public FieldSelection(List<Field> fields) {
+	public FieldSelection(List<IField> fields) {
 		this.fields = fields;
 	}
 
-	public List<Field> getFields() {
+	public List<IField> getFields() {
 		return fields;
 	}
 
-	public void setFields(List<Field> fields) {
+	public void setFields(List<IField> fields) {
 		this.fields = fields;
 	}
 
