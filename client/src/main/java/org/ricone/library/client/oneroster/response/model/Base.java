@@ -1,5 +1,6 @@
 package org.ricone.library.client.oneroster.response.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -61,11 +62,13 @@ public abstract class Base implements Serializable {
 	}
 
 	@JsonProperty("dateLastModified")
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	public ZonedDateTime getDateLastModified() {
 		return dateLastModified;
 	}
 
 	@JsonProperty("dateLastModified")
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	public void setDateLastModified(ZonedDateTime dateLastModified) {
 		this.dateLastModified = dateLastModified;
 	}
@@ -81,4 +84,14 @@ public abstract class Base implements Serializable {
 	}
 
 	public abstract boolean isEmptyObject();
+
+	@Override
+	public String toString() {
+		return "Base{" +
+				"sourcedId='" + sourcedId + '\'' +
+				", status=" + status +
+				", dateLastModified=" + dateLastModified +
+				", metadata=" + metadata +
+				'}';
+	}
 }

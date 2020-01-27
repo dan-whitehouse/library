@@ -31,7 +31,7 @@ public class Course extends Base implements Serializable {
 	private List<String> grades = new ArrayList<>();
 
 	@JsonProperty("subjects")
-	@JacksonXmlElementWrapper(localName = "subjectCodes") @JacksonXmlProperty(localName = "subjectCode")
+	@JacksonXmlElementWrapper(localName = "subjects") @JacksonXmlProperty(localName = "subject")
 	private List<String> subjects = new ArrayList<>();
 
 	@JsonProperty("org")

@@ -14,27 +14,27 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"warnings"})
 @JacksonXmlRootElement(localName = "data")
-public abstract class BaseMultiResponse<T> extends Response<List<T>> implements Serializable {
-	private List<T> data;
+public abstract class BaseMultiResponse<T> extends Response<T> implements Serializable {
+	private T data;
 	private List<Error> warnings;
 
 	protected BaseMultiResponse() {
 	}
 
-	public BaseMultiResponse(List<T> data) {
+	public BaseMultiResponse(T data) {
 		this.data = data;
 	}
 
-	public BaseMultiResponse(List<T> data, List<Error> warnings) {
+	public BaseMultiResponse(T data, List<Error> warnings) {
 		this.data = data;
 		this.warnings = warnings;
 	}
 
-	public List<T> getData() {
+	@Override public T getData() {
 		return data;
 	}
 
-	public void setData(List<T> data) {
+	@Override public void setData(T data) {
 		this.data = data;
 	}
 

@@ -1,5 +1,6 @@
 package org.ricone.library.client.oneroster.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -33,6 +34,9 @@ final class FieldSelectionBuilder {
 
 
 		public Builder field(IField field) {
+			if(instance.fields == null) {
+				instance.fields = new ArrayList<>();
+			}
 			instance.fields.add(field);
 			return this;
 		}

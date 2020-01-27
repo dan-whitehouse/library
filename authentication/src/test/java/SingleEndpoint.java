@@ -22,7 +22,6 @@ public class SingleEndpoint {
 			Optional<Endpoint> endpoint = authenticator.getEndpoint(providerId);
 
 			if(endpoint.isPresent()) {
-				System.out.println("Token: " + endpoint.get().getToken());
 				System.out.println("Href: " + endpoint.get().getHref());
 				System.out.println("ProviderId: " + endpoint.get().getProviderId());
 				System.out.println("Provider Name: " + endpoint.get().getName());

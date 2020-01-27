@@ -1,9 +1,6 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import org.ricone.library.client.oneroster.response.BaseSingleResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +10,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"warnings","org"})
+@JsonRootName("org")
 public class OrgResponse extends BaseSingleResponse<Org> implements Serializable {
 	private final static long serialVersionUID = 4198000642945588466L;
 	@JsonIgnore

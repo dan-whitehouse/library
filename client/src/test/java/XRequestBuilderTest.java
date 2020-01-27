@@ -1,3 +1,4 @@
+import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator2;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.xpress.request.IdType;
@@ -27,11 +28,12 @@ public class XRequestBuilderTest {
 
 	public static void main(String[] args) throws InvalidPathException, MissingArgumentException {
 		Authenticator2 authenticator = Authenticator2.builder()
-				.url(authUrl).credentials(username, password)
-				.provider(providerId)
-				.authenticate();
+			.url("https://auth.test.ricone.org/login").api(API.xPress)
+			.credentials("DataValidationTool", "65ec5dbdf2c18d70abb4996d90")
+			.provider("localhost")
+		.authenticate();
 
-		if(authenticator.isAuthenticated()) {
+		//if(authenticator.isAuthenticated()) {
 			Optional<Endpoint> endpoint = authenticator.getEndpoint();
 
 			if(endpoint.isPresent()) {
@@ -43,10 +45,10 @@ public class XRequestBuilderTest {
 				//System.out.println("!!!!!!!!!!!");
 				//getXLastPage(xPress);
 			}
-		}
+		/*}
 		else {
 			System.out.println("Authentication Failed");
-		}
+		}*/
 	}
 
 	private static void getXLea(XPress xPress) throws MissingArgumentException, InvalidPathException {

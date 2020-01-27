@@ -1,10 +1,8 @@
 package org.ricone.library.client.oneroster.request;
 
 import org.ricone.library.client.oneroster.response.model.*;
-import org.ricone.library.client.oneroster.request.ServicePathType;
 
 import java.lang.Class;
-import java.util.List;
 
 public enum ServicePath {
 	GET_Org_By_SourcedId("orgs/{id}", ServicePathType.SINGLE, OrgResponse.class),
@@ -24,7 +22,7 @@ public enum ServicePath {
 	GET_Courses_By_School_SourcedId("schools/{id}/courses", ServicePathType.PREDICATE,  CoursesResponse.class),
 
 	GET_Classes_By_SourcedId("classes/{id}", ServicePathType.SINGLE,  ClassResponse.class),
-	GET_Classes("classes", ServicePathType.OBJECT,  CoursesResponse.class),
+	GET_Classes("classes", ServicePathType.OBJECT,  ClassesResponse.class),
 	GET_Classes_By_School_SourcedId("schools/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class),
 	GET_Classes_By_Term_SourcedId("terms/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class),
 	GET_Classes_By_Course_SourcedId("terms/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class),
@@ -50,8 +48,8 @@ public enum ServicePath {
 	GET_Students_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/students", ServicePathType.PREDICATES,  UsersResponse.class),
 	GET_Students_By_Class_SourcedId("classes/{id}/students", ServicePathType.PREDICATE,  UsersResponse.class),
 
-	GET_Demographics_By_SourcedId("demographics/{id}", ServicePathType.SINGLE,  UserResponse.class),
-	GET_demographics("demographics", ServicePathType.OBJECT,  UsersResponse.class)
+	GET_Demographics_By_SourcedId("demographics/{id}", ServicePathType.SINGLE,  DemographicResponse.class),
+	GET_demographics("demographics", ServicePathType.OBJECT,  DemographicsResponse.class)
 	;
 
 	private final String value;

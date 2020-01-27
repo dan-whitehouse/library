@@ -2,6 +2,9 @@ package org.ricone.library.client.oneroster.request;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.OffsetUtil;
@@ -34,6 +37,13 @@ public class OneRoster {
 
 	public OneRoster(Endpoint endpoint) {
 		ObjectMapper mapper = new ObjectMapper();
+
+		//Modules
+		mapper.registerModule(new ParameterNamesModule());
+		mapper.registerModule(new Jdk8Module());
+		mapper.registerModule(new JavaTimeModule()); // new module, NOT JSR310Module
+
+		//Features
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
@@ -119,6 +129,7 @@ public class OneRoster {
 			if(response.hasBody()) {
 				data = response.getBody();
 				assert data != null;
+				data.setClazz(clazz);
 				data.setRequestPath(requestPath);
 				data.setRequestHeaders(httpEntity.getHeaders());
 				data.setResponseStatus(response.getStatusCode());
@@ -200,7 +211,11 @@ public class OneRoster {
 		}
 
 		if(request.hasFieldSelection()) {
+			System.out.println("hasFieldSelection: " + request.hasFieldSelection());
 			List<String> fields = request.with().fieldSelection().getFields().stream().map(IField::getValue).collect(Collectors.toList());
+
+			System.out.println("fieldSelection: " + String.join(",", fields));
+
 			builder.queryParam("fields", String.join(",", fields));
 		}
 
@@ -217,9 +232,7 @@ public class OneRoster {
 			else {
 				builder.queryParam("filter", filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'");
 			}
-
 		}
-
 		return builder.build().toUriString();
 	}
 
@@ -228,7 +241,7 @@ public class OneRoster {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-		headers.set("Authorization", "Bearer " + endpoint.getToken());
+		headers.set("Authorization", "Bearer " + this.endpoint.getDecodedToken().getToken());
 		return new HttpEntity<>(headers);
 	}
 

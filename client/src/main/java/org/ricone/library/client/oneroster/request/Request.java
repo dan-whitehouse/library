@@ -87,7 +87,7 @@ public class Request {
 	}
 
 	boolean hasFiltering() {
-		if(with() == null) {
+		if(with() == null || with().filtering() == null) {
 			return false;
 		}
 		return with().filtering().getFiltering() != null;

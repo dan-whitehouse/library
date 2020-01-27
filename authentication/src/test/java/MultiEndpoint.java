@@ -21,7 +21,6 @@ public class MultiEndpoint {
 			List<Endpoint> endpoints = authenticator.getEndpoints();
 
 			for (Endpoint endpoint : endpoints) {
-				System.out.println("Token: " + endpoint.getToken());
 				System.out.println("Href: " + endpoint.getHref());
 				System.out.println("ProviderId: " + endpoint.getProviderId());
 				System.out.println("Provider Name: " + endpoint.getName());

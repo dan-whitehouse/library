@@ -1,12 +1,19 @@
 package org.ricone.library.authentication;
 
-import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ricone.library.authentication.oneroster.OneRosterDecodedToken;
+import org.ricone.library.authentication.oneroster.OneRosterEndpoint;
+import org.ricone.library.authentication.oneroster.OneRosterLoginResponse;
+import org.ricone.library.authentication.xPress.XPressDecodedToken;
+import org.ricone.library.authentication.xPress.XPressEndpoint;
+import org.ricone.library.authentication.xPress.XPressLoginResponse;
 import org.springframework.http.*;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,14 +22,12 @@ import java.util.stream.Collectors;
 
 public class Authenticator2 {
 	private RestTemplate restTemplate;
-	private ObjectMapper mapper;
 	private String url;
 	private String username;
 	private String password;
 	private String provider;
-	private String token;
-	private DecodedToken decodedToken;
-	private List<Endpoint> endpoints;
+	private API api;
+	private List<Endpoint> endpoints = new ArrayList<>();
 
 	public static Builder builder() {
 		return new Builder();
@@ -30,7 +35,6 @@ public class Authenticator2 {
 
 	private Authenticator2() {
 		restTemplate = new RestTemplate();
-		mapper = new ObjectMapper();
 	}
 
 	private static class Singleton {
@@ -61,17 +65,40 @@ public class Authenticator2 {
 			return this;
 		}
 
+		public Builder api(API api) {
+			instance.api = api;
+			return this;
+		}
+
 		public Authenticator2 authenticate()  {
-			instance.authenticate(instance.url, instance.username, instance.password);
+			instance.authenticate(instance.url, instance.username, instance.password, instance.api);
 			return instance;
 		}
 	}
 
-	private void authenticate(String url, String username, String password) {
+	private void authenticate(String url, String username, String password, API api) {
 		this.url = url;
 		this.username = username;
 		this.password = password;
+		this.api = api;
 
+		if(this.api.equals(API.xPress)) {
+			authenticateXPress(this.url, this.username, this.password);
+		}
+		else if(this.api.equals(API.OneRoster)) {
+			authenticateOneRoster(this.url, this.username, this.password);
+		}
+		else {
+			if(this.url.endsWith("oauth/login")) {
+				authenticateOneRoster(this.url, this.username, this.password);
+			}
+			else if (this.url.endsWith("/login")) {
+				authenticateXPress(this.url, this.username, this.password);
+			}
+		}
+	}
+
+	private void authenticateXPress(String url, String username, String password) {
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("username", username);
 		body.add("password", password);
@@ -82,11 +109,35 @@ public class Authenticator2 {
 		HttpEntity<?> entity = new HttpEntity<Object>(body, headers);
 
 		try {
-			ResponseEntity<Login> login = restTemplate.exchange(url, HttpMethod.POST, entity, Login.class);
+			ResponseEntity<XPressLoginResponse> login = restTemplate.exchange(url, HttpMethod.POST, entity, XPressLoginResponse.class);
 			if(login.hasBody()) {
-				token = Objects.requireNonNull(login.getBody()).getToken();
-				endpoints = login.getBody().getEndpoints();
-				decodedToken = mapper.readValue(new String(Base64.getDecoder().decode(JWT.decode(token).getPayload())), DecodedToken.class);
+				for(XPressEndpoint endpoint : login.getBody().getEndpoints()) {
+					DecodedToken decodedToken = TokenDecoder.getDecodedToken(TokenDecoder.decodeToken(endpoint.getToken(), XPressDecodedToken.class), endpoint.getToken());
+					endpoints.add(new Endpoint(endpoint, decodedToken));
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void authenticateOneRoster(String url, String username, String password) {
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("grant_type", "client_credentials");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+
+		HttpEntity<?> entity = new HttpEntity<Object>(body, headers);
+		try {
+			ResponseEntity<OneRosterLoginResponse> login = restTemplate.exchange(url, HttpMethod.POST, entity, OneRosterLoginResponse.class);
+			if(login.hasBody()) {
+				for(OneRosterEndpoint endpoint : login.getBody().getEndpoint()) {
+					DecodedToken decodedToken = TokenDecoder.getDecodedToken(TokenDecoder.decodeToken(endpoint.getAccessToken(), OneRosterDecodedToken.class), endpoint.getAccessToken());
+					endpoints.add(new Endpoint(endpoint, decodedToken));
+				}
 			}
 		}
 		catch (Exception e) {
@@ -134,25 +185,10 @@ public class Authenticator2 {
 		return Optional.empty();
 	}
 
-	/**
-	 * Determine if authentication was successful.
-	 *
-	 * @return value of type boolean.
-	 */
-	public boolean isAuthenticated() {
-		return !isTokenExpired();
-	}
 
-	String getToken() {
-		if(isTokenExpired() || willTokenExpire()) {
-			authenticate(url, username, password);
-		}
-		return token;
-	}
-
-	private boolean isTokenExpired() {
+	private boolean isTokenExpired(Endpoint endpoint) {
 		try {
-			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(decodedToken.getExp()), ZoneId.systemDefault());
+			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(endpoint.getDecodedToken().getExp()), ZoneId.systemDefault());
 			return expiryDate.isBefore(LocalDateTime.now());
 		}
 		catch (Exception e) {
@@ -161,9 +197,9 @@ public class Authenticator2 {
 		return true;
 	}
 
-	private boolean willTokenExpire() {
+	private boolean willTokenExpire(Endpoint endpoint) {
 		try {
-			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(decodedToken.getExp()), ZoneId.systemDefault()).minusMinutes(10);
+			LocalDateTime expiryDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(endpoint.getDecodedToken().getExp()), ZoneId.systemDefault()).minusMinutes(10);
 			return LocalDateTime.now().isAfter(expiryDate);
 			//return expiryDate.isBefore(LocalDateTime.now());
 		}

@@ -1,9 +1,6 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.ricone.library.client.oneroster.response.BaseMultiResponse;
@@ -15,7 +12,8 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"warnings","users"})
-public class UsersResponse extends BaseMultiResponse<User> implements Serializable {
+@JsonRootName("users")
+public class UsersResponse extends BaseMultiResponse<Users> implements Serializable {
 	private final static long serialVersionUID = -2820152702413553355L;
 	@JsonIgnore
 	private String requestPath;
@@ -31,23 +29,23 @@ public class UsersResponse extends BaseMultiResponse<User> implements Serializab
 	public UsersResponse() {
 	}
 
-	public UsersResponse(List<User> users) {
+	public UsersResponse(Users users) {
 		super(users);
 	}
 
-	public UsersResponse(List<User> users, List<Error> errors) {
+	public UsersResponse(Users users, List<Error> errors) {
 		super(users, errors);
 	}
 
-	@JsonProperty("users")
-	@JacksonXmlElementWrapper(localName = "users") @JacksonXmlProperty(localName = "user")
-	@Override public List<User> getData() {
+	@JsonUnwrapped @JsonProperty("users")
+	@JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "user")
+	@Override public Users getData() {
 		return super.getData();
 	}
 
-	@JsonProperty("users")
-	@JacksonXmlElementWrapper(localName = "users") @JacksonXmlProperty(localName = "user")
-	@Override public void setData(List<User> users) {
+	@JsonUnwrapped @JsonProperty("users")
+	@JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "user")
+	@Override public void setData(Users users) {
 		super.setData(users);
 	}
 

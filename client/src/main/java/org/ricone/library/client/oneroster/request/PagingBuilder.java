@@ -32,11 +32,17 @@ final class PagingBuilder {
 
 
 		public Builder limit(int limit) {
+			if(instance.paging == null) {
+				instance.paging = new Paging(100, 0);
+			}
 			instance.paging.setLimit(limit);
 			return this;
 		}
 
 		public Builder offset(int offset) {
+			if(instance.paging == null) {
+				instance.paging = new Paging(100, 0);
+			}
 			instance.paging.setOffset(offset);
 			return this;
 		}

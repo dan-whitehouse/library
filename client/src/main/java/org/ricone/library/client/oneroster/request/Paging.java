@@ -8,10 +8,10 @@ public class Paging {
 	private Integer limit;
 	private Integer offset;
 
+
 	public Paging(Integer limit, Integer offset) {
 		this.limit = limit;
 		this.offset = offset;
-
 	}
 
 	public Integer getLimit() {

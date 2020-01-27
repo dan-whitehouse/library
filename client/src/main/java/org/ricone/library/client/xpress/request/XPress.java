@@ -217,7 +217,7 @@ public class XPress {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-		headers.set("Authorization", "Bearer " + endpoint.getToken());
+		headers.set("Authorization", "Bearer " + this.endpoint.getDecodedToken().getToken());
 
 		if(request.hasIdType() && !request.getRequest().getIdType().equals(IdType.RefId)) {
 			headers.set("IdType", request.getRequest().getIdType().getValue());

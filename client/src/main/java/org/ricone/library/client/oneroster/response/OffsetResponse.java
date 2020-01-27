@@ -40,12 +40,12 @@ public class OffsetResponse extends Response<int[]> implements Iterator<Integer>
 
     @Override
     public int[] getData() {
-        return null;
+        return offsets;
     }
 
     @Override
     public void setData(int[] data) {
-
+        this.offsets = data;
     }
 
     @Override

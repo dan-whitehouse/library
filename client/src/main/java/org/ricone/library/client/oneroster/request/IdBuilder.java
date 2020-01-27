@@ -1,5 +1,6 @@
 package org.ricone.library.client.oneroster.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,6 +33,9 @@ final class IdBuilder {
 		}
 
 		public Builder id(String id) {
+			if(instance.ids == null) {
+				instance.ids = new ArrayList<>();
+			}
 			instance.ids.add(id);
 			return this;
 		}

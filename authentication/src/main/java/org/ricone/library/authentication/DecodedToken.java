@@ -6,88 +6,79 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"application_id", "iat", "exp", "iss"})
-class DecodedToken implements Serializable {
-	@JsonProperty("application_id")
-	private String applicationId;
-	@JsonProperty("iat")
-	private Integer iat;
-	@JsonProperty("exp")
-	private Integer exp;
-	@JsonProperty("iss")
-	private String iss;
-	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+public class DecodedToken implements Serializable {
 	private final static long serialVersionUID = 9033040468688496163L;
+	private String appId;
+	private String providerId;
+	private String href;
+	private Integer iat;
+	private Integer exp;
+	private String iss;
+	private String token;
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public DecodedToken() {
-	}
-
-	/**
-	 * @param exp
-	 * @param iss
-	 * @param applicationId
-	 * @param iat
-	 */
-	public DecodedToken(String applicationId, Integer iat, Integer exp, String iss) {
-		super();
-		this.applicationId = applicationId;
+	public DecodedToken(String appId, String providerId, String href, Integer iat, Integer exp, String iss, String token) {
+		this.appId = appId;
+		this.providerId = providerId;
+		this.href = href;
 		this.iat = iat;
 		this.exp = exp;
 		this.iss = iss;
+		this.token = token;
 	}
 
-	@JsonProperty("application_id")
-	public String getApplicationId() {
-		return applicationId;
+	public String getAppId() {
+		return appId;
 	}
 
-	@JsonProperty("application_id")
-	public void setApplicationId(String applicationId) {
-		this.applicationId = applicationId;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
-	@JsonProperty("iat")
+	public String getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
+	}
+
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
+	}
+
 	public Integer getIat() {
 		return iat;
 	}
 
-	@JsonProperty("iat")
 	public void setIat(Integer iat) {
 		this.iat = iat;
 	}
 
-	@JsonProperty("exp")
 	public Integer getExp() {
 		return exp;
 	}
 
-	@JsonProperty("exp")
 	public void setExp(Integer exp) {
 		this.exp = exp;
 	}
 
-	@JsonProperty("iss")
 	public String getIss() {
 		return iss;
 	}
 
-	@JsonProperty("iss")
 	public void setIss(String iss) {
 		this.iss = iss;
 	}
 
-	@JsonAnyGetter
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
+	public String getToken() {
+		return token;
 	}
 
-	@JsonAnySetter
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

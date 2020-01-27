@@ -1,9 +1,6 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.ricone.library.client.oneroster.response.BaseMultiResponse;
@@ -15,7 +12,8 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"warnings","enrollments"})
-public class EnrollmentsResponse extends BaseMultiResponse<Enrollment> implements Serializable {
+@JsonRootName("enrollments")
+public class EnrollmentsResponse extends BaseMultiResponse<Enrollments> implements Serializable {
 	private final static long serialVersionUID = -3656792804387663344L;
 	@JsonIgnore
 	private String requestPath;
@@ -31,23 +29,23 @@ public class EnrollmentsResponse extends BaseMultiResponse<Enrollment> implement
 	public EnrollmentsResponse() {
 	}
 
-	public EnrollmentsResponse(List<Enrollment> enrollments) {
+	public EnrollmentsResponse(Enrollments enrollments) {
 		super(enrollments);
 	}
 
-	public EnrollmentsResponse(List<Enrollment> enrollments, List<Error> errors) {
+	public EnrollmentsResponse(Enrollments enrollments, List<Error> errors) {
 		super(enrollments);
 	}
 
-	@JsonProperty("enrollments")
-	@JacksonXmlElementWrapper(localName = "enrollments") @JacksonXmlProperty(localName = "enrollment")
-	@Override public List<Enrollment> getData() {
+	@JsonUnwrapped @JsonProperty("enrollments")
+	@JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "enrollment")
+	@Override public Enrollments getData() {
 		return super.getData();
 	}
 
-	@JsonProperty("enrollments")
-	@JacksonXmlElementWrapper(localName = "enrollments") @JacksonXmlProperty(localName = "enrollment")
-	@Override public void setData(List<Enrollment> enrollments) {
+	@JsonUnwrapped @JsonProperty("enrollments")
+	@JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "enrollment")
+	@Override public void setData(Enrollments enrollments) {
 		super.setData(enrollments);
 	}
 

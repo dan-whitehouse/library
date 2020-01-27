@@ -1,9 +1,6 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
@@ -15,6 +12,7 @@ import java.util.stream.Stream;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"sourcedId", "status", "dateLastModified", "metadata", "name", "type", "identifier", "parent", "children"})
+@JsonRootName("org")
 public class Org extends Base implements Serializable {
 	private final static long serialVersionUID = -1025191997431202352L;
 	@JsonProperty("name")
@@ -107,5 +105,17 @@ public class Org extends Base implements Serializable {
 	@Override
 	public boolean isEmptyObject() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), name, type, identifier, parent, children).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public String toString() {
+		return "Org{" +
+				super.toString() +
+				"name='" + name + '\'' +
+				", type=" + type +
+				", identifier='" + identifier + '\'' +
+				", parent=" + parent +
+				", children=" + children +
+				"} ";
 	}
 }

@@ -63,4 +63,13 @@ public class GUIDRef implements Serializable {
 	public void setType(GUIDType type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "GUIDRef{" +
+				"href='" + href + '\'' +
+				", sourcedId='" + sourcedId + '\'' +
+				", type=" + type +
+				'}';
+	}
 }

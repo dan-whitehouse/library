@@ -6,12 +6,15 @@ import java.util.LinkedList;
 
 public class OffsetUtil {
     public static int[] getOffsetArray(int limit, int offset, String totalRecordCount) {
-        LinkedList<Integer> list = new LinkedList<>();
+        final LinkedList<Integer> list = new LinkedList<>();
+        list.add(offset); //Add the first instance of what is being offset
 
         int totalRecords = NumberUtils.parseNumber(totalRecordCount, Integer.class);
         int currentPage = (int) Math.floor((double)offset / limit);
         int totalPages = (int) Math.ceil((double)totalRecords / limit);
         int last_offset = (totalPages - 1) * limit;
+
+        //System.out.println(totalRecords + " " + currentPage + " " +totalPages + " " + last_offset);
 
         int next_offset = 0;
 
