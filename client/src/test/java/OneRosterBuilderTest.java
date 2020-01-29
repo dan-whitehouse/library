@@ -28,8 +28,9 @@ public class OneRosterBuilderTest {
         if(endpoint.isPresent()) {
             OneRoster oneRoster = new OneRoster(endpoint.get());
 
-            offsetTest(oneRoster);
-            allFeaturesTest(oneRoster);
+            //offsetTest(oneRoster);
+            //allFeaturesTest(oneRoster);
+            buildVerifyTest(oneRoster);
 
             //orgTest(oneRoster);
             //academicSessionsTest(oneRoster);
@@ -113,11 +114,10 @@ public class OneRosterBuilderTest {
                     .path(ServicePath.GET_Orgs)
                 .end()
                 .with()
-                    .paging().limit(limit).offset(offset.next()).end()
-                    /*.fieldSelection()
-                        .field(Field.Orgs.name)
-                        .field(Field.sourcedId)
-                    .end()*/
+                    .paging()
+                        .limit(limit)
+                        .offset(offset.next())
+                    .end()
                 .end()
             .build());
 
@@ -125,13 +125,23 @@ public class OneRosterBuilderTest {
         }
     }
 
-
     private static void allFeaturesTest(OneRoster oneRoster) throws InvalidPathException {
-        int limit = 2;
+        int limit = 1;
+        Filter filter1 = new Filter(Field.Orgs.type, Predicate.Equals, "school");
+        Filter filter2 = new Filter(Field.Orgs.name, Predicate.Contains, "HS");
+
         OffsetResponse offset = oneRoster.getOffset(Request.builder()
             .request().path(ServicePath.GET_Orgs).end()
-            .with().paging().limit(limit).end().end()
+            .with()
+                .paging().limit(limit).end()
+                .filtering().filter(filter1).and().filter(filter2).end()
+            .end()
         .build());
+
+        /* The offset request above requires both the paging and filtering as they are used below.
+           The sorting and field selection features used below are/can be ignored, as they don't
+           alter the number of records returned.
+         */
 
         while(offset.hasNext()) {
             Response<Orgs> response = oneRoster.getOrgs(Request.builder()
@@ -142,21 +152,43 @@ public class OneRosterBuilderTest {
                     .paging()
                         .limit(limit)
                         .offset(offset.next()).end()
-                    .sorting()
-                        .field(Field.sourcedId)
-                        .orderBy(SortOrder.ASC).end()
+                    .filtering()
+                        .filter(filter1)
+                        .and()
+                        .filter(filter2).end()
                     .fieldSelection()
                         .field(Field.sourcedId)
                         .field(Field.Orgs.name)
-                        .field(Field.Orgs.type)
-                    .end()
-                    .filtering()
-                        .filter(Field.Orgs.type, Predicate.Equals, "school").end()
+                        .field(Field.Orgs.type).end()
+                    .sorting()
+                        .field(Field.sourcedId)
+                        .orderBy(SortOrder.ASC).end()
                 .end()
             .build());
 
-            Util.debugResponse(response);
+            Util.debugResponseJsonNoXml(response);
         }
     }
 
+    private static void buildVerifyTest(OneRoster oneRoster) throws InvalidPathException {
+        Response<Orgs> response = oneRoster.getOrgs(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+                //.ids().id("1").end()
+            .end()
+            /*.with()
+                .paging().offset(20).end()
+                .sorting().field(Field.sourcedId).end()
+                .filtering()
+                    .filter(Field.sourcedId, Predicate.Equals, "03ACF04F-DC12-411A-9A42-E8323516D699").and()
+                    .filter(Field.sourcedId, Predicate.Equals, "03ACF04F-DC12-411A-9A42-E8323516D699").end()
+                .fieldSelection()
+                    .field(Field.sourcedId)
+                    .field(Field.Orgs.name)
+                    //.field(Field.Users.email)
+                    .end()
+            .end()*/
+        .build());
+        Util.debugResponseJsonNoXml(response);
+    }
 }

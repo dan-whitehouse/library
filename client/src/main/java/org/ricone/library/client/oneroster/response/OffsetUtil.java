@@ -14,8 +14,6 @@ public class OffsetUtil {
         int totalPages = (int) Math.ceil((double)totalRecords / limit);
         int last_offset = (totalPages - 1) * limit;
 
-        //System.out.println(totalRecords + " " + currentPage + " " +totalPages + " " + last_offset);
-
         int next_offset = 0;
 
         while(last_offset != next_offset) {

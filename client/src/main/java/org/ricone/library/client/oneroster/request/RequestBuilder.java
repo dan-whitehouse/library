@@ -22,7 +22,6 @@ final class RequestBuilder {
 		return ids;
 	}
 
-
 	public static class Builder {
 		private RequestBuilder instance = new RequestBuilder();
 		private Request.Builder parentBuilder;
@@ -51,6 +50,6 @@ final class RequestBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
+
 	}		
 }

@@ -96,4 +96,16 @@ public class Error implements Serializable {
 	public void setCodeMinor(CodeMinor codeMinor) {
 		this.codeMinor = codeMinor;
 	}
+
+	@Override
+	public String toString() {
+		return "Error{" +
+				"codeMajor=" + codeMajor +
+				", severity=" + severity +
+				", messageRefIdentifier='" + messageRefIdentifier + '\'' +
+				", operationRefIdentifier='" + operationRefIdentifier + '\'' +
+				", description='" + description + '\'' +
+				", codeMinor=" + codeMinor +
+				'}';
+	}
 }

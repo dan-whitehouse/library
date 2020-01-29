@@ -87,11 +87,9 @@ public abstract class Base implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Base{" +
-				"sourcedId='" + sourcedId + '\'' +
+		return "sourcedId='" + sourcedId + '\'' +
 				", status=" + status +
 				", dateLastModified=" + dateLastModified +
-				", metadata=" + metadata +
-				'}';
+				", metadata=" + metadata + ", ";
 	}
 }

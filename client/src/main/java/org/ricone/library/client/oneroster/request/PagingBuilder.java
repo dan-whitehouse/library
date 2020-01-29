@@ -14,6 +14,9 @@ final class PagingBuilder {
 	}
 
 	public Paging getPaging() {
+		if(paging == null) {
+			return new Paging();
+		}
 		return paging;
 	}
 

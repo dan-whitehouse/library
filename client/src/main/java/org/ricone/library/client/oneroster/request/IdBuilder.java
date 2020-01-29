@@ -18,7 +18,6 @@ final class IdBuilder {
 		return ids;
 	}
 
-
 	public static class Builder {
 		private IdBuilder instance = new IdBuilder();
 		private RequestBuilder.Builder parentBuilder;

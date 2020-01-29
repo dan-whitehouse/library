@@ -9,8 +9,8 @@ import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.OffsetUtil;
 import org.ricone.library.client.oneroster.response.Response;
+import org.ricone.library.client.oneroster.response.ResponseErrorHandler;
 import org.ricone.library.client.oneroster.response.model.*;
-import org.ricone.library.client.xpress.response.XResponseErrorHandler;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.StringUtils;
@@ -51,7 +51,7 @@ public class OneRoster {
 
 		this.endpoint = endpoint;
 		this.restTemplate = new RestTemplate();
-		this.restTemplate.setErrorHandler(new XResponseErrorHandler());
+		this.restTemplate.setErrorHandler(new ResponseErrorHandler());
 		this.restTemplate.setMessageConverters(Collections.singletonList(converter));
 	}
 
@@ -211,11 +211,7 @@ public class OneRoster {
 		}
 
 		if(request.hasFieldSelection()) {
-			System.out.println("hasFieldSelection: " + request.hasFieldSelection());
 			List<String> fields = request.with().fieldSelection().getFields().stream().map(IField::getValue).collect(Collectors.toList());
-
-			System.out.println("fieldSelection: " + String.join(",", fields));
-
 			builder.queryParam("fields", String.join(",", fields));
 		}
 

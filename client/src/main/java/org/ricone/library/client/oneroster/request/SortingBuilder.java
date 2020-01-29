@@ -14,6 +14,9 @@ final class SortingBuilder {
 	}
 
 	public Sorting getSorting() {
+		if(sorting == null) {
+			sorting = new Sorting();
+		}
 		return sorting;
 	}
 
@@ -31,11 +34,17 @@ final class SortingBuilder {
 		}
 
 		public Builder field(IField field) {
+			if(instance.sorting == null) {
+				instance.sorting = new Sorting();
+			}
 			instance.sorting.setField(field);
 			return this;
 		}
 
 		public Builder orderBy(SortOrder sortOrder) {
+			if(instance.sorting == null) {
+				instance.sorting = new Sorting();
+			}
 			instance.sorting.setOrderBy(sortOrder);
 			return this;
 		}

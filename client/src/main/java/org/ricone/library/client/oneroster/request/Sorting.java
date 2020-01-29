@@ -4,6 +4,10 @@ public class Sorting {
 	private IField field;
 	private SortOrder orderBy;
 
+	protected Sorting() {
+		orderBy = SortOrder.ASC;
+	}
+
 	public Sorting(IField field, SortOrder orderBy) {
 		this.field = field;
 		this.orderBy = orderBy;

@@ -9,6 +9,11 @@ public class Paging {
 	private Integer offset;
 
 
+	protected Paging() {
+		this.limit = 100;
+		this.offset = 0;
+	}
+
 	public Paging(Integer limit, Integer offset) {
 		this.limit = limit;
 		this.offset = offset;

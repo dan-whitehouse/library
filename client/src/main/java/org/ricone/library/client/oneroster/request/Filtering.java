@@ -1,11 +1,16 @@
 package org.ricone.library.client.oneroster.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Filtering {
 	private List<Filter> filters;
 	private LogicalOperation logicalOperation = LogicalOperation.NONE;
+
+	protected Filtering() {
+		filters = new ArrayList<>();
+	}
 
 	public Filtering(List<Filter> filters) {
 		this.filters = filters;
