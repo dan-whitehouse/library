@@ -2,16 +2,20 @@ package org.ricone.library.client.oneroster.request;
 
 import java.util.function.Consumer;
 
-final class RequestBuilder {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
+final class RequestBuilder {
 	private ServicePath path;
 	private IdBuilder ids;
 
+	private RequestBuilder() { }
+
 	public static Builder builder() {
 		return new RequestBuilder.Builder();
-	}
-
-	private RequestBuilder() {
 	}
 
 	public ServicePath path() {
@@ -35,14 +39,13 @@ final class RequestBuilder {
 			this.callback = f;
 		}
 
-
 		public Builder path(ServicePath servicePath) {
 			instance.path = servicePath;
 			return this;
 		}
 
 		public IdBuilder.Builder ids() {
-			Consumer<IdBuilder> f = obj -> { instance.ids = obj;};
+			Consumer<IdBuilder> f = obj -> instance.ids = obj;
 			return new IdBuilder.Builder(this, f);
 		}
 
@@ -50,6 +53,5 @@ final class RequestBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-
-	}		
+	}
 }

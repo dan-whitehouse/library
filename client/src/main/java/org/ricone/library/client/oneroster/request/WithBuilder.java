@@ -2,8 +2,13 @@ package org.ricone.library.client.oneroster.request;
 
 import java.util.function.Consumer;
 
-final class WithBuilder {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
+final class WithBuilder {
 	private PagingBuilder paging;
 	private SortingBuilder sorting;
 	private FieldSelectionBuilder fieldSelection;
@@ -46,22 +51,22 @@ final class WithBuilder {
 		}
 
 		public PagingBuilder.Builder paging() {
-			Consumer<PagingBuilder> f = obj -> { instance.paging = obj;};
+			Consumer<PagingBuilder> f = obj -> instance.paging = obj;
 			return new PagingBuilder.Builder(this, f);
 		}
 
 		public SortingBuilder.Builder sorting() {
-			Consumer<SortingBuilder> f = obj -> { instance.sorting = obj;};
+			Consumer<SortingBuilder> f = obj -> instance.sorting = obj;
 			return new SortingBuilder.Builder(this, f);
 		}
 
 		public FieldSelectionBuilder.Builder fieldSelection() {
-			Consumer<FieldSelectionBuilder> f = obj -> { instance.fieldSelection = obj;};
+			Consumer<FieldSelectionBuilder> f = obj -> instance.fieldSelection = obj;
 			return new FieldSelectionBuilder.Builder(this, f);
 		}
 
 		public FilteringBuilder.Builder filtering() {
-			Consumer<FilteringBuilder> f = obj -> { instance.filtering = obj;};
+			Consumer<FilteringBuilder> f = obj -> instance.filtering = obj;
 			return new FilteringBuilder.Builder(this, f);
 		}
 		

@@ -8,6 +8,12 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Iterator;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OffsetResponse extends Response<int[]> implements Iterator<Integer>  {

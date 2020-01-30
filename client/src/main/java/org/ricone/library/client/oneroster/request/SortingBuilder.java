@@ -2,22 +2,29 @@ package org.ricone.library.client.oneroster.request;
 
 import java.util.function.Consumer;
 
-final class SortingBuilder {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
-	private Sorting sorting;
+final class SortingBuilder {
+	private IField field;
+	private SortOrder orderBy;
 
 	public static Builder builder() {
 		return new SortingBuilder.Builder();
 	}
 
 	private SortingBuilder() {
+		this.orderBy = SortOrder.ASC;
 	}
 
-	public Sorting getSorting() {
-		if(sorting == null) {
-			sorting = new Sorting();
-		}
-		return sorting;
+	public IField getField() {
+		return field;
+	}
+	public SortOrder getOrderBy() {
+		return orderBy;
 	}
 
 	public static class Builder {
@@ -34,18 +41,12 @@ final class SortingBuilder {
 		}
 
 		public Builder field(IField field) {
-			if(instance.sorting == null) {
-				instance.sorting = new Sorting();
-			}
-			instance.sorting.setField(field);
+			this.instance.field = field;
 			return this;
 		}
 
 		public Builder orderBy(SortOrder sortOrder) {
-			if(instance.sorting == null) {
-				instance.sorting = new Sorting();
-			}
-			instance.sorting.setOrderBy(sortOrder);
+			this.instance.orderBy = sortOrder;
 			return this;
 		}
 

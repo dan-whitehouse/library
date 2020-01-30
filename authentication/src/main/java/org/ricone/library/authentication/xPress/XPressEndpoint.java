@@ -3,9 +3,14 @@ package org.ricone.library.authentication.xPress;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.ricone.library.authentication.Authenticator2;
 
 import java.io.Serializable;
+
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-16
+ */
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"name", "href", "provider_id", "token"})
@@ -20,8 +25,7 @@ public class XPressEndpoint implements Serializable {
 	private String token;
 	private final static long serialVersionUID = -3410519710831695918L;
 
-	public XPressEndpoint() {
-	}
+	public XPressEndpoint() { }
 
 	public XPressEndpoint(String name, String href, String providerId, String token) {
 		super();

@@ -6,6 +6,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-16
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"app_id", "ims.global.org.security.scope", "provider_id", "href", "iat", "exp", "iss"})
 public class OneRosterDecodedToken implements Serializable {
@@ -102,5 +108,4 @@ public class OneRosterDecodedToken implements Serializable {
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
 	}
-
 }

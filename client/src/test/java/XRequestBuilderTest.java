@@ -1,11 +1,11 @@
 import org.ricone.library.authentication.API;
-import org.ricone.library.authentication.Authenticator2;
+import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.Util;
 import org.ricone.library.client.xpress.request.IdType;
 import org.ricone.library.client.xpress.request.ServicePath;
 import org.ricone.library.client.xpress.request.XPress;
 import org.ricone.library.client.xpress.request.XRequest;
-import org.ricone.library.client.xpress.response.Util;
 import org.ricone.library.client.xpress.response.XLastPageResponse;
 import org.ricone.library.client.xpress.response.XResponse;
 import org.ricone.library.client.xpress.response.model.XLea;
@@ -15,40 +15,31 @@ import org.ricone.library.exception.MissingArgumentException;
 
 import java.util.Optional;
 
-
 /**
- * @project: client
- * @author: Dan on 6/28/2018.
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
  */
-public class XRequestBuilderTest {
-	private static final String authUrl = System.getenv("url");
-	private static final String username = System.getenv("username");
-	private static final String password = System.getenv("password");
-	private static final String providerId = System.getenv("provider");
 
+public class XRequestBuilderTest {
 	public static void main(String[] args) throws InvalidPathException, MissingArgumentException {
-		Authenticator2 authenticator = Authenticator2.builder()
-			.url("https://auth.test.ricone.org/login").api(API.xPress)
-			.credentials("DataValidationTool", "65ec5dbdf2c18d70abb4996d90")
-			.provider("localhost")
+		Authenticator authenticator = Authenticator.builder()
+			.url(System.getenv("url")).api(API.xPress)
+			.credentials(System.getenv("username"), System.getenv("password"))
+			.provider(System.getenv("provider"))
 		.authenticate();
 
-		//if(authenticator.isAuthenticated()) {
-			Optional<Endpoint> endpoint = authenticator.getEndpoint();
+		Optional<Endpoint> endpoint = authenticator.getEndpoint();
 
-			if(endpoint.isPresent()) {
-				XPress xPress = new XPress(endpoint.get());
+		if(endpoint.isPresent()) {
+			XPress xPress = new XPress(endpoint.get());
 
-				//getXLea(xPress);
-				//getXLeas(xPress);
-				getXLeasWithPaging(xPress);
-				//System.out.println("!!!!!!!!!!!");
-				//getXLastPage(xPress);
-			}
-		/*}
-		else {
-			System.out.println("Authentication Failed");
-		}*/
+			//getXLea(xPress);
+			//getXLeas(xPress);
+			getXLeasWithPaging(xPress);
+			//System.out.println("!!!!!!!!!!!");
+			//getXLastPage(xPress);
+		}
 	}
 
 	private static void getXLea(XPress xPress) throws MissingArgumentException, InvalidPathException {

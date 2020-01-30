@@ -1,16 +1,34 @@
 package org.ricone.library.client.oneroster.request;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 final class FilteringBuilder {
-	private Filtering filtering;
+	private List<Filter> filters;
+	private LogicalOperation logicalOperation;
+
+	private FilteringBuilder() {
+		this.filters = new ArrayList<>();
+		this.logicalOperation = LogicalOperation.NONE;
+	}
 
 	public static Builder builder() {
 		return new FilteringBuilder.Builder();
 	}
-	private FilteringBuilder() { }
-	public Filtering getFiltering() {
-		return filtering;
+
+	List<Filter> getFilters() {
+		return filters;
+	}
+
+	LogicalOperation getLogicalOperation() {
+		return logicalOperation;
 	}
 
 	public static class Builder {
@@ -28,10 +46,7 @@ final class FilteringBuilder {
 
 		//Allows for the Filter to be set without needing to create a Filter object.
 		public Builder filter(IField field, Predicate predicate, String value) {
-			if(instance.filtering == null) {
-				instance.filtering = new Filtering();
-			}
-			instance.filtering.getFilters().add(new Filter(field, predicate, value));
+			this.instance.getFilters().add(new Filter(field, predicate, value));
 			return this;
 		}
 
@@ -39,28 +54,19 @@ final class FilteringBuilder {
 			The best use case for this is when doing paging, as it eliminates the need repeat values.
 		 */
 		public Builder filter(Filter filter) {
-			if(instance.filtering == null) {
-				instance.filtering = new Filtering();
-			}
-			instance.filtering.getFilters().add(filter);
+			this.instance.getFilters().add(filter);
 			return this;
 		}
 
 		//If two filters are present, the and() option indicates that the filtering contains a logical operation and is: filter1 AND filter2
 		public Builder and() {
-			if(instance.filtering == null) {
-				instance.filtering = new Filtering();
-			}
-			instance.filtering.setLogicalOperation(LogicalOperation.AND);
+			this.instance.logicalOperation = LogicalOperation.AND;
 			return this;
 		}
 
 		//If two filters are present, the or() option indicates that the filtering contains a logical operation and is: filter1 OR filter2
 		public Builder or() {
-			if(instance.filtering == null) {
-				instance.filtering = new Filtering();
-			}
-			instance.filtering.setLogicalOperation(LogicalOperation.OR);
+			this.instance.logicalOperation = LogicalOperation.OR;
 			return this;
 		}
 
@@ -69,6 +75,5 @@ final class FilteringBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
 	}		
 }

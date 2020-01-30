@@ -4,6 +4,12 @@ import org.ricone.library.client.oneroster.response.model.*;
 
 import java.lang.Class;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 public enum ServicePath {
 	GET_Org_By_SourcedId("orgs/{id}", ServicePathType.SINGLE, OrgResponse.class, FieldType.Orgs),
 	GET_Orgs("orgs", ServicePathType.OBJECT,  OrgsResponse.class, FieldType.Orgs),
@@ -52,10 +58,10 @@ public enum ServicePath {
 
 	private final String value;
 	private ServicePathType servicePathType;
-	private Class responseClass;
+	private Class<?> responseClass;
 	private FieldType fieldType;
 
-	ServicePath(String value, ServicePathType servicePathType, Class responseClass, FieldType fieldType) {
+	ServicePath(String value, ServicePathType servicePathType, Class<?> responseClass, FieldType fieldType) {
 		this.value = value;
 		this.servicePathType = servicePathType;
 		this.responseClass = responseClass;
@@ -70,7 +76,7 @@ public enum ServicePath {
 		return servicePathType;
 	}
 	
-	public Class getResponseClass() {
+	public Class<?> getResponseClass() {
 		return responseClass;
 	}
 

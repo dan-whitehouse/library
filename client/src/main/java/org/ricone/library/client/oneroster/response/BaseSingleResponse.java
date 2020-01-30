@@ -12,6 +12,12 @@ import org.ricone.library.client.oneroster.response.model.Error;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"warnings"})
 public abstract class BaseSingleResponse<T> extends Response<T> implements Serializable {

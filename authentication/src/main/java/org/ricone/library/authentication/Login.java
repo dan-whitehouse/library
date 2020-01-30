@@ -8,6 +8,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "user_name", "token", "endpoint"})
 class Login implements Serializable {
@@ -21,18 +27,8 @@ class Login implements Serializable {
 	private List<Endpoint> endpoints = new ArrayList<>();
 	private final static long serialVersionUID = 1804651811881810864L;
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public Login() {
-	}
+	public Login() { }
 
-	/**
-	 * @param id
-	 * @param token
-	 * @param userName
-	 * @param endpoints
-	 */
 	public Login(String id, String userName, String token, List<Endpoint> endpoints) {
 		super();
 		this.id = id;

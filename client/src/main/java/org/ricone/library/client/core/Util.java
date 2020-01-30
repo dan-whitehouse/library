@@ -1,11 +1,15 @@
-package org.ricone.library.client.oneroster.response;
+package org.ricone.library.client.core;
 
-import org.ricone.library.client.xpress.response.XResponse;
 import org.springframework.util.StringUtils;
 
-public class Util {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
-	public static void debugResponse(Response response, boolean requestPath, boolean requestHeaders, boolean responseStatus, boolean responseHeaders, boolean data, boolean json, boolean xml) {
+public class Util {
+	public static void debugResponse(BaseResponse<?> response, boolean requestPath, boolean requestHeaders, boolean responseStatus, boolean responseHeaders, boolean data, boolean json, boolean xml) {
 		if(requestPath) {
 			System.out.println("\tRequest Path: " + response.getRequestPath());
 		}
@@ -31,15 +35,15 @@ public class Util {
 		}
 	}
 
-	public static void debugResponse(Response response) {
+	public static void debugResponse(BaseResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, true, true);
 	}
 
-	public static void debugResponseJsonNoXml(Response response) {
+	public static void debugResponseJsonNoXml(BaseResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, true, false);
 	}
 
-	public static void debugResponseXmlNoJson(Response response) {
+	public static void debugResponseXmlNoJson(BaseResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, false, true);
 	}
 

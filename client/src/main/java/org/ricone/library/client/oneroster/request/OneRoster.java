@@ -7,12 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
-import org.ricone.library.client.oneroster.response.OffsetUtil;
 import org.ricone.library.client.oneroster.response.Response;
 import org.ricone.library.client.oneroster.response.ResponseErrorHandler;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -22,13 +22,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.lang.Class;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @project: client
- * @author: Dan on 01/16/2020.
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
  */
 
 public class OneRoster {
@@ -123,7 +125,7 @@ public class OneRoster {
 
 		T data = null;
 		String requestPath = getRequestPath(request);
-		HttpEntity<?> httpEntity = getHttpEntity(request);
+		HttpEntity<?> httpEntity = getHttpEntity();
 		try {
 			ResponseEntity<T> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, clazz);
 			if(response.hasBody()) {
@@ -149,18 +151,18 @@ public class OneRoster {
 	}
 
 	private OffsetResponse requestOffsetResponse(Request request) {
-		OffsetResponse data = null;
+		OffsetResponse data;
 		String requestPath = getRequestPath(request);
-		HttpEntity httpEntity = getHttpEntity(request);
+		HttpEntity<?> httpEntity = getHttpEntity();
 		try {
 			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.HEAD, httpEntity, String.class);
 
 			String totalRecords = response.getHeaders().getFirst("X-Total-Count");
-			int limit = request.with().paging().getPaging().getLimit();
-			int offset = request.with().paging().getPaging().getOffset();
+			int limit = request.with().paging().getLimit();
+			int offset = request.with().paging().getOffset();
 
 			if(StringUtils.hasText(totalRecords)) {
-				data = new OffsetResponse(OffsetUtil.getOffsetArray(limit, offset, totalRecords));
+				data = new OffsetResponse(getOffsetArray(limit, offset, totalRecords));
 				data.setRequestPath(requestPath);
 				data.setRequestHeaders(httpEntity.getHeaders());
 				data.setResponseStatus(response.getStatusCode());
@@ -177,37 +179,36 @@ public class OneRoster {
 		return data;
 	}
 
-	/* GET URL */
+	// GET URL
 	private String getRequestPath(Request request) {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(endpoint.getHref());
 		if(!request.request().path().getServicePathType().equals(ServicePathType.OBJECT)) {
-
 			if(!request.request().path().getServicePathType().equals(ServicePathType.PREDICATES)) {
-				//If the request path has one instance of {id}, replace it with the first value from the ids list.
+				//If the request path is not of type Predicates, replace the single {id} parameter from the service path.
 				builder.path(StringUtils.replace(request.request().path().getValue(), "{id}", request.request().ids().getIds().get(0)));
 			}
 			else {
-				//If Predicates, replace {id} two times, once with each id value from the ids list.
+				//If the request path is of type Predicates, replace the two {id} parameters, with values from the list.
 				builder.path(Stream.of(
 						request.request().ids().getIds().get(0),
 						request.request().ids().getIds().get(1)
-					).reduce(request.request().path().getValue(), (id1, id2) -> id1.replaceFirst("\\{([id}]+)\\}", id2))
+					).reduce(request.request().path().getValue(), (id1, id2) -> id1.replaceFirst("\\{([id}]+)}", id2))
 				);
 			}
 		}
 		else {
-			//If the request path has no instances of {id}, don't do anything special.
+			//If the request path has no {id} parameters, don't do anything special.
 			builder.path(request.request().path().getValue());
 		}
 
 		if(request.hasPaging()) {
-			builder.queryParam("limit", request.with().paging().getPaging().getLimit());
-			builder.queryParam("offset", request.with().paging().getPaging().getOffset());
+			builder.queryParam("limit", request.with().paging().getLimit());
+			builder.queryParam("offset", request.with().paging().getOffset());
 		}
 
 		if(request.hasSorting()) {
-			builder.queryParam("sort", request.with().sorting().getSorting().getField().getValue());
-			builder.queryParam("orderBy", request.with().sorting().getSorting().getOrderBy().getValue());
+			builder.queryParam("sort", request.with().sorting().getField().getValue());
+			builder.queryParam("orderBy", request.with().sorting().getOrderBy().getValue());
 		}
 
 		if(request.hasFieldSelection()) {
@@ -216,12 +217,12 @@ public class OneRoster {
 		}
 
 		if(request.hasFiltering()) {
-			Filter filter1 = request.with().filtering().getFiltering().getFilters().get(0);
-			if(request.with().filtering().getFiltering().getLogicalOperation() != LogicalOperation.NONE) {
-				Filter filter2 = request.with().filtering().getFiltering().getFilters().get(1);
+			Filter filter1 = request.with().filtering().getFilters().get(0);
+			if(request.with().filtering().getLogicalOperation() != LogicalOperation.NONE) {
+				Filter filter2 = request.with().filtering().getFilters().get(1);
 				builder.queryParam("filter",
 				filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'" +
-						request.with().filtering().getFiltering().getLogicalOperation().getValue() +
+						request.with().filtering().getLogicalOperation().getValue() +
 						filter2.getField().getValue() + filter2.getPredicate().getValue() + "'" + filter2.getValue() + "'"
 				);
 			}
@@ -232,8 +233,8 @@ public class OneRoster {
 		return builder.build().toUriString();
 	}
 
-	/* GET HEADERS */
-	private HttpEntity<?> getHttpEntity(Request request) {
+	// GET HEADERS
+	private HttpEntity<?> getHttpEntity() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -241,8 +242,28 @@ public class OneRoster {
 		return new HttpEntity<>(headers);
 	}
 
-	/* ON ERROR */
-	private <T extends Response> T setDataOnError(Class<T> clazz, String requestPath, HttpEntity httpEntity, HttpClientErrorException exception) {
+	// GET OFFSET
+	private int[] getOffsetArray(int limit, int offset, String totalRecordCount) {
+		final LinkedList<Integer> list = new LinkedList<>();
+		list.add(offset); //Add the first instance of what is being offset
+
+		int totalRecords = NumberUtils.parseNumber(totalRecordCount, Integer.class);
+		int currentPage = (int) Math.floor((double)offset / limit);
+		int totalPages = (int) Math.ceil((double)totalRecords / limit);
+		int last_offset = (totalPages - 1) * limit;
+
+		int next_offset = 0;
+
+		while(last_offset != next_offset) {
+			next_offset = (currentPage + 1) * limit;
+			list.add(next_offset);
+			currentPage++;
+		}
+		return list.stream().mapToInt(i->i).toArray();
+	}
+
+	/* ON REQUEST ERROR */
+	private <T extends Response<?>> T setDataOnError(Class<T> clazz, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
 		T xResponse = null;
 		try {
 			xResponse = clazz.getDeclaredConstructor().newInstance();
@@ -259,7 +280,7 @@ public class OneRoster {
 		return xResponse;
 	}
 
-	private <T extends Response> T setDataOnNoContent(Class<T> clazz, String requestPath, HttpEntity httpEntity, ResponseEntity response) {
+	private <T extends Response<?>> T setDataOnNoContent(Class<T> clazz, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> response) {
 		T xResponse = null;
 		try {
 			xResponse = clazz.getDeclaredConstructor().newInstance();
@@ -276,7 +297,7 @@ public class OneRoster {
 		return xResponse;
 	}
 
-	private <T extends Response> void verifyRequestAndResponse(Request request, Class<T> clazz) {
+	private <T extends Response<?>> void verifyRequestAndResponse(Request request, Class<T> clazz) {
 		if(!request.request().path().getResponseClass().equals(clazz)) {
 			throw new IllegalArgumentException("ServicePath: " + request.request().path() + " requires that the response return: " + request.request().path().getResponseClass().getCanonicalName()
 					+ ", however the response will return: " + clazz.getCanonicalName());

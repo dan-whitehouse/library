@@ -1,27 +1,28 @@
 import org.ricone.library.authentication.API;
-import org.ricone.library.authentication.Authenticator2;
+import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.oneroster.request.*;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.Response;
-import org.ricone.library.client.oneroster.response.Util;
+import org.ricone.library.client.core.Util;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
 
 import java.util.Optional;
 
 /**
- * @project: client
- * @author: Dan on 01/16/2020.
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
  */
 
 public class OneRosterBuilderTest {
     public static void main(String[] args) throws InvalidPathException {
 
-        Authenticator2 authenticator = Authenticator2.builder()
-            .url("https://auth.test.ricone.org/oauth/login").api(API.OneRoster)
-            .credentials("DataValidationTool", "65ec5dbdf2c18d70abb4996d90")
-            .provider("localhost")
+        Authenticator authenticator = Authenticator.builder()
+            .url(System.getenv("url")).api(API.OneRoster)
+            .credentials(System.getenv("username"), System.getenv("password"))
+            .provider(System.getenv("provider"))
         .authenticate();
 
         Optional<Endpoint> endpoint = authenticator.getEndpoint("localhost");
@@ -176,18 +177,17 @@ public class OneRosterBuilderTest {
                 .path(ServicePath.GET_Orgs)
                 //.ids().id("1").end()
             .end()
-            /*.with()
-                .paging().offset(20).end()
-                .sorting().field(Field.sourcedId).end()
+            .with()
+                .paging().offset(0).limit(5).end()
+                .sorting().field(Field.Orgs.name).orderBy(SortOrder.DESC).end()
                 .filtering()
-                    .filter(Field.sourcedId, Predicate.Equals, "03ACF04F-DC12-411A-9A42-E8323516D699").and()
-                    .filter(Field.sourcedId, Predicate.Equals, "03ACF04F-DC12-411A-9A42-E8323516D699").end()
+                    //.filter(Field.sourcedId, Predicate.Equals, "03ACF04F-DC12-411A-9A42-E8323516D699").and()
+                    .filter(Field.Orgs.type, Predicate.Equals, "school").end()
                 .fieldSelection()
                     .field(Field.sourcedId)
                     .field(Field.Orgs.name)
-                    //.field(Field.Users.email)
                     .end()
-            .end()*/
+            .end()
         .build());
         Util.debugResponseJsonNoXml(response);
     }

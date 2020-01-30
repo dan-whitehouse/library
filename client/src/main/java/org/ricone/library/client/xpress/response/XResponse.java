@@ -6,34 +6,48 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.ricone.library.client.core.BaseResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public abstract class XResponse<T> {
+public abstract class XResponse<T> implements BaseResponse<T> {
+	@Override
 	public abstract T getData();
 
+	@Override
 	public abstract void setData(T data);
 
+	@Override
 	public abstract String getRequestPath();
 
+	@Override
 	public abstract void setRequestPath(String requestPath);
 
+	@Override
 	public abstract HttpHeaders getRequestHeaders();
 
+	@Override
 	public abstract void setRequestHeaders(HttpHeaders requestHeaders);
 
+	@Override
 	public abstract HttpStatus getResponseStatus();
 
+	@Override
 	public abstract void setResponseStatus(HttpStatus status);
 
+	@Override
 	public abstract String getResponseStatusText();
 
+	@Override
 	public abstract void setResponseStatusText(String statusText);
 
+	@Override
 	public abstract HttpHeaders getResponseHeaders();
 
+	@Override
 	public abstract void setResponseHeaders(HttpHeaders responseHeaders);
 
+	@Override
 	public String getJSON() {
 		if(getData() != null) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -51,6 +65,7 @@ public abstract class XResponse<T> {
 		return null;
 	}
 
+	@Override
 	public String getXML() {
 		if(getData() != null) {
 			XmlMapper mapper = new XmlMapper();

@@ -4,6 +4,12 @@ import org.ricone.library.exception.InvalidPathException;
 
 import java.util.function.Consumer;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 public class Request {
 	private RequestBuilder request;
 	private WithBuilder with;
@@ -24,16 +30,12 @@ public class Request {
 		private Request instance = new Request();
 
 		public RequestBuilder.Builder request() {
-			Consumer<RequestBuilder> f = obj -> {
-				instance.request = obj;
-			};
+			Consumer<RequestBuilder> f = obj -> instance.request = obj;
 			return new RequestBuilder.Builder(this, f);
 		}
 
 		public WithBuilder.Builder with() {
-			Consumer<WithBuilder> f = obj -> {
-				instance.with = obj;
-			};
+			Consumer<WithBuilder> f = obj -> instance.with = obj;
 			return new WithBuilder.Builder(this, f);
 		}
 
@@ -149,9 +151,11 @@ public class Request {
 
 		private boolean hasRequestIdsIdWhenNotNeeded() {
 			//If the service path doesn't require ids, but the user has included them.
-			ServicePathType type = instance.request.path().getServicePathType();
+			ServicePathType type = instance.request().path().getServicePathType();
 			if(type.equals(ServicePathType.OBJECT))  {
-				return instance.request().ids().getIds().size() > 0;
+				if(instance.request().ids() != null) {
+					return instance.request().ids().getIds().size() > 0;
+				}
 			}
 			return false;
 		}
@@ -160,7 +164,9 @@ public class Request {
 			//If the service path is like {id}. Because {id} is never present in requests of type object
 			ServicePathType type = instance.request.path().getServicePathType();
 			if(type.equals(ServicePathType.SINGLE) || type.equals(ServicePathType.PREDICATE))  {
-				return instance.request().ids().getIds().size() > 1;
+				if(instance.request().ids() != null) {
+					return instance.request().ids().getIds().size() > 1;
+				}
 			}
 			return false;
 		}
@@ -168,7 +174,9 @@ public class Request {
 		private boolean doesRequestIdsIdsHaveTooManyIds() {
 			//Predicates require two {id} be set
 			if(instance.request.path().getServicePathType().equals(ServicePathType.PREDICATES))  {
-				return instance.request().ids().getIds().size() != 2;
+				if(instance.request().ids() != null) {
+					return instance.request().ids().getIds().size() != 2;
+				}
 			}
 			return false;
 		}
@@ -179,14 +187,14 @@ public class Request {
 		//With - Sorting
 		private boolean isMissingWithSortingField() {
 			if(instance.with() != null && instance.with().sorting() != null) {
-				return instance.with().sorting().getSorting().getField() == null;
+				return instance.with().sorting().getField() == null;
 			}
 			return false;
 		}
 
 		private boolean doesWithSortingFieldNotMatchRequestPathType() {
 			if(instance.with() != null && instance.with().sorting() != null) {
-				IField field = instance.with().sorting().getSorting().getField();
+				IField field = instance.with().sorting().getField();
 				return !field.getType().equals(FieldType.All) && !field.getType().equals(instance.request().path().getFieldType());
 			}
 			return false;
@@ -195,34 +203,29 @@ public class Request {
 		//With - Filtering
 		private boolean isMissingWithFilteringFilter() {
 			if(instance.with() != null && instance.with().filtering() != null) {
-				if(instance.with().filtering().getFiltering() == null) {
-					return true;
-				}
-				return instance.with().filtering().getFiltering().getFilters().size() == 0;
+				return instance.with().filtering().getFilters().size() == 0;
 			}
 			return false;
 		}
 
 		private boolean doesWithFilteringHaveTooManyFilters() {
 			if(instance.with() != null && instance.with().filtering() != null) {
-				return instance.with().filtering().getFiltering().getFilters().size() > 2;
+				return instance.with().filtering().getFilters().size() > 2;
 			}
 			return false;
 		}
 
 		private boolean isMissingWithFilteringLogicalOperation() {
 			if(instance.with() != null && instance.with().filtering() != null) {
-				if (instance.with().filtering().getFiltering().getFilters().size() == 2) {
-					return instance.with().filtering().getFiltering().getLogicalOperation() == null || instance.with().filtering().getFiltering().getLogicalOperation() == LogicalOperation.NONE;
-				}
+				return instance.with().filtering().getFilters().size() == 2 && instance.with().filtering().getLogicalOperation() == LogicalOperation.NONE;
 			}
 			return false;
 		}
 
 		private boolean doesWithFilteringHaveUnnecessaryLogicalOperation() {
 			if(instance.with() != null && instance.with().filtering() != null) {
-				if (instance.with().filtering().getFiltering().getFilters().size() == 1) {
-					return instance.with().filtering().getFiltering().getLogicalOperation() != LogicalOperation.NONE;
+				if (instance.with().filtering().getFilters().size() == 1) {
+					return instance.with().filtering().getLogicalOperation() != LogicalOperation.NONE;
 				}
 			}
 			return false;
@@ -231,9 +234,6 @@ public class Request {
 		//With - Fields
 		private boolean isMissingWithFieldSelectionField() {
 			if(instance.with() != null && instance.with().fieldSelection() != null) {
-				if (instance.with().fieldSelection().getFields() == null) {
-					return true;
-				}
 				return instance.with().fieldSelection().getFields().size() == 0;
 			}
 			return false;
@@ -241,9 +241,6 @@ public class Request {
 
 		private boolean doesWithFieldSelectionFieldsNotMatchRequestPathType() {
 			if(instance.with() != null && instance.with().fieldSelection() != null) {
-				if (instance.with().fieldSelection().getFields() == null) {
-					return true;
-				}
 				for (IField field : instance.with().fieldSelection().getFields()) {
 					if (!field.getType().equals(FieldType.All) && !field.getType().equals(instance.request().path().getFieldType())) {
 						return true;
@@ -254,45 +251,19 @@ public class Request {
 		}
 	}
 
-	boolean hasId() {
-		if(request() == null) {
-			return false;
-		}
-		return request().ids() != null && request().ids().getIds().size() == 1;
-	}
-
-	boolean hasIds() {
-		if(request() == null) {
-			return false;
-		}
-		return request().ids() != null && request().ids().getIds().size() == 2;
-	}
-
 	boolean hasPaging() {
-		if(with() == null) {
-			return false;
-		}
-		return with().paging() != null;
+		return with() != null && with().paging() != null;
 	}
 
 	boolean hasSorting() {
-		if(with() == null) {
-			return false;
-		}
-		return with().sorting() != null;
+		return with() != null && with().sorting() != null;
 	}
 
 	boolean hasFieldSelection() {
-		if(with() == null) {
-			return false;
-		}
-		return with().fieldSelection() != null;
+		return with() != null && with().fieldSelection() != null;
 	}
 
 	boolean hasFiltering() {
-		if(with() == null || with().filtering() == null) {
-			return false;
-		}
-		return with().filtering().getFiltering() != null;
+		return with() != null && with().filtering() != null;
 	}
 }

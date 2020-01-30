@@ -4,14 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
 final class IdBuilder {
 	private List<String> ids;
 
-	public static Builder builder() {
-		return new IdBuilder.Builder();
+	private IdBuilder() {
+		this.ids = new ArrayList<>();
 	}
 
-	private IdBuilder() {
+	public static Builder builder() {
+		return new IdBuilder.Builder();
 	}
 
 	List<String> getIds() {
@@ -32,9 +39,6 @@ final class IdBuilder {
 		}
 
 		public Builder id(String id) {
-			if(instance.ids == null) {
-				instance.ids = new ArrayList<>();
-			}
 			instance.ids.add(id);
 			return this;
 		}
@@ -43,6 +47,5 @@ final class IdBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
 	}		
 }

@@ -3,7 +3,6 @@ package org.ricone.library.client.oneroster.response;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
-import org.ricone.library.client.oneroster.response.model.CodeMinor;
 import org.ricone.library.client.oneroster.response.model.Error;
 import org.ricone.library.client.oneroster.response.model.ErrorsResponse;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
-public class ResponseErrorHandler implements org.springframework.web.client.ResponseErrorHandler {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-29
+ */
 
+public class ResponseErrorHandler implements org.springframework.web.client.ResponseErrorHandler {
 	@Override
 	public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
 		return (httpResponse.getStatusCode().series() == CLIENT_ERROR || httpResponse.getStatusCode().series() == SERVER_ERROR);

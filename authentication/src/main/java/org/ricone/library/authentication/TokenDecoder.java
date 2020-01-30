@@ -16,7 +16,7 @@ import java.util.Base64;
  */
 
 public abstract class TokenDecoder {
-	public static <T> T decodeToken(String token, Class<T> clazz) throws JWTVerificationException {
+	static <T> T decodeToken(String token, Class<T> clazz) throws JWTVerificationException {
 		try {
 			DecodedJWT jwt = JWT.decode(token);
 			ObjectMapper mapper = new ObjectMapper();
@@ -33,11 +33,11 @@ public abstract class TokenDecoder {
 		return new String(decodedBytes);
 	}
 
-	public static DecodedToken getDecodedToken(XPressDecodedToken dt, String token) {
+	static DecodedToken getDecodedToken(XPressDecodedToken dt, String token) {
 		return new DecodedToken(dt.getApplicationId(), "", "", (int)dt.getIat().toInstant().toEpochMilli(), (int)dt.getExp().toInstant().toEpochMilli(), dt.getIss(), token);
 	}
 
-	public static DecodedToken getDecodedToken(OneRosterDecodedToken dt, String token) {
+	static DecodedToken getDecodedToken(OneRosterDecodedToken dt, String token) {
 		return new DecodedToken(dt.getAppId(), dt.getProviderId(), dt.getHref(), dt.getIat(), dt.getExp(), dt.getIss(), token);
 	}
 }

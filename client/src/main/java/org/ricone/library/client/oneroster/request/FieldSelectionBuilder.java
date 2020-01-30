@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-final class FieldSelectionBuilder {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
+final class FieldSelectionBuilder {
 	private List<IField> fields;
+
+	private FieldSelectionBuilder() {
+		this.fields = new ArrayList<>();
+	}
 
 	public static Builder builder() {
 		return new FieldSelectionBuilder.Builder();
 	}
 
-	private FieldSelectionBuilder() {
-	}
-
-	public List<IField> getFields() {
+	List<IField> getFields() {
 		return fields;
 	}
 
@@ -32,12 +38,8 @@ final class FieldSelectionBuilder {
 			this.callback = f;
 		}
 
-
 		public Builder field(IField field) {
-			if(instance.fields == null) {
-				instance.fields = new ArrayList<>();
-			}
-			instance.fields.add(field);
+			this.instance.fields.add(field);
 			return this;
 		}
 
@@ -45,6 +47,5 @@ final class FieldSelectionBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
 	}		
 }

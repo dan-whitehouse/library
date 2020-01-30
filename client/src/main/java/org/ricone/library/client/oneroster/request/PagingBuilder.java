@@ -2,22 +2,31 @@ package org.ricone.library.client.oneroster.request;
 
 import java.util.function.Consumer;
 
-final class PagingBuilder {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
 
-	private Paging paging;
+final class PagingBuilder {
+	private int limit;
+	private int offset;
+
+	private PagingBuilder() {
+		this.limit = 100;
+		this.offset = 0;
+	}
 
 	public static Builder builder() {
 		return new PagingBuilder.Builder();
 	}
 
-	private PagingBuilder() {
+	int getLimit() {
+		return limit;
 	}
 
-	public Paging getPaging() {
-		if(paging == null) {
-			return new Paging();
-		}
-		return paging;
+	int getOffset() {
+		return offset;
 	}
 
 	public static class Builder {
@@ -33,20 +42,13 @@ final class PagingBuilder {
 			this.callback = f;
 		}
 
-
 		public Builder limit(int limit) {
-			if(instance.paging == null) {
-				instance.paging = new Paging(100, 0);
-			}
-			instance.paging.setLimit(limit);
+			this.instance.limit = limit;
 			return this;
 		}
 
 		public Builder offset(int offset) {
-			if(instance.paging == null) {
-				instance.paging = new Paging(100, 0);
-			}
-			instance.paging.setOffset(offset);
+			this.instance.offset = offset;
 			return this;
 		}
 
@@ -54,6 +56,5 @@ final class PagingBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
 	}		
 }

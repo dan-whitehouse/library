@@ -8,40 +8,60 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.ricone.library.client.core.BaseResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public abstract class Response<T> {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-30
+ */
+
+public abstract class Response<T> implements BaseResponse<T> {
 	private Class<T> clazz;
 
 	public void setClazz(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 
+	@Override
 	public abstract T getData();
 
+	@Override
 	public abstract void setData(T data);
 
+	@Override
 	public abstract String getRequestPath();
 
+	@Override
 	public abstract void setRequestPath(String requestPath);
 
+	@Override
 	public abstract HttpHeaders getRequestHeaders();
 
+	@Override
 	public abstract void setRequestHeaders(HttpHeaders requestHeaders);
 
+	@Override
 	public abstract HttpStatus getResponseStatus();
 
+	@Override
 	public abstract void setResponseStatus(HttpStatus status);
 
+	@Override
 	public abstract String getResponseStatusText();
 
+	@Override
 	public abstract void setResponseStatusText(String statusText);
 
+	@Override
 	public abstract HttpHeaders getResponseHeaders();
 
+	@Override
 	public abstract void setResponseHeaders(HttpHeaders responseHeaders);
 
+	@Override
 	public String getJSON() {
 		if(getData() != null) {
 			final String dateFormat = "yyyy-MM-dd";
@@ -71,6 +91,7 @@ public abstract class Response<T> {
 		return null;
 	}
 
+	@Override
 	public String getXML() {
 		if(getData() != null) {
 			XmlMapper mapper = new XmlMapper();
