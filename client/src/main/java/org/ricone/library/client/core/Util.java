@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
  */
 
 public class Util {
-	public static void debugResponse(BaseResponse<?> response, boolean requestPath, boolean requestHeaders, boolean responseStatus, boolean responseHeaders, boolean data, boolean json, boolean xml) {
+	public static void debugResponse(IResponse<?> response, boolean requestPath, boolean requestHeaders, boolean responseStatus, boolean responseHeaders, boolean data, boolean json, boolean xml) {
 		if(requestPath) {
 			System.out.println("\tRequest Path: " + response.getRequestPath());
 		}
@@ -35,15 +35,15 @@ public class Util {
 		}
 	}
 
-	public static void debugResponse(BaseResponse<?> response) {
+	public static void debugResponse(IResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, true, true);
 	}
 
-	public static void debugResponseJsonNoXml(BaseResponse<?> response) {
+	public static void debugResponseJsonNoXml(IResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, true, false);
 	}
 
-	public static void debugResponseXmlNoJson(BaseResponse<?> response) {
+	public static void debugResponseXmlNoJson(IResponse<?> response) {
 		debugResponse(response, true, true, true, true, true, false, true);
 	}
 

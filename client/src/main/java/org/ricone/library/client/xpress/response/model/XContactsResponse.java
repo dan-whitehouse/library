@@ -1,16 +1,24 @@
-package org.ricone.library.client.xpress.response;
+/*
+ * RIC One File Bridge
+ * Version: 1.0.0 Build 20170604-1
+ * Copyright © 2017 New York State Education Department
+ * Created At Northeastern Regional Information Center By Daniel Whitehouse
+ */
+
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XLeas;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XContacts;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xLeas"})
-public class XLeasResponse extends XResponse<XLeas> {
-	@JsonProperty("xLeas")
-	private XLeas xLeas;
+@JsonPropertyOrder({"xContacts"})
+public class XContactsResponse extends XResponse<XContacts> {
+	@JsonProperty("xContacts")
+	private XContacts xContacts;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -22,33 +30,33 @@ public class XLeasResponse extends XResponse<XLeas> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XLeasResponse() {
-		xLeas = new XLeas();
+	public XContactsResponse() {
+		xContacts = new XContacts();
 	}
 
-	public XLeasResponse(XLeas xLeas) {
+	public XContactsResponse(XContacts xContacts) {
 		super();
-		this.xLeas = xLeas;
+		this.xContacts = xContacts;
 	}
 
-	@JsonProperty("xLeas")
-	public XLeas getXLeas() {
-		return xLeas;
+	@JsonProperty("xContacts")
+	public XContacts getXContacts() {
+		return xContacts;
 	}
 
-	@JsonProperty("xLeas")
-	public void setXLeas(XLeas xLeas) {
-		this.xLeas = xLeas;
-	}
-
-	@Override
-	public XLeas getData() {
-		return xLeas;
+	@JsonProperty("xContacts")
+	public void setXContacts(XContacts xContacts) {
+		this.xContacts = xContacts;
 	}
 
 	@Override
-	public void setData(XLeas data) {
-		this.xLeas = data;
+	public XContacts getData() {
+		return xContacts;
+	}
+
+	@Override
+	public void setData(XContacts data) {
+		this.xContacts = data;
 	}
 
 	@Override
@@ -77,6 +85,11 @@ public class XLeasResponse extends XResponse<XLeas> {
 	}
 
 	@Override
+	public void setResponseStatus(HttpStatus responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	@Override
 	public String getResponseStatusText() {
 		return responseStatusText;
 	}
@@ -84,11 +97,6 @@ public class XLeasResponse extends XResponse<XLeas> {
 	@Override
 	public void setResponseStatusText(String responseStatusText) {
 		this.responseStatusText = responseStatusText;
-	}
-
-	@Override
-	public void setResponseStatus(HttpStatus responseStatus) {
-		this.responseStatus = responseStatus;
 	}
 
 	@Override
@@ -103,6 +111,6 @@ public class XLeasResponse extends XResponse<XLeas> {
 
 	@Override
 	public String toString() {
-		return "XLeasResponse{" + "xLeas=" + xLeas + '}';
+		return "XContactsResponse{" + "xContacts=" + xContacts + '}';
 	}
 }

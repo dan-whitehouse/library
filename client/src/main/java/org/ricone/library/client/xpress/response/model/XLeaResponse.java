@@ -1,24 +1,17 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XStaff;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XLea;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xStaff"})
-public class XStaffResponse extends XResponse<XStaff> {
-
-	@JsonProperty("xStaff")
-	private XStaff xStaff;
+@JsonPropertyOrder({"xLea"})
+public class XLeaResponse extends XResponse<XLea> {
+	@JsonProperty("xLea")
+	private XLea xLea;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -30,32 +23,32 @@ public class XStaffResponse extends XResponse<XStaff> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XStaffResponse() {
+	public XLeaResponse() {
 	}
 
-	public XStaffResponse(XStaff xStaff) {
+	public XLeaResponse(XLea xLea) {
 		super();
-		this.xStaff = xStaff;
+		this.xLea = xLea;
 	}
 
-	@JsonProperty("xStaff")
-	public XStaff getXStaff() {
-		return xStaff;
+	@JsonProperty("xLea")
+	public XLea getXLea() {
+		return xLea;
 	}
 
-	@JsonProperty("xStaff")
-	public void setXStaff(XStaff xStaff) {
-		this.xStaff = xStaff;
-	}
-
-	@Override
-	public XStaff getData() {
-		return xStaff;
+	@JsonProperty("xLea")
+	public void setXLea(XLea xLea) {
+		this.xLea = xLea;
 	}
 
 	@Override
-	public void setData(XStaff data) {
-		this.xStaff = data;
+	public XLea getData() {
+		return xLea;
+	}
+
+	@Override
+	public void setData(XLea data) {
+		this.xLea = data;
 	}
 
 	@Override
@@ -110,6 +103,6 @@ public class XStaffResponse extends XResponse<XStaff> {
 
 	@Override
 	public String toString() {
-		return "XStaffResponse{" + "xStaff=" + xStaff + '}';
+		return "XLeaResponse{" + "xLea=" + xLea + '}';
 	}
 }

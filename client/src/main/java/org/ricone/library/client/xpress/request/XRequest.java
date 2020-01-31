@@ -7,9 +7,15 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-31
+ */
+
 public class XRequest {
-	private XRequestRequest request;
-	private XRequestWith with;
+	private XRequestBuilder request;
+	private XWithBuilder with;
 
 	public static Builder builder() {
 		return new Builder();
@@ -18,25 +24,25 @@ public class XRequest {
 	private XRequest() {
 	}
 
-	XRequestRequest getRequest() {
+	XRequestBuilder getRequest() {
 		return request;
 	}
 
-	XRequestWith getWith() {
+	XWithBuilder getWith() {
 		return with;
 	}
 
 	public static class Builder {
 		private XRequest instance = new XRequest();
 
-		public XRequestRequest.Builder request() {
-			Consumer<XRequestRequest> f = obj -> { instance.request = obj;};
-			return new XRequestRequest.Builder(this, f);
+		public XRequestBuilder.Builder request() {
+			Consumer<XRequestBuilder> f = obj -> { instance.request = obj;};
+			return new XRequestBuilder.Builder(this, f);
 		}
 
-		public XRequestWith.Builder with() {
-			Consumer<XRequestWith> f = obj -> { instance.with = obj;};
-			return new XRequestWith.Builder(this, f);
+		public XWithBuilder.Builder with() {
+			Consumer<XWithBuilder> f = obj -> { instance.with = obj;};
+			return new XWithBuilder.Builder(this, f);
 		}
 
 		public XRequest build() throws InvalidPathException {
@@ -144,14 +150,14 @@ public class XRequest {
 			if(instance.with == null) {
 				return false;
 			}
-			return instance.with.getPagingInfo() != null;
+			return instance.with.paging() != null;
 		}
 
 		boolean hasSchoolYear() {
 			if(instance.with == null) {
 				return false;
 			}
-			return instance.with.getSchoolYear() != null;
+			return instance.with.schoolYear() != null;
 		}
 
 		boolean hasChangesSince() {
@@ -201,14 +207,14 @@ public class XRequest {
 		if(getWith() == null) {
 			return false;
 		}
-		return getWith().getPagingInfo() != null;
+		return getWith().paging() != null;
 	}
 
 	boolean hasSchoolYear() {
 		if(getWith() == null) {
 			return false;
 		}
-		return getWith().getSchoolYear() != null;
+		return getWith().schoolYear() != null;
 	}
 
 	boolean hasAUPP() {

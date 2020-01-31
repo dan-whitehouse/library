@@ -5,19 +5,21 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XCalendar;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XRoster;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xCalendar"})
-public class XCalendarResponse extends XResponse<XCalendar> {
-	@JsonProperty("xCalendar")
-	private XCalendar xCalendar;
+@JsonPropertyOrder({"xRoster"})
+public class XRosterResponse extends XResponse<XRoster> {
+
+	@JsonProperty("xRoster")
+	private XRoster xRoster;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -29,32 +31,32 @@ public class XCalendarResponse extends XResponse<XCalendar> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XCalendarResponse() {
+	public XRosterResponse() {
 	}
 
-	public XCalendarResponse(XCalendar xCalendar) {
+	public XRosterResponse(XRoster xRoster) {
 		super();
-		this.xCalendar = xCalendar;
+		this.xRoster = xRoster;
 	}
 
-	@JsonProperty("xCalendar")
-	public XCalendar getXCalendar() {
-		return xCalendar;
+	@JsonProperty("xRoster")
+	public XRoster getXRoster() {
+		return xRoster;
 	}
 
-	@JsonProperty("xCalendar")
-	public void setXCalendar(XCalendar xCalendar) {
-		this.xCalendar = xCalendar;
-	}
-
-	@Override
-	public XCalendar getData() {
-		return xCalendar;
+	@JsonProperty("xRoster")
+	public void setXRoster(XRoster xRoster) {
+		this.xRoster = xRoster;
 	}
 
 	@Override
-	public void setData(XCalendar data) {
-		this.xCalendar = data;
+	public XRoster getData() {
+		return xRoster;
+	}
+
+	@Override
+	public void setData(XRoster data) {
+		this.xRoster = data;
 	}
 
 	@Override
@@ -109,6 +111,6 @@ public class XCalendarResponse extends XResponse<XCalendar> {
 
 	@Override
 	public String toString() {
-		return "XCalendarResponse{" + "xCalendar=" + xCalendar + '}';
+		return "XRosterResponse{" + "xRoster=" + xRoster + '}';
 	}
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.xpress.response.*;
+import org.ricone.library.client.xpress.response.model.*;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.NumberUtils;
@@ -224,12 +225,12 @@ public class XPress {
 		}
 
 		if(request.hasPaging()) {
-			headers.set("navigationPage", request.getWith().getPagingInfo().getPageNumber().toString());
-			headers.set("navigationPageSize", request.getWith().getPagingInfo().getPageSize().toString());
+			headers.set("navigationPage", String.valueOf(request.getWith().paging().getPage()));
+			headers.set("navigationPageSize", String.valueOf(request.getWith().paging().getSize()));
 		}
 
 		if(request.hasSchoolYear()) {
-			headers.set("SchoolYear", request.getWith().getSchoolYear().toString());
+			headers.set("SchoolYear", request.getWith().schoolYear().toString());
 		}
 		return new HttpEntity<>(headers);
 	}

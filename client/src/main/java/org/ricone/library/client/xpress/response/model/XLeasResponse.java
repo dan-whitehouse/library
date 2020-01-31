@@ -1,24 +1,17 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XSchool;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XLeas;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xSchool"})
-public class XSchoolResponse extends XResponse<XSchool> {
-
-	@JsonProperty("xSchool")
-	private XSchool xSchool;
+@JsonPropertyOrder({"xLeas"})
+public class XLeasResponse extends XResponse<XLeas> {
+	@JsonProperty("xLeas")
+	private XLeas xLeas;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -30,33 +23,33 @@ public class XSchoolResponse extends XResponse<XSchool> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-
-	public XSchoolResponse() {
+	public XLeasResponse() {
+		xLeas = new XLeas();
 	}
 
-	public XSchoolResponse(XSchool xSchool) {
+	public XLeasResponse(XLeas xLeas) {
 		super();
-		this.xSchool = xSchool;
+		this.xLeas = xLeas;
 	}
 
-	@JsonProperty("xSchool")
-	public XSchool getXSchool() {
-		return xSchool;
+	@JsonProperty("xLeas")
+	public XLeas getXLeas() {
+		return xLeas;
 	}
 
-	@JsonProperty("xSchool")
-	public void setXSchool(XSchool xSchool) {
-		this.xSchool = xSchool;
-	}
-
-	@Override
-	public XSchool getData() {
-		return xSchool;
+	@JsonProperty("xLeas")
+	public void setXLeas(XLeas xLeas) {
+		this.xLeas = xLeas;
 	}
 
 	@Override
-	public void setData(XSchool data) {
-		this.xSchool = data;
+	public XLeas getData() {
+		return xLeas;
+	}
+
+	@Override
+	public void setData(XLeas data) {
+		this.xLeas = data;
 	}
 
 	@Override
@@ -85,11 +78,6 @@ public class XSchoolResponse extends XResponse<XSchool> {
 	}
 
 	@Override
-	public void setResponseStatus(HttpStatus responseStatus) {
-		this.responseStatus = responseStatus;
-	}
-
-	@Override
 	public String getResponseStatusText() {
 		return responseStatusText;
 	}
@@ -97,6 +85,11 @@ public class XSchoolResponse extends XResponse<XSchool> {
 	@Override
 	public void setResponseStatusText(String responseStatusText) {
 		this.responseStatusText = responseStatusText;
+	}
+
+	@Override
+	public void setResponseStatus(HttpStatus responseStatus) {
+		this.responseStatus = responseStatus;
 	}
 
 	@Override
@@ -111,6 +104,6 @@ public class XSchoolResponse extends XResponse<XSchool> {
 
 	@Override
 	public String toString() {
-		return "XSchoolResponse{" + "xSchool=" + xSchool + '}';
+		return "XLeasResponse{" + "xLeas=" + xLeas + '}';
 	}
 }

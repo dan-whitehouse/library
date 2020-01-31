@@ -5,20 +5,21 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XStudents;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XStaff;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xStudents"})
-public class XStudentsResponse extends XResponse<XStudents> {
+@JsonPropertyOrder({"xStaff"})
+public class XStaffResponse extends XResponse<XStaff> {
 
-	@JsonProperty("xStudents")
-	private XStudents xStudents;
+	@JsonProperty("xStaff")
+	private XStaff xStaff;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -30,33 +31,32 @@ public class XStudentsResponse extends XResponse<XStudents> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XStudentsResponse() {
-		xStudents = new XStudents();
+	public XStaffResponse() {
 	}
 
-	public XStudentsResponse(XStudents xStudents) {
+	public XStaffResponse(XStaff xStaff) {
 		super();
-		this.xStudents = xStudents;
+		this.xStaff = xStaff;
 	}
 
-	@JsonProperty("xStudents")
-	public XStudents getXStudents() {
-		return xStudents;
+	@JsonProperty("xStaff")
+	public XStaff getXStaff() {
+		return xStaff;
 	}
 
-	@JsonProperty("xStudents")
-	public void setXStudents(XStudents xStudents) {
-		this.xStudents = xStudents;
-	}
-
-	@Override
-	public XStudents getData() {
-		return xStudents;
+	@JsonProperty("xStaff")
+	public void setXStaff(XStaff xStaff) {
+		this.xStaff = xStaff;
 	}
 
 	@Override
-	public void setData(XStudents data) {
-		this.xStudents = data;
+	public XStaff getData() {
+		return xStaff;
+	}
+
+	@Override
+	public void setData(XStaff data) {
+		this.xStaff = data;
 	}
 
 	@Override
@@ -111,6 +111,6 @@ public class XStudentsResponse extends XResponse<XStudents> {
 
 	@Override
 	public String toString() {
-		return "XStudentsResponse{" + "xStudents=" + xStudents + '}';
+		return "XStaffResponse{" + "xStaff=" + xStaff + '}';
 	}
 }

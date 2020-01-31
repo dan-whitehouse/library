@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.Response;
 import org.ricone.library.client.oneroster.response.ResponseErrorHandler;
@@ -118,6 +119,28 @@ public class OneRoster {
 		return requestOffsetResponse(request);
 	}
 
+	/* EXPERIMENTAL REQUEST */
+	@SuppressWarnings("unchecked") //We know (T) will extend Response, so we can suppress this.
+	public <T extends IResponse> T request(Request request) {
+		switch(request.request().path().getResponseClass().getSimpleName()) {
+			case "OrgResponse":  return (T) getOrg(request);
+			case "OrgsResponse":  return (T) getOrgs(request);
+			case "AcademicSessionResponse":  return (T) getAcademicSession(request);
+			case "AcademicSessionsResponse":  return (T) getAcademicSessions(request);
+			case "CourseResponse":  return (T) getCourse(request);
+			case "CoursesResponse":  return (T) getCourses(request);
+			case "ClassResponse":  return (T) getClass(request);
+			case "ClassesResponse":  return (T) getClasses(request);
+			case "EnrollmentResponse":  return (T) getEnrollment(request);
+			case "EnrollmentsResponse":  return (T) getEnrollments(request);
+			case "UserResponse":  return (T) getUser(request);
+			case "UsersResponse":  return (T) getUsers(request);
+			case "DemographicResponse":  return (T) getDemographic(request);
+			case "DemographicsResponse":  return (T) getDemographics(request);
+			default: return null;
+		}
+	}
+
 	/* PRIVATE REQUEST */
 	private <T extends Response> T request(Request request, Class<T> clazz) {
 		//Before doing anything, make sure that the request path can return the response object.
@@ -135,6 +158,7 @@ public class OneRoster {
 				data.setRequestPath(requestPath);
 				data.setRequestHeaders(httpEntity.getHeaders());
 				data.setResponseStatus(response.getStatusCode());
+				data.setResponseStatusText(response.getStatusCode().getReasonPhrase());
 				data.setResponseHeaders(response.getHeaders());
 			}
 			else {

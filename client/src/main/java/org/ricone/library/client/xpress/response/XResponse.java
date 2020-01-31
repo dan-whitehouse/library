@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.ricone.library.client.core.BaseResponse;
+import org.ricone.library.client.core.IResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public abstract class XResponse<T> implements BaseResponse<T> {
+public abstract class XResponse<T> implements IResponse<T> {
 	@Override
 	public abstract T getData();
 

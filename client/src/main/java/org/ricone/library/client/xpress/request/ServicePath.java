@@ -1,6 +1,6 @@
 package org.ricone.library.client.xpress.request;
 
-import org.ricone.library.client.xpress.response.*;
+import org.ricone.library.client.xpress.response.model.*;
 
 import java.util.List;
 

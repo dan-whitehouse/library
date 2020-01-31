@@ -5,19 +5,20 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XCourse;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XContact;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xCourse"})
-public class XCourseResponse extends XResponse<XCourse> {
-	@JsonProperty("xCourse")
-	private XCourse xCourse;
+@JsonPropertyOrder({"xContact"})
+public class XContactResponse extends XResponse<XContact> {
+	@JsonProperty("xContact")
+	private XContact xContact;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -29,33 +30,32 @@ public class XCourseResponse extends XResponse<XCourse> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XCourseResponse() {
-		xCourse = new XCourse();
+	public XContactResponse() {
 	}
 
-	public XCourseResponse(XCourse xCourse) {
+	public XContactResponse(XContact xContact) {
 		super();
-		this.xCourse = xCourse;
+		this.xContact = xContact;
 	}
 
-	@JsonProperty("xCourse")
-	public XCourse getXCourse() {
-		return xCourse;
+	@JsonProperty("xContact")
+	public XContact getXContact() {
+		return xContact;
 	}
 
-	@JsonProperty("xCourse")
-	public void setXCourse(XCourse xCourse) {
-		this.xCourse = xCourse;
-	}
-
-	@Override
-	public XCourse getData() {
-		return xCourse;
+	@JsonProperty("xContact")
+	public void setXContact(XContact xContact) {
+		this.xContact = xContact;
 	}
 
 	@Override
-	public void setData(XCourse data) {
-		this.xCourse = data;
+	public XContact getData() {
+		return xContact;
+	}
+
+	@Override
+	public void setData(XContact data) {
+		this.xContact = data;
 	}
 
 	@Override
@@ -110,6 +110,6 @@ public class XCourseResponse extends XResponse<XCourse> {
 
 	@Override
 	public String toString() {
-		return "XCourseResponse{" + "xCourse=" + xCourse + '}';
+		return "XContactResponse{" + "xContact=" + xContact + '}';
 	}
 }

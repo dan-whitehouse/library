@@ -5,19 +5,21 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XCourses;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XStudents;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xCourses"})
-public class XCoursesResponse extends XResponse<XCourses> {
-	@JsonProperty("xCourses")
-	private XCourses xCourses;
+@JsonPropertyOrder({"xStudents"})
+public class XStudentsResponse extends XResponse<XStudents> {
+
+	@JsonProperty("xStudents")
+	private XStudents xStudents;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -29,32 +31,33 @@ public class XCoursesResponse extends XResponse<XCourses> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XCoursesResponse() {
+	public XStudentsResponse() {
+		xStudents = new XStudents();
 	}
 
-	public XCoursesResponse(XCourses xCourses) {
+	public XStudentsResponse(XStudents xStudents) {
 		super();
-		this.xCourses = xCourses;
+		this.xStudents = xStudents;
 	}
 
-	@JsonProperty("xCourses")
-	public XCourses getXCourses() {
-		return xCourses;
+	@JsonProperty("xStudents")
+	public XStudents getXStudents() {
+		return xStudents;
 	}
 
-	@JsonProperty("xCourses")
-	public void setXCourses(XCourses xCourses) {
-		this.xCourses = xCourses;
-	}
-
-	@Override
-	public XCourses getData() {
-		return xCourses;
+	@JsonProperty("xStudents")
+	public void setXStudents(XStudents xStudents) {
+		this.xStudents = xStudents;
 	}
 
 	@Override
-	public void setData(XCourses data) {
-		this.xCourses = data;
+	public XStudents getData() {
+		return xStudents;
+	}
+
+	@Override
+	public void setData(XStudents data) {
+		this.xStudents = data;
 	}
 
 	@Override
@@ -109,6 +112,6 @@ public class XCoursesResponse extends XResponse<XCourses> {
 
 	@Override
 	public String toString() {
-		return "XCoursesResponse{" + "xCourses=" + xCourses + '}';
+		return "XStudentsResponse{" + "xStudents=" + xStudents + '}';
 	}
 }

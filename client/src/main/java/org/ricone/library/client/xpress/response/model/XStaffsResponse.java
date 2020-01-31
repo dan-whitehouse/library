@@ -5,19 +5,21 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XContact;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XStaffs;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xContact"})
-public class XContactResponse extends XResponse<XContact> {
-	@JsonProperty("xContact")
-	private XContact xContact;
+@JsonPropertyOrder({"xStaffs"})
+public class XStaffsResponse extends XResponse<XStaffs> {
+
+	@JsonProperty("xStaffs")
+	private XStaffs xStaffs;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -29,32 +31,33 @@ public class XContactResponse extends XResponse<XContact> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XContactResponse() {
+	public XStaffsResponse() {
+		xStaffs = new XStaffs();
 	}
 
-	public XContactResponse(XContact xContact) {
+	public XStaffsResponse(XStaffs xStaffs) {
 		super();
-		this.xContact = xContact;
+		this.xStaffs = xStaffs;
 	}
 
-	@JsonProperty("xContact")
-	public XContact getXContact() {
-		return xContact;
+	@JsonProperty("xStaffs")
+	public XStaffs getXStaffs() {
+		return xStaffs;
 	}
 
-	@JsonProperty("xContact")
-	public void setXContact(XContact xContact) {
-		this.xContact = xContact;
-	}
-
-	@Override
-	public XContact getData() {
-		return xContact;
+	@JsonProperty("xStaffs")
+	public void setXStaffs(XStaffs xStaffs) {
+		this.xStaffs = xStaffs;
 	}
 
 	@Override
-	public void setData(XContact data) {
-		this.xContact = data;
+	public XStaffs getData() {
+		return xStaffs;
+	}
+
+	@Override
+	public void setData(XStaffs data) {
+		this.xStaffs = data;
 	}
 
 	@Override
@@ -109,6 +112,6 @@ public class XContactResponse extends XResponse<XContact> {
 
 	@Override
 	public String toString() {
-		return "XContactResponse{" + "xContact=" + xContact + '}';
+		return "XStaffsResponse{" + "xStaffs=" + xStaffs + '}';
 	}
 }

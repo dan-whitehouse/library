@@ -1,4 +1,4 @@
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"error"})
-class XErrorResponse implements Serializable {
+public class XErrorResponse implements Serializable {
 
 	@JsonProperty("error")
 	private XError error;

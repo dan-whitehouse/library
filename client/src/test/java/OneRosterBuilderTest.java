@@ -1,6 +1,7 @@
 import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.oneroster.request.*;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.Response;
@@ -31,7 +32,10 @@ public class OneRosterBuilderTest {
 
             //offsetTest(oneRoster);
             //allFeaturesTest(oneRoster);
-            buildVerifyTest(oneRoster);
+            //buildVerifyTest(oneRoster);
+            //responseInterfaceTest(oneRoster);
+            requestTest(oneRoster);
+
 
             //orgTest(oneRoster);
             //academicSessionsTest(oneRoster);
@@ -96,7 +100,7 @@ public class OneRosterBuilderTest {
 
     private static void demographicsTest(OneRoster oneRoster) throws InvalidPathException {
         Response<Demographics> response = oneRoster.getDemographics(Request.builder()
-            .request().path(ServicePath.GET_demographics).end()
+            .request().path(ServicePath.GET_Demographics).end()
             .with().paging().limit(2).end().end()
         .build());
         Util.debugResponse(response);
@@ -121,7 +125,6 @@ public class OneRosterBuilderTest {
                     .end()
                 .end()
             .build());
-
             Util.debugResponse(response);
         }
     }
@@ -190,5 +193,90 @@ public class OneRosterBuilderTest {
             .end()
         .build());
         Util.debugResponseJsonNoXml(response);
+    }
+
+    private static void responseInterfaceTest(OneRoster oneRoster) throws InvalidPathException {
+        IResponse<Orgs> response = oneRoster.getOrgs(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+            .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        Util.debugResponseJsonNoXml(response);
+    }
+
+    private static void requestTest(OneRoster oneRoster) throws InvalidPathException {
+        IResponse<Orgs> response = oneRoster.request(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+            .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        Util.debugResponseJsonNoXml(response);
+    }
+
+    private static void allTheWays(OneRoster oneRoster) throws InvalidPathException {
+        /* Interface */
+        IResponse<Orgs> response = oneRoster.getOrgs(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+                .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        IResponse<Orgs> response2 = oneRoster.request(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+                .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        /* Abstract Class */
+        Response<Orgs> response3 = oneRoster.getOrgs(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+                .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        Response<Orgs> response4 = oneRoster.request(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+                .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        /* Class */
+        OrgsResponse response5 = oneRoster.getOrgs(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+            .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
+
+        OrgsResponse response6 = oneRoster.request(Request.builder()
+            .request()
+                .path(ServicePath.GET_Orgs)
+            .end()
+            .with()
+                .paging().limit(5).end()
+            .end()
+        .build());
     }
 }

@@ -3,17 +3,18 @@ package org.ricone.library.client.xpress.request;
 
 import java.util.function.Consumer;
 
-public final class XRequestRequest {
+public final class XRequestBuilder {
 
 	private ServicePath path;
 	private String id;
 	private IdType idType;
 
 	public static Builder builder() {
-		return new XRequestRequest.Builder();
+		return new XRequestBuilder.Builder();
 	}
 
-	private XRequestRequest() {
+	private XRequestBuilder() {
+		this.idType = IdType.RefId;
 	}
 
 	ServicePath getPath() {
@@ -29,14 +30,14 @@ public final class XRequestRequest {
 	}
 
 	public static class Builder {
-		private XRequestRequest instance = new XRequestRequest();
+		private XRequestBuilder instance = new XRequestBuilder();
 		private XRequest.Builder parentBuilder;
-		private Consumer<XRequestRequest> callback;
+		private Consumer<XRequestBuilder> callback;
 
 		public Builder() {
 		}
 
-		public Builder(XRequest.Builder b, Consumer<XRequestRequest> f) {
+		public Builder(XRequest.Builder b, Consumer<XRequestBuilder> f) {
 			this.parentBuilder = b;
 			this.callback = f;
 		}
@@ -44,6 +45,11 @@ public final class XRequestRequest {
 
 		public Builder path(ServicePath servicePath) {
 			instance.path = servicePath;
+			return this;
+		}
+
+		public Builder id(String id) {
+			instance.id = id;
 			return this;
 		}
 

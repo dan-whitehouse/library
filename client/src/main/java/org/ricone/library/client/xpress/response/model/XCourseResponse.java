@@ -5,20 +5,20 @@
  * Created At Northeastern Regional Information Center By Daniel Whitehouse
  */
 
-package org.ricone.library.client.xpress.response;
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XRoster;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XCourse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xRoster"})
-public class XRosterResponse extends XResponse<XRoster> {
-
-	@JsonProperty("xRoster")
-	private XRoster xRoster;
+@JsonPropertyOrder({"xCourse"})
+public class XCourseResponse extends XResponse<XCourse> {
+	@JsonProperty("xCourse")
+	private XCourse xCourse;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -30,32 +30,33 @@ public class XRosterResponse extends XResponse<XRoster> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XRosterResponse() {
+	public XCourseResponse() {
+		xCourse = new XCourse();
 	}
 
-	public XRosterResponse(XRoster xRoster) {
+	public XCourseResponse(XCourse xCourse) {
 		super();
-		this.xRoster = xRoster;
+		this.xCourse = xCourse;
 	}
 
-	@JsonProperty("xRoster")
-	public XRoster getXRoster() {
-		return xRoster;
+	@JsonProperty("xCourse")
+	public XCourse getXCourse() {
+		return xCourse;
 	}
 
-	@JsonProperty("xRoster")
-	public void setXRoster(XRoster xRoster) {
-		this.xRoster = xRoster;
-	}
-
-	@Override
-	public XRoster getData() {
-		return xRoster;
+	@JsonProperty("xCourse")
+	public void setXCourse(XCourse xCourse) {
+		this.xCourse = xCourse;
 	}
 
 	@Override
-	public void setData(XRoster data) {
-		this.xRoster = data;
+	public XCourse getData() {
+		return xCourse;
+	}
+
+	@Override
+	public void setData(XCourse data) {
+		this.xCourse = data;
 	}
 
 	@Override
@@ -110,6 +111,6 @@ public class XRosterResponse extends XResponse<XRoster> {
 
 	@Override
 	public String toString() {
-		return "XRosterResponse{" + "xRoster=" + xRoster + '}';
+		return "XCourseResponse{" + "xCourse=" + xCourse + '}';
 	}
 }

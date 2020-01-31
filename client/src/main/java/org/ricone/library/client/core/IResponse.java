@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  * @since 2020-01-30
  */
 
-public interface BaseResponse<T> {
+public interface IResponse<T> {
 	T getData();
 
 	void setData(T data);

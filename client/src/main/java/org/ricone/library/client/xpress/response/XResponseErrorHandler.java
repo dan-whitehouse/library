@@ -3,6 +3,7 @@ package org.ricone.library.client.xpress.response;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.ricone.library.client.xpress.response.model.XErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;

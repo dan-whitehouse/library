@@ -13,12 +13,13 @@ import org.ricone.library.client.xpress.response.model.XLeas;
 import org.ricone.library.exception.InvalidPathException;
 import org.ricone.library.exception.MissingArgumentException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
  * @author Dan Whitehouse <daniel.whitehouse@neric.org>
  * @version 2020.1
- * @since 2020-01-30
+ * @since 2020-01-31
  */
 
 public class XRequestBuilderTest {
@@ -48,7 +49,7 @@ public class XRequestBuilderTest {
 		XResponse<XLea> response = xPress.getXLea(XRequest.builder()
 			.request()
 				.path(ServicePath.GET_XLEA_BY_REFID)
-				.id("A9F798CE-DA1A-3195-88CD-13AAC9416187", IdType.RefId).end()
+				.id("A9F798CE-DA1A-3195-88CD-13AAC9416187").end()
 			.build()
 		);
 
@@ -73,18 +74,21 @@ public class XRequestBuilderTest {
 	private static void getXLeasWithPaging(XPress xPress) throws MissingArgumentException, InvalidPathException {
 		System.out.println("/* getXLeasWithPaging */");
 		ServicePath servicePath = ServicePath.GET_XLEAS;
-		int pageSize = 1;
 
 		XLastPageResponse lastPage = xPress.getXLastPage(XRequest.builder()
 			.request().path(servicePath).end()
-			.with().paging(1, pageSize).end()
+			.with()
+				.paging().page(1).end()
+			.end()
 			.build()
 		);
 
 		for (int pageNumber = 1; pageNumber <= lastPage.getData(); pageNumber++) {
 			XResponse<XLeas> response = xPress.getXLeas(XRequest.builder()
 				.request().path(servicePath).end()
-				.with().paging(pageNumber, pageSize).end()
+				.with()
+					.paging().page(pageNumber).end()
+				.end()
 				.build()
 			);
 			Util.debugResponse(response);
@@ -97,12 +101,30 @@ public class XRequestBuilderTest {
 
 		XResponse<Integer> lastPageResponse = xPress.getXLastPage(XRequest.builder()
 			.request().path(ServicePath.GET_XLEAS).end()
-			.with().paging(1, pageSize).end()
+			.with()
+				.paging()
+					.size(pageSize).end()
+			.end()
 			.build()
 		);
 		Integer lastPage = lastPageResponse.getData();
-
-		System.out.println("Last Page 1: " + lastPage);
 		Util.debugResponse(lastPageResponse);
+	}
+
+	private static void allFeatures(XPress xPress) throws MissingArgumentException, InvalidPathException {
+		XResponse<XLea> response = xPress.getXLea(XRequest.builder()
+			.request()
+				.path(ServicePath.GET_XLEA_BY_ID)
+				.id("052146", IdType.Local)
+			.end()
+			.with()
+				.paging().page(1).size(200).end()
+				.changesSince(LocalDateTime.now())
+				.schoolYear(2020)
+				.accountProvisioning()
+			.end()
+		.build());
+
+		Util.debugResponse(response);
 	}
 }

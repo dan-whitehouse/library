@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.ricone.library.client.core.BaseResponse;
+import org.ricone.library.client.core.IResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
  * @since 2020-01-30
  */
 
-public abstract class Response<T> implements BaseResponse<T> {
+public abstract class Response<T> implements IResponse<T> {
 	private Class<T> clazz;
 
 	public void setClazz(Class<T> clazz) {
@@ -76,8 +76,7 @@ public abstract class Response<T> implements BaseResponse<T> {
 				mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 			}
 			mapper.enable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
-
-			//TODO: Dates DateTimes are screwy
+			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
 			ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 			try {
@@ -99,6 +98,7 @@ public abstract class Response<T> implements BaseResponse<T> {
 			mapper.registerModule(new JavaTimeModule());
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 			mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
 			//TODO: Dates DateTimes are screwy
 

@@ -3,25 +3,31 @@ package org.ricone.library.client.xpress.request;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-public final class XRequestWith {
+/**
+ * @author Dan Whitehouse <daniel.whitehouse@neric.org>
+ * @version 2020.1
+ * @since 2020-01-31
+ */
 
-	private PagingInfo pagingInfo;
+public final class XWithBuilder {
+	private XPagingBuilder paging;
 	private Integer schoolYear;
 	private boolean accountProvisioning;
 	private ChangesSince changesSince;
 
 	public static Builder builder() {
-		return new XRequestWith.Builder();
+		return new XWithBuilder.Builder();
 	}
 
-	private XRequestWith() {
+	private XWithBuilder() {
+		accountProvisioning = false;
 	}
 
-	public PagingInfo getPagingInfo() {
-		return pagingInfo;
+	public XPagingBuilder paging() {
+		return paging;
 	}
 
-	public Integer getSchoolYear() {
+	public Integer schoolYear() {
 		return schoolYear;
 	}
 
@@ -34,22 +40,22 @@ public final class XRequestWith {
 	}
 
 	public static class Builder {
-		private XRequestWith instance = new XRequestWith();
+		private XWithBuilder instance = new XWithBuilder();
 		private XRequest.Builder parentBuilder;
-		private Consumer<XRequestWith> callback;
+		private Consumer<XWithBuilder> callback;
 
 		public Builder() {
 		}
 
-		public Builder(XRequest.Builder b, Consumer<XRequestWith> f) {
+		public Builder(XRequest.Builder b, Consumer<XWithBuilder> f) {
 			this.parentBuilder = b;
 			this.callback = f;
 		}
 
 
-		public Builder paging(Integer pageNumber, Integer pageSize) {
-			instance.pagingInfo = new PagingInfo(pageNumber, pageSize);
-			return this;
+		public XPagingBuilder.Builder paging() {
+			Consumer<XPagingBuilder> f = obj -> instance.paging = obj;
+			return new XPagingBuilder.Builder(this, f);
 		}
 
 		public Builder schoolYear(Integer schoolYear) {

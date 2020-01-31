@@ -1,16 +1,24 @@
-package org.ricone.library.client.xpress.response;
+/*
+ * RIC One File Bridge
+ * Version: 1.0.0 Build 20170604-1
+ * Copyright © 2017 New York State Education Department
+ * Created At Northeastern Regional Information Center By Daniel Whitehouse
+ */
+
+package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
-import org.ricone.library.client.xpress.response.model.XLea;
+import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.XCourses;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"xLea"})
-public class XLeaResponse extends XResponse<XLea> {
-	@JsonProperty("xLea")
-	private XLea xLea;
+@JsonPropertyOrder({"xCourses"})
+public class XCoursesResponse extends XResponse<XCourses> {
+	@JsonProperty("xCourses")
+	private XCourses xCourses;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -22,32 +30,32 @@ public class XLeaResponse extends XResponse<XLea> {
 	@JsonIgnore
 	private HttpHeaders responseHeaders;
 
-	public XLeaResponse() {
+	public XCoursesResponse() {
 	}
 
-	public XLeaResponse(XLea xLea) {
+	public XCoursesResponse(XCourses xCourses) {
 		super();
-		this.xLea = xLea;
+		this.xCourses = xCourses;
 	}
 
-	@JsonProperty("xLea")
-	public XLea getXLea() {
-		return xLea;
+	@JsonProperty("xCourses")
+	public XCourses getXCourses() {
+		return xCourses;
 	}
 
-	@JsonProperty("xLea")
-	public void setXLea(XLea xLea) {
-		this.xLea = xLea;
-	}
-
-	@Override
-	public XLea getData() {
-		return xLea;
+	@JsonProperty("xCourses")
+	public void setXCourses(XCourses xCourses) {
+		this.xCourses = xCourses;
 	}
 
 	@Override
-	public void setData(XLea data) {
-		this.xLea = data;
+	public XCourses getData() {
+		return xCourses;
+	}
+
+	@Override
+	public void setData(XCourses data) {
+		this.xCourses = data;
 	}
 
 	@Override
@@ -102,6 +110,6 @@ public class XLeaResponse extends XResponse<XLea> {
 
 	@Override
 	public String toString() {
-		return "XLeaResponse{" + "xLea=" + xLea + '}';
+		return "XCoursesResponse{" + "xCourses=" + xCourses + '}';
 	}
 }
