@@ -17,7 +17,7 @@ public class Demographic extends Base implements Serializable {
 	@JsonProperty("birthDate")
 	private LocalDate birthDate;
 	@JsonProperty("sex")
-	private Gender sex;
+	private GenderType sex;
 	@JsonProperty("americanIndianOrAlaskaNative")
 	private Boolean americanIndianOrAlaskaNative;
 	@JsonProperty("asian")
@@ -62,7 +62,7 @@ public class Demographic extends Base implements Serializable {
 	 * @param countryOfBirthCode
 	 * @param birthDate
 	 */
-	public Demographic(LocalDate birthDate, Gender sex, Boolean americanIndianOrAlaskaNative, Boolean asian, Boolean blackOrAfricanAmerican, Boolean nativeHawaiianOrOtherPacificIslander, Boolean white, Boolean demographicRaceTwoOrMoreRaces, Boolean hispanicOrLatinoEthnicity, String countryOfBirthCode, String stateOfBirthAbbreviation, String cityOfBirth, String publicSchoolResidenceStatus) {
+	public Demographic(LocalDate birthDate, GenderType sex, Boolean americanIndianOrAlaskaNative, Boolean asian, Boolean blackOrAfricanAmerican, Boolean nativeHawaiianOrOtherPacificIslander, Boolean white, Boolean demographicRaceTwoOrMoreRaces, Boolean hispanicOrLatinoEthnicity, String countryOfBirthCode, String stateOfBirthAbbreviation, String cityOfBirth, String publicSchoolResidenceStatus) {
 		super();
 		this.birthDate = birthDate;
 		this.sex = sex;
@@ -90,12 +90,12 @@ public class Demographic extends Base implements Serializable {
 	}
 
 	@JsonProperty("sex")
-	public Gender getSex() {
+	public GenderType getSex() {
 		return sex;
 	}
 
 	@JsonProperty("sex")
-	public void setSex(Gender sex) {
+	public void setSex(GenderType sex) {
 		this.sex = sex;
 	}
 
@@ -211,7 +211,7 @@ public class Demographic extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), birthDate, sex, americanIndianOrAlaskaNative, asian, blackOrAfricanAmerican, nativeHawaiianOrOtherPacificIslander, white, demographicRaceTwoOrMoreRaces, hispanicOrLatinoEthnicity, countryOfBirthCode, stateOfBirthAbbreviation, cityOfBirth, publicSchoolResidenceStatus).allMatch(Objects::isNull);
 	}
 }

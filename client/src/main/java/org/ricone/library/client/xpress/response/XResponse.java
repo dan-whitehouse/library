@@ -10,12 +10,25 @@ import org.ricone.library.client.core.IResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public abstract class XResponse<T> implements IResponse<T> {
-	@Override
-	public abstract T getData();
+public abstract class XResponse<M> implements IResponse<M> {
+	private Class<? extends IResponse<M>> responseClass;
+	private Class<M> modelClass;
 
 	@Override
-	public abstract void setData(T data);
+	public void setResponseClass(Class<? extends IResponse<M>> clazz) {
+		this.responseClass = clazz;
+	}
+
+	@Override
+	public void setModelClass(Class<M> clazz) {
+		this.modelClass = clazz;
+	}
+
+	@Override
+	public abstract M getData();
+
+	@Override
+	public abstract void setData(M data);
 
 	@Override
 	public abstract String getRequestPath();

@@ -3,8 +3,8 @@ package org.ricone.library.client.oneroster.response;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.ricone.library.client.oneroster.response.model.Error;
+import org.ricone.library.client.oneroster.response.model.ResponseModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -19,8 +19,8 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"warnings"})
-public abstract class BaseSingleResponse<T> extends Response<T> implements Serializable {
-	private T data;
+public abstract class BaseSingleResponse<M extends ResponseModel> extends Response<M> implements Serializable {
+	private M data;
 	@JsonIgnore
 	private String requestPath;
 	@JsonIgnore
@@ -35,22 +35,22 @@ public abstract class BaseSingleResponse<T> extends Response<T> implements Seria
 
 	protected BaseSingleResponse() { }
 
-	public BaseSingleResponse(T data) {
+	public BaseSingleResponse(M data) {
 		this.data = data;
 	}
 
-	public BaseSingleResponse(T data, List<Error> warnings) {
+	public BaseSingleResponse(M data, List<Error> warnings) {
 		this.data = data;
 		this.warnings = warnings;
 	}
 
 	@Override
-	public T getData() {
+	public M getData() {
 		return data;
 	}
 
 	@Override
-	public void setData(T data) {
+	public void setData(M data) {
 		this.data = data;
 	}
 

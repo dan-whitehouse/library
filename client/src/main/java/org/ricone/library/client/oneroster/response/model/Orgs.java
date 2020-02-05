@@ -7,18 +7,19 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @JsonRootName("orgs")
 @JacksonXmlRootElement(localName = "orgs")
-public class Orgs implements Serializable {
-
+public class Orgs extends ResponseModel implements Serializable {
     @JsonProperty("orgs")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "org")
     private List<Org> orgs;
 
     public Orgs() {
+        orgs = new ArrayList<>();
     }
 
     public Orgs(List<Org> orgs) {
@@ -35,6 +36,11 @@ public class Orgs implements Serializable {
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "org")
     public void setOrgs(List<Org> orgs) {
         this.orgs = orgs;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return orgs.isEmpty();
     }
 
     @Override

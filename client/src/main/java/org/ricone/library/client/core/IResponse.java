@@ -9,10 +9,13 @@ import org.springframework.http.HttpStatus;
  * @since 2020-01-30
  */
 
-public interface IResponse<T> {
-	T getData();
+public interface IResponse<M> {
+	void setResponseClass(Class<? extends IResponse<M>> clazz);
+	void setModelClass(Class<M> clazz);
 
-	void setData(T data);
+	M getData();
+
+	void setData(M data);
 
 	String getRequestPath();
 

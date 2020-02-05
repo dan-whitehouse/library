@@ -161,9 +161,8 @@ public class Course extends Base implements Serializable {
 		this.resources = resources;
 	}
 
-	@JsonIgnore
-	@Override
-	public boolean isEmptyObject() {
+	@JsonIgnore @Override
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), title, schoolYear, courseCode, grades, subjects, org, subjectCodes).allMatch(Objects::isNull);
 	}
 

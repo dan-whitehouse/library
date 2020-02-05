@@ -127,7 +127,7 @@ public class Enrollment extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), role, primary, user, _class, school, beginDate, endDate).allMatch(Objects::isNull);
 	}
 }

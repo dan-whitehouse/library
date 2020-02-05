@@ -103,7 +103,7 @@ public class Org extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), name, type, identifier, parent, children).allMatch(Objects::isNull);
 	}
 

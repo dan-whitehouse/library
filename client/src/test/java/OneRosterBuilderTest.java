@@ -30,11 +30,11 @@ public class OneRosterBuilderTest {
         if(endpoint.isPresent()) {
             OneRoster oneRoster = new OneRoster(endpoint.get());
 
-            //offsetTest(oneRoster);
+            offsetTest(oneRoster);
             //allFeaturesTest(oneRoster);
             //buildVerifyTest(oneRoster);
             //responseInterfaceTest(oneRoster);
-            requestTest(oneRoster);
+            //requestTest(oneRoster);
 
 
             //orgTest(oneRoster);
@@ -108,6 +108,8 @@ public class OneRosterBuilderTest {
 
     private static void offsetTest(OneRoster oneRoster) throws InvalidPathException {
         int limit = 2;
+
+        //It can be written this way
         OffsetResponse offset = oneRoster.getOffset(Request.builder()
             .request().path(ServicePath.GET_Orgs).end()
             .with().paging().limit(limit).end().end()
@@ -125,7 +127,28 @@ public class OneRosterBuilderTest {
                     .end()
                 .end()
             .build());
-            Util.debugResponse(response);
+            Util.debugResponseJsonNoXml(response);
+        }
+
+        //Or this way
+        IResponse<Offset> offset2 = oneRoster.getOffset(Request.builder()
+            .request().path(ServicePath.GET_Orgs).end()
+            .with().paging().limit(limit).end().end()
+        .build());
+
+        while(offset2.getData().hasNext()) {
+            Response<Orgs> response = oneRoster.getOrgs(Request.builder()
+                .request()
+                    .path(ServicePath.GET_Orgs)
+                .end()
+                .with()
+                    .paging()
+                        .limit(limit)
+                        .offset(offset2.getData().next())
+                    .end()
+                .end()
+            .build());
+            Util.debugResponseJsonNoXml(response);
         }
     }
 
@@ -142,8 +165,8 @@ public class OneRosterBuilderTest {
             .end()
         .build());
 
-        /* The offset request above requires both the paging and filtering as they are used below.
-           The sorting and field selection features used below are/can be ignored, as they don't
+        /* The offset request above requires both paging() and filtering() as they are used below.
+           The sorting() and fieldSelection() options used below can be ignored, as they don't
            alter the number of records returned.
          */
 

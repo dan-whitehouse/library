@@ -7,18 +7,20 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @JsonRootName("academicSessions")
 @JacksonXmlRootElement(localName = "academicSessions")
-public class AcademicSessions implements Serializable {
+public class AcademicSessions extends ResponseModel implements Serializable {
 
     @JsonProperty("academicSessions")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "academicSession")
     private List<AcademicSession> academicSessions;
 
     public AcademicSessions() {
+        academicSessions = new ArrayList<>();
     }
 
     public AcademicSessions(List<AcademicSession> academicSessions) {
@@ -35,6 +37,11 @@ public class AcademicSessions implements Serializable {
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "academicSession")
     public void setAcademicSessions(List<AcademicSession> academicSessions) {
         this.academicSessions = academicSessions;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return academicSessions.isEmpty();
     }
 
     @Override

@@ -19,10 +19,10 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="authentication" target="9" />
-      <module name="client" target="9" />
-      <module name="config" target="10" />
-      <module name="exception" target="9" />
-      <module name="library" target="9" />
+      <module name="client" target="13" />
+      <module name="config" target="13" />
+      <module name="exception" target="13" />
+      <module name="library" target="13" />
     </bytecodeTargetLevel>
   </component>
 </project>

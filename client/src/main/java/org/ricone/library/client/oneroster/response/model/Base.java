@@ -1,16 +1,17 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"sourcedId", "status", "dateLastModified", "metadata"})
-public abstract class Base implements Serializable {
+public abstract class Base extends ResponseModel implements Serializable {
 	private final static long serialVersionUID = 602595453201771641L;
 	@JsonProperty("sourcedId")
 	private String sourcedId;
@@ -83,7 +84,26 @@ public abstract class Base implements Serializable {
 		this.metadata = metadata;
 	}
 
-	public abstract boolean isEmptyObject();
+	@Override
+	public boolean isEmpty() {
+		return Stream.of(sourcedId, status, dateLastModified, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Base base = (Base) o;
+		return Objects.equals(sourcedId, base.sourcedId) &&
+				status == base.status &&
+				Objects.equals(dateLastModified, base.dateLastModified) &&
+				Objects.equals(metadata, base.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(sourcedId, status, dateLastModified, metadata);
+	}
 
 	@Override
 	public String toString() {

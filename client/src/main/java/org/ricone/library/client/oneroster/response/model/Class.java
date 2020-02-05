@@ -213,7 +213,7 @@ public class Class extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), title, classCode, classType, location, grades, subjects, course, school, terms, subjectCodes, periods).allMatch(Objects::isNull);
 	}
 }

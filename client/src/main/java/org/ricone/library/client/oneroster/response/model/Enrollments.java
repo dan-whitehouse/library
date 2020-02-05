@@ -7,18 +7,20 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @JsonRootName("enrollments")
 @JacksonXmlRootElement(localName = "enrollments")
-public class Enrollments implements Serializable {
+public class Enrollments extends ResponseModel implements Serializable {
 
     @JsonProperty("enrollments")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "enrollment")
     private List<Enrollment> enrollments;
 
     public Enrollments() {
+        enrollments = new ArrayList<>();
     }
 
     public Enrollments(List<Enrollment> enrollments) {
@@ -38,6 +40,11 @@ public class Enrollments implements Serializable {
     }
 
     @Override
+    public boolean isEmpty() {
+        return enrollments.isEmpty();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -49,6 +56,4 @@ public class Enrollments implements Serializable {
     public int hashCode() {
         return Objects.hash(enrollments);
     }
-
-
 }

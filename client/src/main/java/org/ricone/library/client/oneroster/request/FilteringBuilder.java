@@ -1,5 +1,7 @@
 package org.ricone.library.client.oneroster.request;
 
+import org.ricone.library.client.oneroster.response.model.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -47,6 +49,11 @@ final class FilteringBuilder {
 		//Allows for the Filter to be set without needing to create a Filter object.
 		public Builder filter(IField field, Predicate predicate, String value) {
 			this.instance.getFilters().add(new Filter(field, predicate, value));
+			return this;
+		}
+
+		public Builder filter(IField field, Predicate predicate, Type type) {
+			this.instance.getFilters().add(new Filter(field, predicate, type.getValue()));
 			return this;
 		}
 

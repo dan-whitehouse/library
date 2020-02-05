@@ -254,7 +254,7 @@ public class User extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), username, userIds, enabledUser, givenName, familyName, middleName, role, identifier, email, sms, phone, agents, orgs, grades, password).allMatch(Objects::isNull);
 	}
 }

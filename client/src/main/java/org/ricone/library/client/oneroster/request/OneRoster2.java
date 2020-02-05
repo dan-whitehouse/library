@@ -33,11 +33,11 @@ import java.util.stream.Stream;
  * @since 2020-01-30
  */
 
-public class OneRoster {
+public class OneRoster2 {
 	private Endpoint endpoint;
 	private RestTemplate restTemplate;
 
-	public OneRoster(Endpoint endpoint) {
+	public OneRoster2(Endpoint endpoint) {
 		ObjectMapper mapper = new ObjectMapper();
 
 		//Modules
@@ -255,7 +255,7 @@ public class OneRoster {
 				builder.path(Stream.of(
 						request.request().ids().getIds().get(0),
 						request.request().ids().getIds().get(1)
-						).reduce(request.request().path().getValue(), (id1, id2) -> id1.replaceFirst("\\{([id}]+)}", id2))
+					).reduce(request.request().path().getValue(), (id1, id2) -> id1.replaceFirst("\\{([id}]+)}", id2))
 				);
 			}
 		}
@@ -284,9 +284,9 @@ public class OneRoster {
 			if(request.with().filtering().getLogicalOperation() != LogicalOperation.NONE) {
 				Filter filter2 = request.with().filtering().getFilters().get(1);
 				builder.queryParam("filter",
-						filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'" +
-								request.with().filtering().getLogicalOperation().getValue() +
-								filter2.getField().getValue() + filter2.getPredicate().getValue() + "'" + filter2.getValue() + "'"
+				filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'" +
+						request.with().filtering().getLogicalOperation().getValue() +
+						filter2.getField().getValue() + filter2.getPredicate().getValue() + "'" + filter2.getValue() + "'"
 				);
 			}
 			else {

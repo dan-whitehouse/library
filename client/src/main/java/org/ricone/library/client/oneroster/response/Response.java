@@ -9,6 +9,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.ricone.library.client.core.IResponse;
+import org.ricone.library.client.oneroster.response.model.ResponseModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -18,18 +19,25 @@ import org.springframework.http.HttpStatus;
  * @since 2020-01-30
  */
 
-public abstract class Response<T> implements IResponse<T> {
-	private Class<T> clazz;
+public abstract class Response<M extends ResponseModel> implements IResponse<M> {
+	private Class<? extends IResponse<M>> responseClass;
+	private Class<M> clazz;
 
-	public void setClazz(Class<T> clazz) {
+	@Override
+	public void setResponseClass(Class<? extends IResponse<M>> clazz) {
+		this.responseClass = clazz;
+	}
+
+	@Override
+	public void setModelClass(Class<M> clazz) {
 		this.clazz = clazz;
 	}
 
 	@Override
-	public abstract T getData();
+	public abstract M getData();
 
 	@Override
-	public abstract void setData(T data);
+	public abstract void setData(M data);
 
 	@Override
 	public abstract String getRequestPath();
@@ -63,7 +71,7 @@ public abstract class Response<T> implements IResponse<T> {
 
 	@Override
 	public String getJSON() {
-		if(getData() != null) {
+		if(getData().hasData()) {
 			final String dateFormat = "yyyy-MM-dd";
 			final String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
@@ -92,7 +100,7 @@ public abstract class Response<T> implements IResponse<T> {
 
 	@Override
 	public String getXML() {
-		if(getData() != null) {
+		if(getData().hasData()) {
 			XmlMapper mapper = new XmlMapper();
 			mapper.registerModule(new Jdk8Module());
 			mapper.registerModule(new JavaTimeModule());

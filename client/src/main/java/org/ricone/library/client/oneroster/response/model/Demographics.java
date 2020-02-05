@@ -7,18 +7,20 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @JsonRootName("demographics")
 @JacksonXmlRootElement(localName = "demographics")
-public class Demographics implements Serializable {
+public class Demographics extends ResponseModel implements Serializable {
 
     @JsonProperty("demographics")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "demographic")
     private List<Demographic> demographics;
 
     public Demographics() {
+        demographics = new ArrayList<>();
     }
 
     public Demographics(List<Demographic> demographics) {
@@ -35,6 +37,11 @@ public class Demographics implements Serializable {
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "demographic")
     public void setDemographics(List<Demographic> demographics) {
         this.demographics = demographics;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return demographics.isEmpty();
     }
 
     @Override

@@ -141,7 +141,7 @@ public class AcademicSession extends Base implements Serializable {
 
 	@JsonIgnore
 	@Override
-	public boolean isEmptyObject() {
+	public boolean isEmpty() {
 		return Stream.of(super.getSourcedId(), super.getStatus(), super.getDateLastModified(), super.getMetadata(), title, startDate, endDate, type, parent, children, schoolYear).allMatch(Objects::isNull);
 	}
 

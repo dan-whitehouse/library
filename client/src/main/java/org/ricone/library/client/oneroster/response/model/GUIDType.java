@@ -2,7 +2,7 @@ package org.ricone.library.client.oneroster.response.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum GUIDType {
+public enum GUIDType implements Type {
 	academicSession("academicSession"),
 	category("category"),
 	clazz("class"),
@@ -19,11 +19,13 @@ public enum GUIDType {
 	term("term"),
 	user("user");
 
-	private final String label;
-	GUIDType(String label) {
-		this.label = label;
+	private final String value;
+	GUIDType(String value) {
+		this.value = value;
 	}
-	@JsonValue public String getLabel() {
-		return label;
+
+	@Override @JsonValue
+	public String getValue() {
+		return value;
 	}
 }

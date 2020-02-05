@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 /**
  * @author Dan Whitehouse <daniel.whitehouse@neric.org>
  * @version 2020.1
- * @since 2020-01-30
+ * @since 2020-02-05
  */
 
 public class Util {
@@ -26,12 +26,23 @@ public class Util {
 			System.out.println("\tResponse Data: " + response.getData());
 		}
 		if(json) {
-			System.out.println("\tResponse JSON:");
-			System.out.println(tabMultiLine(response.getJSON()));
+			if(response.getJSON() != null) {
+				System.out.println("\tResponse JSON: ");
+				System.out.println(tabMultiLine(response.getJSON()));
+			}
+			else {
+				System.out.println("\tResponse JSON: " + response.getJSON());
+			}
 		}
 		if(xml) {
-			System.out.println("\tResponse XML:");
-			System.out.println(tabMultiLine(response.getXML()));
+
+			if(response.getJSON() != null) {
+				System.out.println("\tResponse XML: ");
+				System.out.println(tabMultiLine(response.getXML()));
+			}
+			else {
+				System.out.println("\tResponse XML: " + response.getXML());
+			}
 		}
 	}
 
@@ -52,5 +63,12 @@ public class Util {
 			return input.replaceAll("(?m)^", "\t");
 		}
 		return null;
+	}
+
+
+	/* Testing Methods */
+
+	public static void testStatusResponse(String testName, IResponse<?> response) {
+		System.out.println(testName + "\tStatus: " + response.getResponseStatus() + " " + response.getResponseStatusText());
 	}
 }
