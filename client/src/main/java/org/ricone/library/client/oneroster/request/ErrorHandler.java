@@ -3,6 +3,7 @@ package org.ricone.library.client.oneroster.request;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
+import org.ricone.library.client.oneroster.response.model.CodeMajor;
 import org.ricone.library.client.oneroster.response.model.Error;
 import org.ricone.library.client.oneroster.response.ErrorsResponse;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,10 @@ class ErrorHandler implements ResponseErrorHandler {
 
 	private int getStatusCode(ErrorsResponse response) {
 		for(Error error : response.getErrors().getErrors()) {
+			if(error.getCodeMajor().equals(CodeMajor.failure) && error.getCodeMinor() == null) {
+				return 500;
+			}
+
 			switch(error.getCodeMinor()) {
 				case invalid_data:
 				case invalid_filter_field:
@@ -68,7 +73,7 @@ class ErrorHandler implements ResponseErrorHandler {
 				case unknown_object:
 					return 404;
 				default:
-					return 500;
+					return 418; //We don't know what happened, but can use this code to track it.
 			}
 		}
 		return 0;

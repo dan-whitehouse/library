@@ -2,24 +2,24 @@ import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.Model;
-import org.ricone.library.client.core.Util;
 import org.ricone.library.client.oneroster.request.*;
-import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.Response;
-import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.client.oneroster.response.model.Class;
+import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
-import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class OneRosterTest {
     private static int LIMIT = 5;
     private static String DISTRICT_ID = "530501";
+    private static final Random random = new Random();
+    private static final int randomNumber = random.nextInt(LIMIT - 0 + 1) + 0; // 0 = min, LIMIT = max
+
     private static List<Org> orgs = new ArrayList<>();
     private static List<Org> schools = new ArrayList<>();
     private static List<AcademicSession> academicSessions = new ArrayList<>();
@@ -307,10 +307,10 @@ public class OneRosterTest {
     }
 
     private static void test2(OneRoster oneRoster) throws InvalidPathException {
-        String format = "| %-150s | %-6s | %-9s | %-18s |%n";
-        System.out.format("+--------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
-        System.out.format("| Request                                                                                                                                                | Status | Size      | Total Record Count |%n");
-        System.out.format("+--------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+        String format = "| %-200s | %-6s | %-9s | %-18s |%n";
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count |%n");
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
 
         for(ServicePath servicePath : ServicePath.values()) {
             /** Request - No Features **/
@@ -347,7 +347,7 @@ public class OneRosterTest {
                         .path(servicePath)
                         .ids()
                             .id(getId(predicates[0]))
-                            .id(predicates[1])
+                            .id(getId(predicates[1]))
                         .end()
                     .end()
                 .build());
@@ -406,7 +406,7 @@ public class OneRosterTest {
                         .path(servicePath)
                         .ids()
                             .id(getId(predicates[0]))
-                            .id(predicates[1])
+                            .id(getId(predicates[1]))
                         .end()
                     .end()
                     .with()
@@ -468,7 +468,7 @@ public class OneRosterTest {
                         .path(servicePath)
                         .ids()
                             .id(getId(predicates[0]))
-                            .id(predicates[1])
+                            .id(getId(predicates[1]))
                         .end()
                     .end()
                     .with()
@@ -482,7 +482,7 @@ public class OneRosterTest {
 
 
             /** Request - Filtering **/
-            if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
+            if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
                 Response responseFiltering = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
@@ -530,7 +530,7 @@ public class OneRosterTest {
                         .path(servicePath)
                         .ids()
                             .id(getId(predicates[0]))
-                            .id(predicates[1])
+                            .id(getId(predicates[1]))
                         .end()
                     .end()
                     .with()
@@ -544,10 +544,9 @@ public class OneRosterTest {
 
 
             //Separate the next service path
-            System.out.format("+--------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+            System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+
         }
-
-
     }
 
     //Helper Methods
@@ -557,7 +556,7 @@ public class OneRosterTest {
 
     private static String byteCount(String stringBytes) {
         if(stringBytes == null) {
-            return null;
+            stringBytes = "0";
         }
 
         long bytes = Long.parseLong(stringBytes);
@@ -604,22 +603,29 @@ public class OneRosterTest {
          */
 
         String[] array = servicePath.toString().split("_");
-        return new String[] {array[5], array[3]};
+        return new String[] {array[6], array[3]};
     }
 
     private static String getId(String predicateObject) {
+        //final int min = 0;
+        //final int max = LIMIT - 1;
+        //Random random = new Random();
+        //int randomNumber = random.nextInt(max - min + 1) + min;
+
         switch(predicateObject) {
-            case "Org": return orgs.get(0).getSourcedId();
-            case "School": return schools.get(0).getSourcedId();
-            case "AcademicSession": return academicSessions.get(0).getSourcedId();
-            case "Term": return terms.get(0).getSourcedId();
-            case "Course": return courses.get(0).getSourcedId();
-            case "Class": return classes.get(0).getSourcedId();
-            case "Enrollment": return enrollments.get(0).getSourcedId();
-            case "User": return users.get(0).getSourcedId();
-            case "Teacher": return teachers.get(0).getSourcedId();
-            case "Student": return students.get(0).getSourcedId();
-            case "Demographic": return demographics.get(0).getSourcedId();
+            case "Org": return orgs.get(randomNumber).getSourcedId();
+            case "School":
+            case "Schools":
+                return schools.get(randomNumber).getSourcedId();
+            case "AcademicSession": return academicSessions.get(randomNumber).getSourcedId();
+            case "Term": return terms.get(randomNumber).getSourcedId();
+            case "Course": return courses.get(randomNumber).getSourcedId();
+            case "Class": return classes.get(randomNumber).getSourcedId();
+            case "Enrollment": return enrollments.get(randomNumber).getSourcedId();
+            case "User": return users.get(randomNumber).getSourcedId();
+            case "Teacher": return teachers.get(randomNumber).getSourcedId();
+            case "Student": return students.get(randomNumber).getSourcedId();
+            case "Demographic": return demographics.get(randomNumber).getSourcedId();
             default: return "NO_ID_FOUND";
         }
     }

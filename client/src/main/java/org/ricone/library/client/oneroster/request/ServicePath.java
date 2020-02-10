@@ -19,7 +19,7 @@ public enum ServicePath {
 
 	GET_AcademicSession_By_SourcedId("academicSessions/{id}", ServicePathType.SINGLE,  AcademicSessionResponse.class, FieldType.AcademicSessions),
 	GET_AcademicSessions("academicSessions", ServicePathType.OBJECT,  AcademicSessionsResponse.class, FieldType.AcademicSessions),
-	GET_Terms_By_SourcedId("terms/{id}", ServicePathType.SINGLE,  AcademicSessionResponse.class, FieldType.AcademicSessions),
+	GET_Term_By_SourcedId("terms/{id}", ServicePathType.SINGLE,  AcademicSessionResponse.class, FieldType.AcademicSessions),
 	GET_Terms("terms", ServicePathType.OBJECT,  AcademicSessionsResponse.class, FieldType.AcademicSessions),
 	GET_Terms_By_School_SourcedId("schools/{id}/terms", ServicePathType.PREDICATE,  AcademicSessionsResponse.class, FieldType.AcademicSessions),
 
