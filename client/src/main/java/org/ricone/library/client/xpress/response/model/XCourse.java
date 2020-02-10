@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "schoolRefId", "schoolCourseId", "leaCourseId", "otherIds", "courseTitle", "description", "subject", "applicableEducationLevels", "scedCourseCode", "scedCourseLevelCode", "scedCourseSubjectAreaCode", "metadata"})
 @JsonRootName(value = "xCourse")
-public class XCourse {
+public class XCourse extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -46,8 +40,7 @@ public class XCourse {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XCourse() {
-	}
+	public XCourse() { }
 
 	public XCourse(String refId, String schoolRefId, String schoolCourseId, String leaCourseId, OtherIds otherIds, String courseTitle, String description, String subject, ApplicableEducationLevels applicableEducationLevels, String scedCourseCode, String scedCourseLevelCode, String scedCourseSubjectAreaCode, Metadata metadata) {
 		this.refId = refId;
@@ -196,58 +189,38 @@ public class XCourse {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, schoolRefId, schoolCourseId, leaCourseId, otherIds, courseTitle, description, subject, applicableEducationLevels, scedCourseCode, scedCourseLevelCode, scedCourseSubjectAreaCode, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XCourse xCourse = (XCourse) o;
+		return Objects.equals(refId, xCourse.refId) &&
+				Objects.equals(schoolRefId, xCourse.schoolRefId) &&
+				Objects.equals(schoolCourseId, xCourse.schoolCourseId) &&
+				Objects.equals(leaCourseId, xCourse.leaCourseId) &&
+				Objects.equals(otherIds, xCourse.otherIds) &&
+				Objects.equals(courseTitle, xCourse.courseTitle) &&
+				Objects.equals(description, xCourse.description) &&
+				Objects.equals(subject, xCourse.subject) &&
+				Objects.equals(applicableEducationLevels, xCourse.applicableEducationLevels) &&
+				Objects.equals(scedCourseCode, xCourse.scedCourseCode) &&
+				Objects.equals(scedCourseLevelCode, xCourse.scedCourseLevelCode) &&
+				Objects.equals(scedCourseSubjectAreaCode, xCourse.scedCourseSubjectAreaCode) &&
+				Objects.equals(metadata, xCourse.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, schoolRefId, schoolCourseId, leaCourseId, otherIds, courseTitle, description, subject, applicableEducationLevels, scedCourseCode, scedCourseLevelCode, scedCourseSubjectAreaCode, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XCourse{" + "refId='" + refId + '\'' + ", schoolRefId='" + schoolRefId + '\'' + ", schoolCourseId='" + schoolCourseId + '\'' + ", leaCourseId='" + leaCourseId + '\'' + ", otherIds=" + otherIds + ", courseTitle='" + courseTitle + '\'' + ", description='" + description + '\'' + ", subject='" + subject + '\'' + ", applicableEducationLevels=" + applicableEducationLevels + ", scedCourseCode='" + scedCourseCode + '\'' + ", scedCourseLevelCode='" + scedCourseLevelCode + '\'' + ", scedCourseSubjectAreaCode='" + scedCourseSubjectAreaCode + '\'' + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XCourse)) return false;
-
-		XCourse xCourse = (XCourse) o;
-
-		if(refId != null ? !refId.equals(xCourse.refId) : xCourse.refId != null) return false;
-		if(schoolRefId != null ? !schoolRefId.equals(xCourse.schoolRefId) : xCourse.schoolRefId != null) return false;
-		if(schoolCourseId != null ? !schoolCourseId.equals(xCourse.schoolCourseId) : xCourse.schoolCourseId != null)
-			return false;
-		if(leaCourseId != null ? !leaCourseId.equals(xCourse.leaCourseId) : xCourse.leaCourseId != null) return false;
-		if(otherIds != null ? !otherIds.equals(xCourse.otherIds) : xCourse.otherIds != null) return false;
-		if(courseTitle != null ? !courseTitle.equals(xCourse.courseTitle) : xCourse.courseTitle != null) return false;
-		if(description != null ? !description.equals(xCourse.description) : xCourse.description != null) return false;
-		if(subject != null ? !subject.equals(xCourse.subject) : xCourse.subject != null) return false;
-		if(applicableEducationLevels != null ? !applicableEducationLevels.equals(xCourse.applicableEducationLevels) : xCourse.applicableEducationLevels != null)
-			return false;
-		if(scedCourseCode != null ? !scedCourseCode.equals(xCourse.scedCourseCode) : xCourse.scedCourseCode != null)
-			return false;
-		if(scedCourseLevelCode != null ? !scedCourseLevelCode.equals(xCourse.scedCourseLevelCode) : xCourse.scedCourseLevelCode != null)
-			return false;
-		if(scedCourseSubjectAreaCode != null ? !scedCourseSubjectAreaCode.equals(xCourse.scedCourseSubjectAreaCode) : xCourse.scedCourseSubjectAreaCode != null)
-			return false;
-		return metadata != null ? metadata.equals(xCourse.metadata) : xCourse.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (schoolRefId != null ? schoolRefId.hashCode() : 0);
-		result = 31 * result + (schoolCourseId != null ? schoolCourseId.hashCode() : 0);
-		result = 31 * result + (leaCourseId != null ? leaCourseId.hashCode() : 0);
-		result = 31 * result + (otherIds != null ? otherIds.hashCode() : 0);
-		result = 31 * result + (courseTitle != null ? courseTitle.hashCode() : 0);
-		result = 31 * result + (description != null ? description.hashCode() : 0);
-		result = 31 * result + (subject != null ? subject.hashCode() : 0);
-		result = 31 * result + (applicableEducationLevels != null ? applicableEducationLevels.hashCode() : 0);
-		result = 31 * result + (scedCourseCode != null ? scedCourseCode.hashCode() : 0);
-		result = 31 * result + (scedCourseLevelCode != null ? scedCourseLevelCode.hashCode() : 0);
-		result = 31 * result + (scedCourseSubjectAreaCode != null ? scedCourseSubjectAreaCode.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

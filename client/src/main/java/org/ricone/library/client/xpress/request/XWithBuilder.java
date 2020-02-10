@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  * @since 2020-01-31
  */
 
-public final class XWithBuilder {
+final class XWithBuilder {
 	private XPagingBuilder paging;
 	private Integer schoolYear;
 	private boolean accountProvisioning;

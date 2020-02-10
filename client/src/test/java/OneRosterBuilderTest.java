@@ -2,10 +2,11 @@ import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.IResponse;
+import org.ricone.library.client.core.Util;
 import org.ricone.library.client.oneroster.request.*;
 import org.ricone.library.client.oneroster.response.OffsetResponse;
+import org.ricone.library.client.oneroster.response.OrgsResponse;
 import org.ricone.library.client.oneroster.response.Response;
-import org.ricone.library.client.core.Util;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 /**
  * @author Dan Whitehouse <daniel.whitehouse@neric.org>
  * @version 2020.1
- * @since 2020-01-30
+ * @since 2020.1
  */
 
 public class OneRosterBuilderTest {
@@ -30,15 +31,14 @@ public class OneRosterBuilderTest {
         if(endpoint.isPresent()) {
             OneRoster oneRoster = new OneRoster(endpoint.get());
 
-            offsetTest(oneRoster);
+            //offsetTest(oneRoster);
             //allFeaturesTest(oneRoster);
             //buildVerifyTest(oneRoster);
             //responseInterfaceTest(oneRoster);
             //requestTest(oneRoster);
 
-
             //orgTest(oneRoster);
-            //academicSessionsTest(oneRoster);
+            academicSessionsTest(oneRoster);
             //coursesTest(oneRoster);
             //classesTest(oneRoster);
             //enrollmentsTest(oneRoster);
@@ -301,5 +301,31 @@ public class OneRosterBuilderTest {
                 .paging().limit(5).end()
             .end()
         .build());
+    }
+
+    private static void accessTest(OneRoster oneRoster) throws InvalidPathException {
+        //Response
+        IResponse<Orgs> iResponse = new OrgsResponse();
+        iResponse.setResponseClass(null); //shouldn't be accessible
+        iResponse.setModelClass(null); //shouldn't be accessible
+
+        Response<Orgs> response = new OrgsResponse();
+        response.setResponseClass(null); //shouldn't be accessible
+        response.setModelClass(null); //shouldn't be accessible
+
+        OrgsResponse orgsResponse = new OrgsResponse();
+        orgsResponse.setResponseClass(null); //shouldn't be accessible
+        orgsResponse.setModelClass(null); //shouldn't be accessible
+
+        //Request
+        IField iField = Field.sourcedId;
+        Field field = Field.sourcedId;
+        Field.Demographics demographics = Field.Demographics.asian;
+
+        ServicePath servicePath = ServicePath.GET_Orgs;
+        Predicate predicate = Predicate.Equals;
+        SortOrder sortOrder = SortOrder.DESC;
+        LogicalOperation logicalOperation = LogicalOperation.AND;
+        Filter filter = new Filter(field, predicate, "");
     }
 }

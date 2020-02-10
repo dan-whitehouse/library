@@ -8,7 +8,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.ricone.library.client.oneroster.response.model.Error;
-import org.ricone.library.client.oneroster.response.model.ResponseModel;
+import org.ricone.library.client.core.Model;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -24,7 +24,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"warnings"})
 @JacksonXmlRootElement(localName = "data")
-public abstract class BaseMultiResponse<M extends ResponseModel> extends Response<M> implements Serializable {
+abstract class BaseMultiResponse<M extends Model> extends Response<M> implements Serializable {
 	private M data;
 	@JsonIgnore
 	private String requestPath;

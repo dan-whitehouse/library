@@ -3,7 +3,7 @@ package org.ricone.library.client.xpress.request;
 
 import java.util.function.Consumer;
 
-public final class XRequestBuilder {
+final class XRequestBuilder {
 
 	private ServicePath path;
 	private String id;

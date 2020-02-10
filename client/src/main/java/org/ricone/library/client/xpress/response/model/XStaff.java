@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "name", "localId", "stateProvinceId", "otherIds", "sex", "email", "primaryAssignment", "otherAssignments", "metadata"})
 @JsonRootName(value = "xStaff")
-public class XStaff {
+public class XStaff extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -42,8 +36,7 @@ public class XStaff {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XStaff() {
-	}
+	public XStaff() { }
 
 	public XStaff(String refId, Name name, String localId, String stateProvinceId, OtherIds otherIds, String sex, Email email, PrimaryAssignment primaryAssignment, OtherAssignments otherAssignments, Metadata metadata) {
 		this.refId = refId;
@@ -175,53 +168,36 @@ public class XStaff {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, name, localId, stateProvinceId, otherIds, appProvisioningInfo, sex, email, primaryAssignment, otherAssignments, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XStaff xStaff = (XStaff) o;
+		return Objects.equals(refId, xStaff.refId) &&
+				Objects.equals(name, xStaff.name) &&
+				Objects.equals(localId, xStaff.localId) &&
+				Objects.equals(stateProvinceId, xStaff.stateProvinceId) &&
+				Objects.equals(otherIds, xStaff.otherIds) &&
+				Objects.equals(sex, xStaff.sex) &&
+				Objects.equals(email, xStaff.email) &&
+				Objects.equals(primaryAssignment, xStaff.primaryAssignment) &&
+				Objects.equals(otherAssignments, xStaff.otherAssignments) &&
+				Objects.equals(appProvisioningInfo, xStaff.appProvisioningInfo) &&
+				Objects.equals(metadata, xStaff.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, name, localId, stateProvinceId, otherIds, sex, email, primaryAssignment, otherAssignments, appProvisioningInfo, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XStaff{" + "refId='" + refId + '\'' + ", name=" + name + ", localId='" + localId + '\'' + ", stateProvinceId='" + stateProvinceId + '\'' + ", otherIds=" + otherIds + ", sex='" + sex + '\'' + ", email=" + email + ", primaryAssignment=" + primaryAssignment + ", otherAssignments=" + otherAssignments + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XStaff)) return false;
-
-		XStaff xStaff = (XStaff) o;
-
-		if(refId != null ? !refId.equals(xStaff.refId) : xStaff.refId != null) return false;
-		if(name != null ? !name.equals(xStaff.name) : xStaff.name != null) return false;
-		if(localId != null ? !localId.equals(xStaff.localId) : xStaff.localId != null) return false;
-		if(stateProvinceId != null ? !stateProvinceId.equals(xStaff.stateProvinceId) : xStaff.stateProvinceId != null)
-			return false;
-		if(otherIds != null ? !otherIds.equals(xStaff.otherIds) : xStaff.otherIds != null) return false;
-		if(sex != null ? !sex.equals(xStaff.sex) : xStaff.sex != null) return false;
-		if(email != null ? !email.equals(xStaff.email) : xStaff.email != null) return false;
-		if(primaryAssignment != null ? !primaryAssignment.equals(xStaff.primaryAssignment) : xStaff.primaryAssignment != null)
-			return false;
-		if(otherAssignments != null ? !otherAssignments.equals(xStaff.otherAssignments) : xStaff.otherAssignments != null)
-			return false;
-		if(appProvisioningInfo != null ? !appProvisioningInfo.equals(xStaff.appProvisioningInfo) : xStaff.appProvisioningInfo != null)
-			return false;
-		return metadata != null ? metadata.equals(xStaff.metadata) : xStaff.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (localId != null ? localId.hashCode() : 0);
-		result = 31 * result + (stateProvinceId != null ? stateProvinceId.hashCode() : 0);
-		result = 31 * result + (otherIds != null ? otherIds.hashCode() : 0);
-		result = 31 * result + (sex != null ? sex.hashCode() : 0);
-		result = 31 * result + (email != null ? email.hashCode() : 0);
-		result = 31 * result + (primaryAssignment != null ? primaryAssignment.hashCode() : 0);
-		result = 31 * result + (otherAssignments != null ? otherAssignments.hashCode() : 0);
-		result = 31 * result + (appProvisioningInfo != null ? appProvisioningInfo.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

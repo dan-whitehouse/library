@@ -1,23 +1,18 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import org.ricone.library.client.core.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"xCalendar"})
 @JsonRootName(value = "xCalendars")
-public class XCalendars {
+public class XCalendars extends Model {
 	@JsonProperty("xCalendar")
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private List<XCalendar> xCalendar;
@@ -39,6 +34,24 @@ public class XCalendars {
 	@JsonProperty("xCalendar")
 	public void setXCalendar(List<XCalendar> xCalendar) {
 		this.xCalendar = xCalendar;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return xCalendar.isEmpty();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XCalendars that = (XCalendars) o;
+		return Objects.equals(xCalendar, that.xCalendar);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(xCalendar);
 	}
 
 	@Override

@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "name", "otherNames", "localId", "stateProvinceId", "otherIds", "address", "phoneNumber", "otherPhoneNumbers", "email", "otherEmails", "demographics", "enrollment", "otherEnrollments", "academicSummary", "studentContacts", "languages", "metadata"})
 @JsonRootName(value = "xStudent")
-public class XStudent {
+public class XStudent extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -58,8 +52,7 @@ public class XStudent {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XStudent() {
-	}
+	public XStudent() { }
 
 	public XStudent(String refId, Name name, OtherNames otherNames, String localId, String stateProvinceId, OtherIds otherIds, Address address, PhoneNumber phoneNumber, OtherPhoneNumbers otherPhoneNumbers, Email email, OtherEmails otherEmails, Demographics demographics, Enrollment enrollment, OtherEnrollments otherEnrollments, AcademicSummary academicSummary, StudentContacts studentContacts, Languages languages, Metadata metadata) {
 		this.refId = refId;
@@ -279,72 +272,44 @@ public class XStudent {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, name, otherNames, localId, stateProvinceId, otherIds, address, phoneNumber, otherPhoneNumbers, email, otherEmails, demographics, enrollment, otherEnrollments, academicSummary, studentContacts, languages, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XStudent xStudent = (XStudent) o;
+		return Objects.equals(refId, xStudent.refId) &&
+				Objects.equals(name, xStudent.name) &&
+				Objects.equals(otherNames, xStudent.otherNames) &&
+				Objects.equals(localId, xStudent.localId) &&
+				Objects.equals(stateProvinceId, xStudent.stateProvinceId) &&
+				Objects.equals(otherIds, xStudent.otherIds) &&
+				Objects.equals(address, xStudent.address) &&
+				Objects.equals(phoneNumber, xStudent.phoneNumber) &&
+				Objects.equals(otherPhoneNumbers, xStudent.otherPhoneNumbers) &&
+				Objects.equals(email, xStudent.email) &&
+				Objects.equals(otherEmails, xStudent.otherEmails) &&
+				Objects.equals(demographics, xStudent.demographics) &&
+				Objects.equals(enrollment, xStudent.enrollment) &&
+				Objects.equals(otherEnrollments, xStudent.otherEnrollments) &&
+				Objects.equals(academicSummary, xStudent.academicSummary) &&
+				Objects.equals(studentContacts, xStudent.studentContacts) &&
+				Objects.equals(languages, xStudent.languages) &&
+				Objects.equals(appProvisioningInfo, xStudent.appProvisioningInfo) &&
+				Objects.equals(metadata, xStudent.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, name, otherNames, localId, stateProvinceId, otherIds, address, phoneNumber, otherPhoneNumbers, email, otherEmails, demographics, enrollment, otherEnrollments, academicSummary, studentContacts, languages, appProvisioningInfo, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XStudent{" + "refId='" + refId + '\'' + ", name=" + name + ", otherNames=" + otherNames + ", localId='" + localId + '\'' + ", stateProvinceId='" + stateProvinceId + '\'' + ", otherIds=" + otherIds + ", address=" + address + ", phoneNumber=" + phoneNumber + ", otherPhoneNumbers=" + otherPhoneNumbers + ", email=" + email + ", otherEmails=" + otherEmails + ", demographics=" + demographics + ", enrollment=" + enrollment + ", otherEnrollments=" + otherEnrollments + ", academicSummary=" + academicSummary + ", studentContacts=" + studentContacts + ", languages=" + languages + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XStudent)) return false;
-
-		XStudent xStudent = (XStudent) o;
-
-		if(refId != null ? !refId.equals(xStudent.refId) : xStudent.refId != null) return false;
-		if(name != null ? !name.equals(xStudent.name) : xStudent.name != null) return false;
-		if(otherNames != null ? !otherNames.equals(xStudent.otherNames) : xStudent.otherNames != null) return false;
-		if(localId != null ? !localId.equals(xStudent.localId) : xStudent.localId != null) return false;
-		if(stateProvinceId != null ? !stateProvinceId.equals(xStudent.stateProvinceId) : xStudent.stateProvinceId != null)
-			return false;
-		if(otherIds != null ? !otherIds.equals(xStudent.otherIds) : xStudent.otherIds != null) return false;
-		if(address != null ? !address.equals(xStudent.address) : xStudent.address != null) return false;
-		if(phoneNumber != null ? !phoneNumber.equals(xStudent.phoneNumber) : xStudent.phoneNumber != null) return false;
-		if(otherPhoneNumbers != null ? !otherPhoneNumbers.equals(xStudent.otherPhoneNumbers) : xStudent.otherPhoneNumbers != null)
-			return false;
-		if(email != null ? !email.equals(xStudent.email) : xStudent.email != null) return false;
-		if(otherEmails != null ? !otherEmails.equals(xStudent.otherEmails) : xStudent.otherEmails != null) return false;
-		if(demographics != null ? !demographics.equals(xStudent.demographics) : xStudent.demographics != null)
-			return false;
-		if(enrollment != null ? !enrollment.equals(xStudent.enrollment) : xStudent.enrollment != null) return false;
-		if(otherEnrollments != null ? !otherEnrollments.equals(xStudent.otherEnrollments) : xStudent.otherEnrollments != null)
-			return false;
-		if(academicSummary != null ? !academicSummary.equals(xStudent.academicSummary) : xStudent.academicSummary != null)
-			return false;
-		if(studentContacts != null ? !studentContacts.equals(xStudent.studentContacts) : xStudent.studentContacts != null)
-			return false;
-		if(languages != null ? !languages.equals(xStudent.languages) : xStudent.languages != null) return false;
-		if(appProvisioningInfo != null ? !appProvisioningInfo.equals(xStudent.appProvisioningInfo) : xStudent.appProvisioningInfo != null)
-			return false;
-		return metadata != null ? metadata.equals(xStudent.metadata) : xStudent.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (otherNames != null ? otherNames.hashCode() : 0);
-		result = 31 * result + (localId != null ? localId.hashCode() : 0);
-		result = 31 * result + (stateProvinceId != null ? stateProvinceId.hashCode() : 0);
-		result = 31 * result + (otherIds != null ? otherIds.hashCode() : 0);
-		result = 31 * result + (address != null ? address.hashCode() : 0);
-		result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-		result = 31 * result + (otherPhoneNumbers != null ? otherPhoneNumbers.hashCode() : 0);
-		result = 31 * result + (email != null ? email.hashCode() : 0);
-		result = 31 * result + (otherEmails != null ? otherEmails.hashCode() : 0);
-		result = 31 * result + (demographics != null ? demographics.hashCode() : 0);
-		result = 31 * result + (enrollment != null ? enrollment.hashCode() : 0);
-		result = 31 * result + (otherEnrollments != null ? otherEnrollments.hashCode() : 0);
-		result = 31 * result + (academicSummary != null ? academicSummary.hashCode() : 0);
-		result = 31 * result + (studentContacts != null ? studentContacts.hashCode() : 0);
-		result = 31 * result + (languages != null ? languages.hashCode() : 0);
-		result = 31 * result + (appProvisioningInfo != null ? appProvisioningInfo.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.ricone.library.client.core.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 @JsonRootName("enrollments")
 @JacksonXmlRootElement(localName = "enrollments")
-public class Enrollments extends ResponseModel implements Serializable {
+public class Enrollments extends Model implements Serializable {
 
     @JsonProperty("enrollments")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "enrollment")

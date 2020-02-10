@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.ricone.library.client.core.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @JsonRootName("classes")
 @JacksonXmlRootElement(localName = "classes")
-public class Classes extends ResponseModel implements Serializable {
+public class Classes extends Model implements Serializable {
 
     @JsonProperty("classes")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "class")

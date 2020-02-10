@@ -9,8 +9,7 @@ package org.ricone.library.client.oneroster.request;
 public enum Field implements IField {
 	sourcedId("sourcedId", FieldType.All),
 	status("status", FieldType.All),
-	dateLastModified("dateLastModified", FieldType.All),
-	metadata("metadata", FieldType.All);
+	dateLastModified("dateLastModified", FieldType.All);
 
 	private final String value;
 	private final FieldType type;
@@ -27,6 +26,27 @@ public enum Field implements IField {
 	@Override
 	public FieldType getType() {
 		return type;
+	}
+
+	public enum Metadata implements IField {
+		ricone_districtId("metadata.ricone.districtId", FieldType.All),
+		ricone_schoolYear("metadata.ricone.schoolYear", FieldType.All);
+
+		private final String value;
+		private final FieldType type2;
+		Metadata(String value, FieldType type) {
+			this.value = value;
+			this.type2 = type;
+		}
+
+		@Override
+		public String getValue() {
+			return value;
+		}
+		@Override
+		public FieldType getType() {
+			return type2;
+		}
 	}
 
 	public enum Orgs implements IField {

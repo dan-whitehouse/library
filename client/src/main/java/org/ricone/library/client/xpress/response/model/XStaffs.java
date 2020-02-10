@@ -1,23 +1,18 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import org.ricone.library.client.core.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"xStaff"})
 @JsonRootName(value = "xStaffs")
-public class XStaffs {
+public class XStaffs extends Model {
 	@JsonProperty("xStaff")
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private List<XStaff> xStaff;
@@ -39,6 +34,24 @@ public class XStaffs {
 	@JsonProperty("xStaff")
 	public void setXStaff(List<XStaff> xStaff) {
 		this.xStaff = xStaff;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return xStaff.isEmpty();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XStaffs xStaffs = (XStaffs) o;
+		return Objects.equals(xStaff, xStaffs.xStaff);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(xStaff);
 	}
 
 	@Override

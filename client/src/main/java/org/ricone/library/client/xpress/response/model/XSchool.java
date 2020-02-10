@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "leaRefId", "localId", "stateProvinceId", "otherIds", "schoolName", "gradeLevels", "address", "phoneNumber", "otherPhoneNumbers", "metadata"})
 @JsonRootName(value = "xSchool")
-public class XSchool {
+public class XSchool extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -42,8 +36,7 @@ public class XSchool {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XSchool() {
-	}
+	public XSchool() { }
 
 	public XSchool(String refId, String leaRefId, String localId, String stateProvinceId, OtherIds otherIds, String schoolName, GradeLevels gradeLevels, Address address, PhoneNumber phoneNumber, OtherPhoneNumbers otherPhoneNumbers, Metadata metadata) {
 		this.refId = refId;
@@ -170,51 +163,36 @@ public class XSchool {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, leaRefId, localId, stateProvinceId, otherIds, schoolName, gradeLevels, address, phoneNumber, otherPhoneNumbers, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XSchool xSchool = (XSchool) o;
+		return Objects.equals(refId, xSchool.refId) &&
+				Objects.equals(leaRefId, xSchool.leaRefId) &&
+				Objects.equals(localId, xSchool.localId) &&
+				Objects.equals(stateProvinceId, xSchool.stateProvinceId) &&
+				Objects.equals(otherIds, xSchool.otherIds) &&
+				Objects.equals(schoolName, xSchool.schoolName) &&
+				Objects.equals(gradeLevels, xSchool.gradeLevels) &&
+				Objects.equals(address, xSchool.address) &&
+				Objects.equals(phoneNumber, xSchool.phoneNumber) &&
+				Objects.equals(otherPhoneNumbers, xSchool.otherPhoneNumbers) &&
+				Objects.equals(metadata, xSchool.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, leaRefId, localId, stateProvinceId, otherIds, schoolName, gradeLevels, address, phoneNumber, otherPhoneNumbers, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XSchool{" + "refId='" + refId + '\'' + ", leaRefId='" + leaRefId + '\'' + ", localId='" + localId + '\'' + ", stateProvinceId='" + stateProvinceId + '\'' + ", otherIds=" + otherIds + ", schoolName='" + schoolName + '\'' + ", gradeLevels=" + gradeLevels + ", address=" + address + ", phoneNumber=" + phoneNumber + ", otherPhoneNumbers=" + otherPhoneNumbers + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XSchool)) return false;
-
-		XSchool xSchool = (XSchool) o;
-
-		if(refId != null ? !refId.equals(xSchool.refId) : xSchool.refId != null) return false;
-		if(leaRefId != null ? !leaRefId.equals(xSchool.leaRefId) : xSchool.leaRefId != null) return false;
-		if(localId != null ? !localId.equals(xSchool.localId) : xSchool.localId != null) return false;
-		if(stateProvinceId != null ? !stateProvinceId.equals(xSchool.stateProvinceId) : xSchool.stateProvinceId != null)
-			return false;
-		if(otherIds != null ? !otherIds.equals(xSchool.otherIds) : xSchool.otherIds != null) return false;
-		if(schoolName != null ? !schoolName.equals(xSchool.schoolName) : xSchool.schoolName != null) return false;
-		if(gradeLevels != null ? !gradeLevels.equals(xSchool.gradeLevels) : xSchool.gradeLevels != null) return false;
-		if(address != null ? !address.equals(xSchool.address) : xSchool.address != null) return false;
-		if(phoneNumber != null ? !phoneNumber.equals(xSchool.phoneNumber) : xSchool.phoneNumber != null) return false;
-		if(otherPhoneNumbers != null ? !otherPhoneNumbers.equals(xSchool.otherPhoneNumbers) : xSchool.otherPhoneNumbers != null)
-			return false;
-		return metadata != null ? metadata.equals(xSchool.metadata) : xSchool.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (leaRefId != null ? leaRefId.hashCode() : 0);
-		result = 31 * result + (localId != null ? localId.hashCode() : 0);
-		result = 31 * result + (stateProvinceId != null ? stateProvinceId.hashCode() : 0);
-		result = 31 * result + (otherIds != null ? otherIds.hashCode() : 0);
-		result = 31 * result + (schoolName != null ? schoolName.hashCode() : 0);
-		result = 31 * result + (gradeLevels != null ? gradeLevels.hashCode() : 0);
-		result = 31 * result + (address != null ? address.hashCode() : 0);
-		result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-		result = 31 * result + (otherPhoneNumbers != null ? otherPhoneNumbers.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

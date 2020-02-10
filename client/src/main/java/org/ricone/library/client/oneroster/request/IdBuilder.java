@@ -1,6 +1,7 @@
 package org.ricone.library.client.oneroster.request;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -14,7 +15,7 @@ final class IdBuilder {
 	private List<String> ids;
 
 	private IdBuilder() {
-		this.ids = new ArrayList<>();
+		this.ids = new LinkedList<>();
 	}
 
 	public static Builder builder() {

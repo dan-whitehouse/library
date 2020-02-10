@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "schoolRefId", "schoolYear", "sessions", "metadata"})
 @JsonRootName(value = "xCalendar")
-public class XCalendar {
+public class XCalendar extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -30,8 +24,7 @@ public class XCalendar {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XCalendar() {
-	}
+	public XCalendar() { }
 
 	public XCalendar(String refId, String schoolRefId, String schoolYear, Sessions sessions, Metadata metadata) {
 		this.refId = refId;
@@ -92,38 +85,30 @@ public class XCalendar {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, schoolRefId, schoolYear, sessions, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XCalendar xCalendar = (XCalendar) o;
+		return Objects.equals(refId, xCalendar.refId) &&
+				Objects.equals(schoolRefId, xCalendar.schoolRefId) &&
+				Objects.equals(schoolYear, xCalendar.schoolYear) &&
+				Objects.equals(sessions, xCalendar.sessions) &&
+				Objects.equals(metadata, xCalendar.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, schoolRefId, schoolYear, sessions, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XCalendar{" + "refId='" + refId + '\'' + ", schoolRefId='" + schoolRefId + '\'' + ", schoolYear='" + schoolYear + '\'' + ", sessions=" + sessions + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XCalendar)) return false;
-
-		XCalendar xCalendar = (XCalendar) o;
-
-		if(refId != null ? !refId.equals(xCalendar.refId) : xCalendar.refId != null) return false;
-		if(schoolRefId != null ? !schoolRefId.equals(xCalendar.schoolRefId) : xCalendar.schoolRefId != null)
-			return false;
-		if(schoolYear != null ? !schoolYear.equals(xCalendar.schoolYear) : xCalendar.schoolYear != null) return false;
-		if(sessions != null ? !sessions.equals(xCalendar.sessions) : xCalendar.sessions != null) return false;
-		return metadata != null ? metadata.equals(xCalendar.metadata) : xCalendar.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (schoolRefId != null ? schoolRefId.hashCode() : 0);
-		result = 31 * result + (schoolYear != null ? schoolYear.hashCode() : 0);
-		result = 31 * result + (sessions != null ? sessions.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

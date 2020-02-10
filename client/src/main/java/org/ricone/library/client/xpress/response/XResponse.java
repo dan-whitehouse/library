@@ -1,5 +1,6 @@
 package org.ricone.library.client.xpress.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,12 +8,23 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.ricone.library.client.core.IResponse;
+import org.ricone.library.client.core.Model;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-public abstract class XResponse<M> implements IResponse<M> {
+public abstract class XResponse<M extends Model> implements IResponse<M> {
 	private Class<? extends IResponse<M>> responseClass;
 	private Class<M> modelClass;
+	@JsonIgnore
+	private String requestPath;
+	@JsonIgnore
+	private HttpHeaders requestHeaders;
+	@JsonIgnore
+	private HttpStatus responseStatus;
+	@JsonIgnore
+	private String responseStatusText;
+	@JsonIgnore
+	private HttpHeaders responseHeaders;
 
 	@Override
 	public void setResponseClass(Class<? extends IResponse<M>> clazz) {
@@ -31,34 +43,54 @@ public abstract class XResponse<M> implements IResponse<M> {
 	public abstract void setData(M data);
 
 	@Override
-	public abstract String getRequestPath();
+	public String getRequestPath() {
+		return requestPath;
+	}
 
 	@Override
-	public abstract void setRequestPath(String requestPath);
+	public void setRequestPath(String requestPath) {
+		this.requestPath = requestPath;
+	}
 
 	@Override
-	public abstract HttpHeaders getRequestHeaders();
+	public HttpHeaders getRequestHeaders() {
+		return requestHeaders;
+	}
 
 	@Override
-	public abstract void setRequestHeaders(HttpHeaders requestHeaders);
+	public void setRequestHeaders(HttpHeaders requestHeaders) {
+		this.requestHeaders = requestHeaders;
+	}
 
 	@Override
-	public abstract HttpStatus getResponseStatus();
+	public HttpStatus getResponseStatus() {
+		return responseStatus;
+	}
 
 	@Override
-	public abstract void setResponseStatus(HttpStatus status);
+	public void setResponseStatus(HttpStatus responseStatus) {
+		this.responseStatus = responseStatus;
+	}
 
 	@Override
-	public abstract String getResponseStatusText();
+	public String getResponseStatusText() {
+		return responseStatusText;
+	}
 
 	@Override
-	public abstract void setResponseStatusText(String statusText);
+	public void setResponseStatusText(String responseStatusText) {
+		this.responseStatusText = responseStatusText;
+	}
 
 	@Override
-	public abstract HttpHeaders getResponseHeaders();
+	public HttpHeaders getResponseHeaders() {
+		return responseHeaders;
+	}
 
 	@Override
-	public abstract void setResponseHeaders(HttpHeaders responseHeaders);
+	public void setResponseHeaders(HttpHeaders responseHeaders) {
+		this.responseHeaders = responseHeaders;
+	}
 
 	@Override
 	public String getJSON() {

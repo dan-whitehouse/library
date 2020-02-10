@@ -3,6 +3,7 @@ package org.ricone.library.client.oneroster.response.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.ricone.library.client.core.Model;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"sourcedId", "status", "dateLastModified", "metadata"})
-public abstract class Base extends ResponseModel implements Serializable {
+public abstract class Base extends Model implements Serializable {
 	private final static long serialVersionUID = 602595453201771641L;
 	@JsonProperty("sourcedId")
 	private String sourcedId;

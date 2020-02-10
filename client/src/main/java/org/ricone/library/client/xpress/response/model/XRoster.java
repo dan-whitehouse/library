@@ -1,14 +1,8 @@
-/*
- * RIC One File Bridge
- * Version: 1.0.0 Build 20170604-1
- * Copyright © 2017 New York State Education Department
- * Created At Northeastern Regional Information Center By Daniel Whitehouse
- */
-
 package org.ricone.library.client.xpress.response.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.ricone.library.client.core.Model;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -17,7 +11,7 @@ import java.util.stream.Stream;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"@refId", "courseRefId", "courseTitle", "sectionRefId", "subject", "schoolRefId", "schoolSectionId", "schoolYear", "meetingTimes", "students", "primaryStaff", "otherStaffs", "metadata"})
 @JsonRootName(value = "xRoster")
-public class XRoster {
+public class XRoster extends Model {
 	@JsonProperty("@refId")
 	@JacksonXmlProperty(localName = "refId", isAttribute = true)
 	private String refId;
@@ -46,8 +40,7 @@ public class XRoster {
 	@JsonProperty("metadata")
 	private Metadata metadata;
 
-	public XRoster() {
-	}
+	public XRoster() { }
 
 	public XRoster(String refId, String courseRefId, String courseTitle, String sectionRefId, String subject, String schoolRefId, String schoolSectionId, String schoolYear, MeetingTimes meetingTimes, Students students, PrimaryStaff primaryStaff, OtherStaffs otherStaffs, Metadata metadata) {
 		this.refId = refId;
@@ -196,57 +189,38 @@ public class XRoster {
 		this.metadata = metadata;
 	}
 
-	@JsonIgnore
-	public boolean isEmptyObject() {
+	@Override
+	public boolean isEmpty() {
 		return Stream.of(refId, courseRefId, courseTitle, sectionRefId, subject, schoolRefId, schoolSectionId, schoolYear, meetingTimes, students, primaryStaff, otherStaffs, metadata).allMatch(Objects::isNull);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		XRoster xRoster = (XRoster) o;
+		return Objects.equals(refId, xRoster.refId) &&
+				Objects.equals(courseRefId, xRoster.courseRefId) &&
+				Objects.equals(courseTitle, xRoster.courseTitle) &&
+				Objects.equals(sectionRefId, xRoster.sectionRefId) &&
+				Objects.equals(subject, xRoster.subject) &&
+				Objects.equals(schoolRefId, xRoster.schoolRefId) &&
+				Objects.equals(schoolSectionId, xRoster.schoolSectionId) &&
+				Objects.equals(schoolYear, xRoster.schoolYear) &&
+				Objects.equals(meetingTimes, xRoster.meetingTimes) &&
+				Objects.equals(students, xRoster.students) &&
+				Objects.equals(primaryStaff, xRoster.primaryStaff) &&
+				Objects.equals(otherStaffs, xRoster.otherStaffs) &&
+				Objects.equals(metadata, xRoster.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(refId, courseRefId, courseTitle, sectionRefId, subject, schoolRefId, schoolSectionId, schoolYear, meetingTimes, students, primaryStaff, otherStaffs, metadata);
 	}
 
 	@Override
 	public String toString() {
 		return "XRoster{" + "refId='" + refId + '\'' + ", courseRefId='" + courseRefId + '\'' + ", courseTitle='" + courseTitle + '\'' + ", sectionRefId='" + sectionRefId + '\'' + ", subject='" + subject + '\'' + ", schoolRefId='" + schoolRefId + '\'' + ", schoolSectionId='" + schoolSectionId + '\'' + ", schoolYear='" + schoolYear + '\'' + ", meetingTimes=" + meetingTimes + ", students=" + students + ", primaryStaff=" + primaryStaff + ", otherStaffs=" + otherStaffs + ", metadata=" + metadata + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof XRoster)) return false;
-
-		XRoster xRoster = (XRoster) o;
-
-		if(refId != null ? !refId.equals(xRoster.refId) : xRoster.refId != null) return false;
-		if(courseRefId != null ? !courseRefId.equals(xRoster.courseRefId) : xRoster.courseRefId != null) return false;
-		if(courseTitle != null ? !courseTitle.equals(xRoster.courseTitle) : xRoster.courseTitle != null) return false;
-		if(sectionRefId != null ? !sectionRefId.equals(xRoster.sectionRefId) : xRoster.sectionRefId != null)
-			return false;
-		if(subject != null ? !subject.equals(xRoster.subject) : xRoster.subject != null) return false;
-		if(schoolRefId != null ? !schoolRefId.equals(xRoster.schoolRefId) : xRoster.schoolRefId != null) return false;
-		if(schoolSectionId != null ? !schoolSectionId.equals(xRoster.schoolSectionId) : xRoster.schoolSectionId != null)
-			return false;
-		if(schoolYear != null ? !schoolYear.equals(xRoster.schoolYear) : xRoster.schoolYear != null) return false;
-		if(meetingTimes != null ? !meetingTimes.equals(xRoster.meetingTimes) : xRoster.meetingTimes != null)
-			return false;
-		if(students != null ? !students.equals(xRoster.students) : xRoster.students != null) return false;
-		if(primaryStaff != null ? !primaryStaff.equals(xRoster.primaryStaff) : xRoster.primaryStaff != null)
-			return false;
-		if(otherStaffs != null ? !otherStaffs.equals(xRoster.otherStaffs) : xRoster.otherStaffs != null) return false;
-		return metadata != null ? metadata.equals(xRoster.metadata) : xRoster.metadata == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = refId != null ? refId.hashCode() : 0;
-		result = 31 * result + (courseRefId != null ? courseRefId.hashCode() : 0);
-		result = 31 * result + (courseTitle != null ? courseTitle.hashCode() : 0);
-		result = 31 * result + (sectionRefId != null ? sectionRefId.hashCode() : 0);
-		result = 31 * result + (subject != null ? subject.hashCode() : 0);
-		result = 31 * result + (schoolRefId != null ? schoolRefId.hashCode() : 0);
-		result = 31 * result + (schoolSectionId != null ? schoolSectionId.hashCode() : 0);
-		result = 31 * result + (schoolYear != null ? schoolYear.hashCode() : 0);
-		result = 31 * result + (meetingTimes != null ? meetingTimes.hashCode() : 0);
-		result = 31 * result + (students != null ? students.hashCode() : 0);
-		result = 31 * result + (primaryStaff != null ? primaryStaff.hashCode() : 0);
-		result = 31 * result + (otherStaffs != null ? otherStaffs.hashCode() : 0);
-		result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
-		return result;
 	}
 }

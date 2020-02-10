@@ -3,6 +3,8 @@ package org.ricone.library.client.xpress.request;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.IResponse;
+import org.ricone.library.client.core.Model;
 import org.ricone.library.client.xpress.response.*;
 import org.ricone.library.client.xpress.response.model.*;
 import org.springframework.http.*;
@@ -35,157 +37,132 @@ public class XPress {
 
 		this.endpoint = endpoint;
 		this.restTemplate = new RestTemplate();
-		this.restTemplate.setErrorHandler(new XResponseErrorHandler());
+		this.restTemplate.setErrorHandler(new XErrorHandler());
 		this.restTemplate.setMessageConverters(Collections.singletonList(converter));
 	}
 
 	/* PUBLIC REQUESTS */
 	public XLeaResponse getXLea(XRequest request) {
-		return request(request, XLeaResponse.class);
+		return request(request, XLeaResponse.class, XLea.class);
 	}
 
 	public XLeasResponse getXLeas(XRequest request) {
-		return request(request, XLeasResponse.class);
+		return request(request, XLeasResponse.class, XLeas.class);
 	}
 
 	public XSchoolResponse getXSchool(XRequest request) {
-		return request(request, XSchoolResponse.class);
+		return request(request, XSchoolResponse.class, XSchool.class);
 	}
 
-	public XSchoolsResponse getXSchools(XRequest request) {
-		return request(request, XSchoolsResponse.class);
-	}
+	public XSchoolsResponse getXSchools(XRequest request) { return request(request, XSchoolsResponse.class, XSchools.class); }
 
-	public XCalendarResponse getXCalendar(XRequest request) {
-		return request(request, XCalendarResponse.class);
-	}
+	public XCalendarResponse getXCalendar(XRequest request) { return request(request, XCalendarResponse.class, XCalendar.class); }
 
-	public XCalendarsResponse getXCalendars(XRequest request) {
-		return request(request, XCalendarsResponse.class);
-	}
+	public XCalendarsResponse getXCalendars(XRequest request) { return request(request, XCalendarsResponse.class, XCalendars.class); }
 
-	public XCourseResponse getXCourse(XRequest request) {
-		return request(request, XCourseResponse.class);
-	}
+	public XCourseResponse getXCourse(XRequest request) { return request(request, XCourseResponse.class, XCourse.class); }
 
-	public XCoursesResponse getXCourses(XRequest request) {
-		return request(request, XCoursesResponse.class);
-	}
+	public XCoursesResponse getXCourses(XRequest request) { return request(request, XCoursesResponse.class, XCourses.class); }
 
-	public XRosterResponse getXRoster(XRequest request) {
-		return request(request, XRosterResponse.class);
-	}
+	public XRosterResponse getXRoster(XRequest request) { return request(request, XRosterResponse.class, XRoster.class); }
 
-	public XRostersResponse getXRosters(XRequest request) {
-		return request(request, XRostersResponse.class);
-	}
+	public XRostersResponse getXRosters(XRequest request) { return request(request, XRostersResponse.class, XRosters.class); }
 
-	public XStaffResponse getXStaff(XRequest request) {
-		return request(request, XStaffResponse.class);
-	}
+	public XStaffResponse getXStaff(XRequest request) { return request(request, XStaffResponse.class, XStaff.class); }
 
-	public XStaffsResponse getXStaffs(XRequest request) {
-		return request(request, XStaffsResponse.class);
-	}
+	public XStaffsResponse getXStaffs(XRequest request) { return request(request, XStaffsResponse.class, XStaffs.class); }
 
-	public XStudentResponse getXStudent(XRequest request) {
-		return request(request, XStudentResponse.class);
-	}
+	public XStudentResponse getXStudent(XRequest request) { return request(request, XStudentResponse.class, XStudent.class); }
 
-	public XStudentsResponse getXStudents(XRequest request) {
-		return request(request, XStudentsResponse.class);
-	}
+	public XStudentsResponse getXStudents(XRequest request) { return request(request, XStudentsResponse.class, XStudents.class); }
 
-	public XContactResponse getXContact(XRequest request) {
-		return request(request, XContactResponse.class);
-	}
+	public XContactResponse getXContact(XRequest request) { return request(request, XContactResponse.class, XContact.class); }
 
-	public XContactsResponse getXContacts(XRequest request) {
-		return request(request, XContactsResponse.class);
-	}
+	public XContactsResponse getXContacts(XRequest request) { return request(request, XContactsResponse.class, XContacts.class); }
 
-	public Integer getLastPage(XRequest request) {
-		return requestLastPage(request);
-	}
+	public Integer getLastPage(XRequest request) { return requestLastPage(request); }
 
 	public XLastPageResponse getXLastPage(XRequest request) {
 		return requestLastPageResponse(request);
 	}
 
 	/* PRIVATE REQUEST */
-	private <T extends XResponse> T request(XRequest request, Class<T> clazz) {
+	private <R extends IResponse<M>, M extends Model> R request(XRequest request, Class<R> responseClass, Class<M> modelClass) {
 		//Before doing anything, make sure that the request path can return the response object.
-		verifyRequestAndResponse(request, clazz);
+		verifyRequestAndResponse(request, responseClass, modelClass);
 
-		T data = null;
+		R response = null;
 		String requestPath = getRequestPath(request);
-		HttpEntity httpEntity = getHttpEntity(request);
+		HttpEntity<?> httpEntity = getHttpEntity(request);
 		try {
-			ResponseEntity<T> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, clazz);
-			if(response.hasBody()) {
-				data = response.getBody();
-				assert data != null;
-				data.setRequestPath(requestPath);
-				data.setRequestHeaders(httpEntity.getHeaders());
-				data.setResponseStatus(response.getStatusCode());
-				data.setResponseHeaders(response.getHeaders());
+			ResponseEntity<R> entity = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, responseClass);
+			if(entity.hasBody()) {
+				response = entity.getBody();
+				assert response != null;
+				response.setRequestPath(requestPath);
+				response.setRequestHeaders(httpEntity.getHeaders());
+				response.setResponseStatus(entity.getStatusCode());
+				response.setResponseHeaders(entity.getHeaders());
+
+				//Needed for determining the JSON/XML building
+				response.setResponseClass(responseClass);
+				response.setModelClass(modelClass);
 			}
 			else {
-				data = setDataOnNoContent(clazz, requestPath, httpEntity, response);
+				response = setDataOnNoContent(responseClass, modelClass, requestPath, httpEntity, entity);
 			}
 		}
 		catch (HttpClientErrorException e) {
-			data = setDataOnError(clazz, requestPath, httpEntity, e);
+			response = setDataOnError(responseClass, modelClass, requestPath, httpEntity, e);
 		}
 		catch(HttpStatusCodeException c) {
 			System.out.println("TEST TEST TEST");
 		}
-		return data;
+		return response;
 	}
 
 	private Integer requestLastPage(XRequest request) {
-		Integer data = null;
+		Integer response = null;
 		String requestPath = getRequestPath(request);
-		HttpEntity httpEntity = getHttpEntity(request);
+		HttpEntity<?> httpEntity = getHttpEntity(request);
 		try {
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, String.class);
+			ResponseEntity<String> entity = restTemplate.exchange(requestPath, HttpMethod.GET, httpEntity, String.class);
 
-			String value = response.getHeaders().getFirst("navigationLastPage");
+			String value = entity.getHeaders().getFirst("navigationLastPage");
 			if(StringUtils.hasText(value)) {
-				data = NumberUtils.parseNumber(value, Integer.class);
+				response = NumberUtils.parseNumber(value, Integer.class);
 			}
 		}
 		catch (Exception e) {
 			System.out.println("request error: " + e.getMessage());
 		}
-		return data;
+		return response;
 	}
 
 	private XLastPageResponse requestLastPageResponse(XRequest request) {
-		XLastPageResponse data = null;
+		XLastPageResponse response;
 		String requestPath = getRequestPath(request);
-		HttpEntity httpEntity = getHttpEntity(request);
+		HttpEntity<?> httpEntity = getHttpEntity(request);
 		try {
-			ResponseEntity<String> response = restTemplate.exchange(requestPath, HttpMethod.HEAD, httpEntity, String.class);
+			ResponseEntity<String> entity = restTemplate.exchange(requestPath, HttpMethod.HEAD, httpEntity, String.class);
 
-			String value = response.getHeaders().getFirst("navigationLastPage");
+			String value = entity.getHeaders().getFirst("navigationLastPage");
 			if(StringUtils.hasText(value)) {
-				data = new XLastPageResponse(NumberUtils.parseNumber(value, Integer.class));
-				data.setRequestPath(requestPath);
-				data.setRequestHeaders(httpEntity.getHeaders());
-				data.setResponseStatus(response.getStatusCode());
-				data.setResponseHeaders(response.getHeaders());
+				response = new XLastPageResponse(NumberUtils.parseNumber(value, Integer.class));
+				response.setRequestPath(requestPath);
+				response.setRequestHeaders(httpEntity.getHeaders());
+				response.setResponseStatus(entity.getStatusCode());
+				response.setResponseHeaders(entity.getHeaders());
 			}
 			else {
-				data = setDataOnNoContent(XLastPageResponse.class, requestPath, httpEntity, response);
+				response = setDataOnNoContent(XLastPageResponse.class,LastPage.class, requestPath, httpEntity, entity);
 			}
 		}
 		catch (HttpClientErrorException e) {
 			e.printStackTrace();
-			data = setDataOnError(XLastPageResponse.class, requestPath, httpEntity, e);
+			response = setDataOnError(XLastPageResponse.class, LastPage.class, requestPath, httpEntity, e);
 		}
-		return data;
+		return response;
 	}
 
 	/* GET URL */
@@ -236,16 +213,20 @@ public class XPress {
 	}
 
 	/* ON ERROR */
-	private <T extends XResponse> T setDataOnError(Class<T> clazz, String requestPath, HttpEntity httpEntity, HttpClientErrorException exception) {
-		T xResponse = null;
+	private <R extends IResponse<M>, M extends Model> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
+		R xResponse = null;
 		try {
-			xResponse = clazz.getDeclaredConstructor().newInstance();
+			xResponse = responseClass.getDeclaredConstructor().newInstance();
 			xResponse.setData(null);
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
 			xResponse.setResponseHeaders(exception.getResponseHeaders());
 			xResponse.setResponseStatusText(exception.getStatusText());
 			xResponse.setResponseStatus(exception.getStatusCode());
+
+			//Needed for determining the JSON/XML building
+			xResponse.setResponseClass(responseClass);
+			xResponse.setModelClass(modelClass);
 		}
 		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
@@ -253,16 +234,20 @@ public class XPress {
 		return xResponse;
 	}
 
-	private <T extends XResponse> T setDataOnNoContent(Class<T> clazz, String requestPath, HttpEntity httpEntity, ResponseEntity response) {
-		T xResponse = null;
+	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> response) {
+		R xResponse = null;
 		try {
-			xResponse = clazz.getDeclaredConstructor().newInstance();
+			xResponse = responseClass.getDeclaredConstructor().newInstance();
 			xResponse.setData(null);
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
 			xResponse.setResponseHeaders(response.getHeaders());
 			xResponse.setResponseStatusText(response.getStatusCode().getReasonPhrase());
 			xResponse.setResponseStatus(response.getStatusCode());
+
+			//Needed for determining the JSON/XML building
+			xResponse.setResponseClass(responseClass);
+			xResponse.setModelClass(modelClass);
 		}
 		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
@@ -270,10 +255,10 @@ public class XPress {
 		return xResponse;
 	}
 
-	private <T extends XResponse> void verifyRequestAndResponse(XRequest request, Class<T> clazz) {
-		if(!request.getRequest().getPath().getResponseClass().equals(clazz)) {
+	private <R extends IResponse<M>, M extends Model> void verifyRequestAndResponse(XRequest request, Class<R> responseClass, Class<M> modelClass) {
+		if(!request.getRequest().getPath().getResponseClass().equals(responseClass)) {
 			throw new IllegalArgumentException("ServicePath: " + request.getRequest().getPath() + " requires that the response return: " + request.getRequest().getPath().getResponseClass().getCanonicalName()
-					+ ", however the response will return: " + clazz.getCanonicalName());
+					+ ", however the response will return: " + responseClass.getCanonicalName());
 		}
 	}
 }

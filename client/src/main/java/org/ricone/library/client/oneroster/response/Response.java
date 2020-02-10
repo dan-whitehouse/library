@@ -9,19 +9,19 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.ricone.library.client.core.IResponse;
-import org.ricone.library.client.oneroster.response.model.ResponseModel;
+import org.ricone.library.client.core.Model;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 /**
  * @author Dan Whitehouse <daniel.whitehouse@neric.org>
  * @version 2020.1
- * @since 2020-01-30
+ * @since 2020.1
  */
 
-public abstract class Response<M extends ResponseModel> implements IResponse<M> {
+public abstract class Response<M extends Model> implements IResponse<M> {
 	private Class<? extends IResponse<M>> responseClass;
-	private Class<M> clazz;
+	private Class<M> modelClass;
 
 	@Override
 	public void setResponseClass(Class<? extends IResponse<M>> clazz) {
@@ -30,7 +30,7 @@ public abstract class Response<M extends ResponseModel> implements IResponse<M> 
 
 	@Override
 	public void setModelClass(Class<M> clazz) {
-		this.clazz = clazz;
+		this.modelClass = clazz;
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class Response<M extends ResponseModel> implements IResponse<M> 
 			mapper.registerModule(new Jdk8Module());
 			mapper.registerModule(new JavaTimeModule());
 
-			if(this.clazz.getSuperclass().isAssignableFrom(BaseSingleResponse.class)) {
+			if(this.modelClass.getSuperclass().isAssignableFrom(BaseSingleResponse.class)) {
 				//If the request is a single object, wrap it.
 				mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 			}
@@ -107,8 +107,6 @@ public abstract class Response<M extends ResponseModel> implements IResponse<M> 
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 			mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-			//TODO: Dates DateTimes are screwy
 
 			try {
 				return mapper.writeValueAsString(getData());

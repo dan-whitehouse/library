@@ -1,6 +1,6 @@
 package org.ricone.library.client.xpress.request;
 
-public enum ServicePathType {
+enum ServicePathType {
 	OBJECT(),
 	SINGLE(),
 	PREDICATE()

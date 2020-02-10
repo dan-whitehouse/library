@@ -1,5 +1,7 @@
 package org.ricone.library.client.oneroster.response.model;
 
+import org.ricone.library.client.core.Model;
+
 import java.util.Iterator;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Iterator;
  * @since 2020-02-05
  */
 
-public class Offset extends ResponseModel implements Iterator<Integer>  {
+public class Offset extends Model implements Iterator<Integer>  {
 	private int current = 0;
 	private int[] offsets;
 

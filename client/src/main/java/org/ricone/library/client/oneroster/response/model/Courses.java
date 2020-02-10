@@ -1,21 +1,20 @@
 package org.ricone.library.client.oneroster.response.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.ricone.library.client.core.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @JsonRootName("courses")
 @JacksonXmlRootElement(localName = "courses")
-public class Courses extends ResponseModel implements Serializable {
+public class Courses extends Model implements Serializable {
 
     @JsonProperty("courses")
     @JacksonXmlElementWrapper(useWrapping = false) @JacksonXmlProperty(localName = "course")

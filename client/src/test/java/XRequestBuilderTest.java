@@ -8,6 +8,7 @@ import org.ricone.library.client.xpress.request.XPress;
 import org.ricone.library.client.xpress.request.XRequest;
 import org.ricone.library.client.xpress.response.XLastPageResponse;
 import org.ricone.library.client.xpress.response.XResponse;
+import org.ricone.library.client.xpress.response.model.LastPage;
 import org.ricone.library.client.xpress.response.model.XLea;
 import org.ricone.library.client.xpress.response.model.XLeas;
 import org.ricone.library.exception.InvalidPathException;
@@ -83,7 +84,7 @@ public class XRequestBuilderTest {
 			.build()
 		);
 
-		for (int pageNumber = 1; pageNumber <= lastPage.getData(); pageNumber++) {
+		for (int pageNumber = 1; pageNumber <= lastPage.getData().getLastPage(); pageNumber++) {
 			XResponse<XLeas> response = xPress.getXLeas(XRequest.builder()
 				.request().path(servicePath).end()
 				.with()
@@ -99,7 +100,7 @@ public class XRequestBuilderTest {
 		System.out.println("/* getXLastPage */");
 		int pageSize = 2;
 
-		XResponse<Integer> lastPageResponse = xPress.getXLastPage(XRequest.builder()
+		XResponse<LastPage> lastPageResponse = xPress.getXLastPage(XRequest.builder()
 			.request().path(ServicePath.GET_XLEAS).end()
 			.with()
 				.paging()
@@ -107,7 +108,7 @@ public class XRequestBuilderTest {
 			.end()
 			.build()
 		);
-		Integer lastPage = lastPageResponse.getData();
+		Integer lastPage = lastPageResponse.getData().getLastPage();
 		Util.debugResponse(lastPageResponse);
 	}
 

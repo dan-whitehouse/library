@@ -6,9 +6,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.Experimental;
 import org.ricone.library.client.core.IResponse;
-import org.ricone.library.client.oneroster.response.OffsetResponse;
-import org.ricone.library.client.oneroster.response.ResponseErrorHandler;
+import org.ricone.library.client.core.Model;
+import org.ricone.library.client.oneroster.response.*;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
 /**
  * @author Dan Whitehouse <daniel.whitehouse@neric.org>
  * @version 2020.1
- * @since 2020-01-30
+ * @since 2020.1
  */
 
 public class OneRoster {
@@ -53,62 +54,59 @@ public class OneRoster {
 
 		this.endpoint = endpoint;
 		this.restTemplate = new RestTemplate();
-		this.restTemplate.setErrorHandler(new ResponseErrorHandler());
+		this.restTemplate.setErrorHandler(new ErrorHandler());
 		this.restTemplate.setMessageConverters(Collections.singletonList(converter));
 	}
 
 	/* PUBLIC REQUESTS */
-	public OrgResponse getOrg(Request request) {
-		return request(request, OrgResponse.class, Org.class);
-	}
+	public OrgResponse getOrg(Request request) { return request(request, OrgResponse.class, Org.class); }
 
-	public OrgsResponse getOrgs(Request request) {
-		return request(request, OrgsResponse.class, Orgs.class);
-	}
+	public OrgsResponse getOrgs(Request request) { return request(request, OrgsResponse.class, Orgs.class); }
 
 	public AcademicSessionResponse getAcademicSession(Request request) { return request(request, AcademicSessionResponse.class, AcademicSession.class); }
 
 	public AcademicSessionsResponse getAcademicSessions(Request request) { return request(request, AcademicSessionsResponse.class, AcademicSessions.class); }
 
-	public CourseResponse getCourse(Request request) {
-		return request(request, CourseResponse.class, Course.class);
-	}
+	public CourseResponse getCourse(Request request) { return request(request, CourseResponse.class, Course.class); }
 
-	public CoursesResponse getCourses(Request request) {
-		return request(request, CoursesResponse.class, Courses.class);
-	}
+	public CoursesResponse getCourses(Request request) { return request(request, CoursesResponse.class, Courses.class); }
 
-	public ClassResponse getClass(Request request) {
-		return request(request, ClassResponse.class, org.ricone.library.client.oneroster.response.model.Class.class);
-	}
+	public ClassResponse getClass(Request request) { return request(request, ClassResponse.class, org.ricone.library.client.oneroster.response.model.Class.class); }
 
-	public ClassesResponse getClasses(Request request) {
-		return request(request, ClassesResponse.class, Classes.class);
-	}
+	public ClassesResponse getClasses(Request request) { return request(request, ClassesResponse.class, Classes.class); }
 
 	public EnrollmentResponse getEnrollment(Request request) { return request(request, EnrollmentResponse.class, Enrollment.class); }
 
 	public EnrollmentsResponse getEnrollments(Request request) { return request(request, EnrollmentsResponse.class, Enrollments.class); }
 
-	public UserResponse getUser(Request request) {
-		return request(request, UserResponse.class, User.class);
-	}
+	public UserResponse getUser(Request request) { return request(request, UserResponse.class, User.class); }
 
-	public UsersResponse getUsers(Request request) {
-		return request(request, UsersResponse.class, Users.class);
-	}
+	public UsersResponse getUsers(Request request) { return request(request, UsersResponse.class, Users.class); }
 
 	public DemographicResponse getDemographic(Request request) { return request(request, DemographicResponse.class, Demographic.class); }
 
 	public DemographicsResponse getDemographics(Request request) { return request(request, DemographicsResponse.class, Demographics.class); }
 
-	public OffsetResponse getOffset(Request request) {
-		return requestOffsetResponse(request);
-	}
+	public OffsetResponse getOffset(Request request) { return requestOffsetResponse(request); }
 
-	/* EXPERIMENTAL REQUEST */
-	@SuppressWarnings("unchecked") //We know (T) will extend Response, so we can suppress this.
-	public <R extends IResponse<M>, M extends ResponseModel> R request(Request request) {
+
+	@SuppressWarnings("unchecked")
+	@Experimental @Deprecated(since = "2020.1")
+	/**
+	 * The request() method is an experimental method used to simplify the need for picking the right method when developing with this library .
+	 * The reason for the experimental annotation, is that the method is prone to throwing an exception if the user does not know what they are doing.
+	 * Additionally, the compiler won't detect an issue until runtime.
+	 *
+	 * Correct Usage: - Orgs is used correctly in both the IResponse and the ServicePath.
+	 * IResponse<Orgs> response = oneRoster.request(Request.builder().request().path(ServicePath.GET_Orgs).end().build());
+	 *
+	 * Incorrect Usage: - Expects Courses but will return Orgs resulting in a ClassCastException.
+	 * IResponse<Courses> response = oneRoster.request(Request.builder().request().path(ServicePath.GET_Orgs).end().build());
+	 *
+	 * @param request is an instance of request builder, which contains all of the necessary information to make the request.
+	 * @return an IResponse object containing an instance of the object being request.
+	 */
+	public <R extends IResponse<M>, M extends Model> R request(Request request) {
 		switch(request.request().path().getResponseClass().getSimpleName()) {
 			case "OrgResponse":  return (R) getOrg(request);
 			case "OrgsResponse":  return (R) getOrgs(request);
@@ -124,12 +122,13 @@ public class OneRoster {
 			case "UsersResponse":  return (R) getUsers(request);
 			case "DemographicResponse":  return (R) getDemographic(request);
 			case "DemographicsResponse":  return (R) getDemographics(request);
+			case "OffsetResponse":  return (R) getOffset(request);
 			default: return null;
 		}
 	}
 
 	/* PRIVATE REQUEST */
-	private <R extends IResponse<M>, M extends ResponseModel> R request(Request request, Class<R> responseClass, Class<M> modelClass) {
+	private <R extends IResponse<M>, M extends Model> R request(Request request, Class<R> responseClass, Class<M> modelClass) {
 		//Before doing anything, make sure that the request path can return the response object.
 		verifyRequestAndResponse(request, responseClass, modelClass);
 
@@ -166,7 +165,7 @@ public class OneRoster {
 	}
 
 	/* ON REQUEST ERROR */
-	private <R extends IResponse<M>, M extends ResponseModel> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
+	private <R extends IResponse<M>, M extends Model> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
 		R response = null;
 		try {
 			response = responseClass.getDeclaredConstructor().newInstance();
@@ -188,7 +187,7 @@ public class OneRoster {
 		return response;
 	}
 
-	private <R extends IResponse<M>, M extends ResponseModel> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> entity) {
+	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> entity) {
 		R response = null;
 		try {
 			response = responseClass.getDeclaredConstructor().newInstance();
@@ -284,9 +283,9 @@ public class OneRoster {
 			if(request.with().filtering().getLogicalOperation() != LogicalOperation.NONE) {
 				Filter filter2 = request.with().filtering().getFilters().get(1);
 				builder.queryParam("filter",
-						filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'" +
-								request.with().filtering().getLogicalOperation().getValue() +
-								filter2.getField().getValue() + filter2.getPredicate().getValue() + "'" + filter2.getValue() + "'"
+								filter1.getField().getValue() + filter1.getPredicate().getValue() + "'" + filter1.getValue() + "'" +
+										request.with().filtering().getLogicalOperation().getValue() +
+										filter2.getField().getValue() + filter2.getPredicate().getValue() + "'" + filter2.getValue() + "'"
 				);
 			}
 			else {
@@ -325,7 +324,7 @@ public class OneRoster {
 		return list.stream().mapToInt(i->i).toArray();
 	}
 
-	private <R extends IResponse<M>, M extends ResponseModel> void verifyRequestAndResponse(Request request, Class<R> responseClass, Class<M> modelClass) {
+	private <R extends IResponse<M>, M extends Model> void verifyRequestAndResponse(Request request, Class<R> responseClass, Class<M> modelClass) {
 		if(!request.request().path().getResponseClass().equals(responseClass)) {
 			throw new IllegalArgumentException("ServicePath: " + request.request().path() + " requires that the response return: " + request.request().path().getResponseClass().getCanonicalName()
 					+ ", however the response will return: " + responseClass.getCanonicalName());
