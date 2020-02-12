@@ -1,9 +1,10 @@
 import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
+import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.core.Model;
 import org.ricone.library.client.oneroster.request.*;
-import org.ricone.library.client.oneroster.response.Response;
+//import org.ricone.library.client.oneroster.response.Response;
 import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
@@ -14,11 +15,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+@SuppressWarnings("deprecation")
 public class OneRosterTest {
-    private static int LIMIT = 5;
-    private static String DISTRICT_ID = "530501";
+    private static final int LIMIT = 10;
+    private static final String DISTRICT_ID = "530501";
+    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s |%n";
     private static final Random random = new Random();
-    private static final int randomNumber = random.nextInt(LIMIT - 0 + 1) + 0; // 0 = min, LIMIT = max
+    private static final int randomNumber = random.nextInt(((LIMIT - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
 
     private static List<Org> orgs = new ArrayList<>();
     private static List<Org> schools = new ArrayList<>();
@@ -46,7 +49,7 @@ public class OneRosterTest {
             //Add values to the lists, so subsequent calls can be made using their ids.
             loadLists(oneRoster);
 
-            test2(oneRoster);
+            runTests(oneRoster);
         }
     }
 
@@ -65,7 +68,7 @@ public class OneRosterTest {
     }
 
     private static List<Org> loadOrgs(OneRoster oneRoster) throws InvalidPathException {
-        Response<Orgs> response = oneRoster.request(Request.builder()
+        IResponse<Orgs> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Orgs)
             .end()
@@ -87,7 +90,7 @@ public class OneRosterTest {
     }
 
     private static List<Org> loadSchools(OneRoster oneRoster) throws InvalidPathException {
-        Response<Orgs> response = oneRoster.request(Request.builder()
+        IResponse<Orgs> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Orgs)
             .end()
@@ -109,7 +112,7 @@ public class OneRosterTest {
     }
 
     private static List<AcademicSession> loadAcademicSessions(OneRoster oneRoster) throws InvalidPathException {
-        Response<AcademicSessions> response = oneRoster.request(Request.builder()
+        IResponse<AcademicSessions> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_AcademicSessions)
             .end()
@@ -131,7 +134,7 @@ public class OneRosterTest {
     }
 
     private static List<AcademicSession> loadTerms(OneRoster oneRoster) throws InvalidPathException {
-        Response<AcademicSessions> response = oneRoster.request(Request.builder()
+        IResponse<AcademicSessions> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Terms)
             .end()
@@ -153,7 +156,7 @@ public class OneRosterTest {
     }
 
     private static List<Course> loadCourses(OneRoster oneRoster) throws InvalidPathException {
-        Response<Courses> response = oneRoster.request(Request.builder()
+        IResponse<Courses> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Courses)
                 .end()
@@ -175,7 +178,7 @@ public class OneRosterTest {
     }
 
     private static List<Class> loadClasses(OneRoster oneRoster) throws InvalidPathException {
-        Response<Classes> response = oneRoster.request(Request.builder()
+        IResponse<Classes> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Classes)
                 .end()
@@ -197,7 +200,7 @@ public class OneRosterTest {
     }
 
     private static List<Enrollment> loadEnrollments(OneRoster oneRoster) throws InvalidPathException {
-        Response<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Enrollments> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Enrollments)
             .end()
@@ -219,7 +222,7 @@ public class OneRosterTest {
     }
 
     private static List<User> loadUsers(OneRoster oneRoster) throws InvalidPathException {
-        Response<Users> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Users)
             .end()
@@ -241,7 +244,7 @@ public class OneRosterTest {
     }
 
     private static List<User> loadTeachers(OneRoster oneRoster) throws InvalidPathException {
-        Response<Users> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Teachers)
             .end()
@@ -263,7 +266,7 @@ public class OneRosterTest {
     }
 
     private static List<User> loadStudents(OneRoster oneRoster) throws InvalidPathException {
-        Response<Users> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Students)
             .end()
@@ -285,7 +288,7 @@ public class OneRosterTest {
     }
 
     private static List<Demographic> loadDemographics(OneRoster oneRoster) throws InvalidPathException {
-        Response<Demographics> response = oneRoster.request(Request.builder()
+        IResponse<Demographics> response = oneRoster.request(Request.builder()
             .request()
                 .path(ServicePath.GET_Demographics)
             .end()
@@ -306,43 +309,43 @@ public class OneRosterTest {
         return response.getData().getDemographics();
     }
 
-    private static void test2(OneRoster oneRoster) throws InvalidPathException {
-        String format = "| %-200s | %-6s | %-9s | %-18s |%n";
-        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+    private static void runTests(OneRoster oneRoster) throws InvalidPathException {
+
+        printTableBorder();
         System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count |%n");
-        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+        printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
-            /** Request - No Features **/
+            /* Request - No Features */
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                Response responseNoFeatures = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getObject(servicePath))).end()
                     .end()
                     .build());
-                System.out.format(format, responseNoFeatures.getRequestPath(), responseNoFeatures.getResponseStatus(), byteCount(responseNoFeatures.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseNoFeatures.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseNoFeatures);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                Response responseNoFeatures = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                     .end()
                 .build());
-                System.out.format(format, responseNoFeatures.getRequestPath(), responseNoFeatures.getResponseStatus(), byteCount(responseNoFeatures.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseNoFeatures.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseNoFeatures);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                Response responseNoFeatures = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getPredicate(servicePath))).end()
                     .end()
                 .build());
-                System.out.format(format, responseNoFeatures.getRequestPath(), responseNoFeatures.getResponseStatus(), byteCount(responseNoFeatures.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseNoFeatures.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseNoFeatures);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                Response responseNoFeatures = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -351,12 +354,12 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseNoFeatures.getRequestPath(), responseNoFeatures.getResponseStatus(), byteCount(responseNoFeatures.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseNoFeatures.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseNoFeatures);
             }
 
-            /** Request - Field Selection **/
+            /* Request - Field Selection */
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                Response responseFieldSelection = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getObject(servicePath))).end()
@@ -368,10 +371,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFieldSelection.getRequestPath(), responseFieldSelection.getResponseStatus(), byteCount(responseFieldSelection.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFieldSelection.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFieldSelection);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                Response responseFieldSelection = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                     .end()
@@ -382,10 +385,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFieldSelection.getRequestPath(), responseFieldSelection.getResponseStatus(), byteCount(responseFieldSelection.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFieldSelection.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFieldSelection);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                Response responseFieldSelection = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getPredicate(servicePath))).end()
@@ -397,11 +400,11 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFieldSelection.getRequestPath(), responseFieldSelection.getResponseStatus(), byteCount(responseFieldSelection.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFieldSelection.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFieldSelection);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                Response responseFieldSelection = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -416,12 +419,12 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFieldSelection.getRequestPath(), responseFieldSelection.getResponseStatus(), byteCount(responseFieldSelection.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFieldSelection.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFieldSelection);
             }
 
-            /** Request - Paging **/
+            /* Request - Paging */
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                Response responsePaging = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getObject(servicePath))).end()
@@ -432,10 +435,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responsePaging.getRequestPath(), responsePaging.getResponseStatus(), byteCount(responsePaging.getResponseHeaders().getFirst("Content-Length")), formatNumber(responsePaging.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responsePaging);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                Response responsePaging = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                     .end()
@@ -445,10 +448,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responsePaging.getRequestPath(), responsePaging.getResponseStatus(), byteCount(responsePaging.getResponseHeaders().getFirst("Content-Length")), formatNumber(responsePaging.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responsePaging);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                Response responsePaging = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getPredicate(servicePath))).end()
@@ -459,11 +462,11 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responsePaging.getRequestPath(), responsePaging.getResponseStatus(), byteCount(responsePaging.getResponseHeaders().getFirst("Content-Length")), formatNumber(responsePaging.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responsePaging);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                Response responsePaging = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -477,13 +480,12 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responsePaging.getRequestPath(), responsePaging.getResponseStatus(), byteCount(responsePaging.getResponseHeaders().getFirst("Content-Length")), formatNumber(responsePaging.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responsePaging);
             }
 
-
-            /** Request - Filtering **/
+            /* Request - Filtering */
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                Response responseFiltering = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFiltering = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getObject(servicePath))).end()
@@ -494,10 +496,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFiltering.getRequestPath(), responseFiltering.getResponseStatus(), byteCount(responseFiltering.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFiltering.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFiltering);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                Response responseFiltering = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFiltering = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                     .end()
@@ -507,10 +509,10 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFiltering.getRequestPath(), responseFiltering.getResponseStatus(), byteCount(responseFiltering.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFiltering.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFiltering);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                Response responseFiltering = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFiltering = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getPredicate(servicePath))).end()
@@ -521,11 +523,11 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFiltering.getRequestPath(), responseFiltering.getResponseStatus(), byteCount(responseFiltering.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFiltering.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFiltering);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                Response responseFiltering = oneRoster.request(Request.builder()
+                IResponse<? extends Model> responseFiltering = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -539,19 +541,29 @@ public class OneRosterTest {
                         .end()
                     .end()
                 .build());
-                System.out.format(format, responseFiltering.getRequestPath(), responseFiltering.getResponseStatus(), byteCount(responseFiltering.getResponseHeaders().getFirst("Content-Length")), formatNumber(responseFiltering.getResponseHeaders().getFirst("X-Total-Count")));
+                printTableRow(responseFiltering);
             }
-
 
             //Separate the next service path
-            System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
-
+            printTableBorder();
         }
     }
 
     //Helper Methods
-    private static void showResults(Response<? extends Model> response) {
-        //System.out.println("Request: " + response.getRequestPath() + " | Status: " + response.getResponseStatus() + " | HasData: " + response.getData().hasData());
+    private static void showResults(IResponse<? extends Model> response) {
+        System.out.println("Request: " + response.getRequestPath() + " | Status: " + response.getResponseStatus() + " | HasData: " + response.getData().hasData() + " | Response Headers: " + response.getResponseHeaders());
+    }
+
+    private static void printTableBorder() {
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+    }
+
+    private static void printTableRow(IResponse<? extends Model> response) {
+        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
+    }
+
+    private static String trimUrl(String url) {
+        return url.replace("http://localhost:8080/api/ims/oneroster/v1p1","");
     }
 
     private static String byteCount(String stringBytes) {

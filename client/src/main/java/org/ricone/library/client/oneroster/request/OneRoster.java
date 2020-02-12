@@ -17,6 +17,7 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -93,7 +94,7 @@ public class OneRoster {
 	@SuppressWarnings("unchecked")
 	@Experimental @Deprecated(since = "2020.1")
 	/**
-	 * The request() method is an experimental method used to simplify the need for picking the right method when developing with this library .
+	 * The request() method is an experimental method used to simplify the need for picking the right method when developing with this library.
 	 * The reason for the experimental annotation, is that the method is prone to throwing an exception if the user does not know what they are doing.
 	 * Additionally, the compiler won't detect an issue until runtime.
 	 *
@@ -149,7 +150,6 @@ public class OneRoster {
 				//Needed for determining the JSON/XML building
 				response.setResponseClass(responseClass);
 				response.setModelClass(modelClass);
-
 			}
 			else {
 				response = setDataOnNoContent(responseClass, modelClass, requestPath, httpEntity, entity);
@@ -158,56 +158,16 @@ public class OneRoster {
 		catch (HttpClientErrorException e) {
 			response = setDataOnError(responseClass, modelClass, requestPath, httpEntity, e);
 		}
+		catch(ResourceAccessException rae) {
+			response = setDataOnServerDown(responseClass, modelClass, requestPath, httpEntity, rae);
+		}
 		catch(HttpStatusCodeException c) {
 			c.printStackTrace();
 		}
 		return response;
 	}
 
-	/* ON REQUEST ERROR */
-	private <R extends IResponse<M>, M extends Model> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
-		R response = null;
-		try {
-			response = responseClass.getDeclaredConstructor().newInstance();
-			response.setData(modelClass.getDeclaredConstructor().newInstance());
-			response.setRequestPath(requestPath);
-			response.setRequestHeaders(httpEntity.getHeaders());
-			response.setResponseHeaders(exception.getResponseHeaders());
-			response.setResponseStatusText(exception.getStatusText());
-			response.setResponseStatus(exception.getStatusCode());
-
-			//Needed for determining the JSON/XML building
-			response.setResponseClass(responseClass);
-			response.setModelClass(modelClass);
-
-		}
-		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		return response;
-	}
-
-	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> entity) {
-		R response = null;
-		try {
-			response = responseClass.getDeclaredConstructor().newInstance();
-			response.setData(modelClass.getDeclaredConstructor().newInstance());
-			response.setRequestPath(requestPath);
-			response.setRequestHeaders(httpEntity.getHeaders());
-			response.setResponseHeaders(entity.getHeaders());
-			response.setResponseStatusText(entity.getStatusCode().getReasonPhrase());
-			response.setResponseStatus(entity.getStatusCode());
-
-			//Needed for determining the JSON/XML building
-			response.setResponseClass(responseClass);
-			response.setModelClass(modelClass);
-		}
-		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		return response;
-	}
-
+	/* OFFSET REQUEST */
 	private OffsetResponse requestOffsetResponse(Request request) {
 		OffsetResponse response;
 		String requestPath = getRequestPath(request);
@@ -240,6 +200,73 @@ public class OneRoster {
 		}
 		return response;
 	}
+
+	/* ON REQUEST ERROR */
+	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> entity) {
+		R response = null;
+		try {
+			response = responseClass.getDeclaredConstructor().newInstance();
+			response.setData(modelClass.getDeclaredConstructor().newInstance());
+			response.setRequestPath(requestPath);
+			response.setRequestHeaders(httpEntity.getHeaders());
+			response.setResponseHeaders(entity.getHeaders());
+			response.setResponseStatusText(entity.getStatusCode().getReasonPhrase());
+			response.setResponseStatus(entity.getStatusCode());
+
+			//Needed for determining the JSON/XML building
+			response.setResponseClass(responseClass);
+			response.setModelClass(modelClass);
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	private <R extends IResponse<M>, M extends Model> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
+		R response = null;
+		try {
+			response = responseClass.getDeclaredConstructor().newInstance();
+			response.setData(modelClass.getDeclaredConstructor().newInstance());
+			response.setRequestPath(requestPath);
+			response.setRequestHeaders(httpEntity.getHeaders());
+			response.setResponseHeaders(exception.getResponseHeaders());
+			response.setResponseStatusText(exception.getStatusText());
+			response.setResponseStatus(exception.getStatusCode());
+
+			//Needed for determining the JSON/XML building
+			response.setResponseClass(responseClass);
+			response.setModelClass(modelClass);
+
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	private <R extends IResponse<M>, M extends Model> R setDataOnServerDown(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResourceAccessException exception) {
+		R response = null;
+		try {
+			response = responseClass.getDeclaredConstructor().newInstance();
+			response.setData(modelClass.getDeclaredConstructor().newInstance());
+			response.setRequestPath(requestPath);
+			response.setRequestHeaders(httpEntity.getHeaders());
+			response.setResponseHeaders(new HttpHeaders());
+			response.setResponseStatusText(HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase());
+			response.setResponseStatus(HttpStatus.SERVICE_UNAVAILABLE);
+
+			//Needed for determining the JSON/XML building
+			response.setResponseClass(responseClass);
+			response.setModelClass(modelClass);
+
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
 
 	// GET URL
 	private String getRequestPath(Request request) {

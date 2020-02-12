@@ -13,6 +13,7 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -115,8 +116,11 @@ public class XPress {
 		catch (HttpClientErrorException e) {
 			response = setDataOnError(responseClass, modelClass, requestPath, httpEntity, e);
 		}
+		catch(ResourceAccessException rae) {
+			response = setDataOnServerDown(responseClass, modelClass, requestPath, httpEntity, rae);
+		}
 		catch(HttpStatusCodeException c) {
-			System.out.println("TEST TEST TEST");
+			c.printStackTrace();
 		}
 		return response;
 	}
@@ -213,6 +217,27 @@ public class XPress {
 	}
 
 	/* ON ERROR */
+	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> response) {
+		R xResponse = null;
+		try {
+			xResponse = responseClass.getDeclaredConstructor().newInstance();
+			xResponse.setData(null);
+			xResponse.setRequestPath(requestPath);
+			xResponse.setRequestHeaders(httpEntity.getHeaders());
+			xResponse.setResponseHeaders(response.getHeaders());
+			xResponse.setResponseStatusText(response.getStatusCode().getReasonPhrase());
+			xResponse.setResponseStatus(response.getStatusCode());
+
+			//Needed for determining the JSON/XML building
+			xResponse.setResponseClass(responseClass);
+			xResponse.setModelClass(modelClass);
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return xResponse;
+	}
+
 	private <R extends IResponse<M>, M extends Model> R setDataOnError(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, HttpClientErrorException exception) {
 		R xResponse = null;
 		try {
@@ -234,16 +259,16 @@ public class XPress {
 		return xResponse;
 	}
 
-	private <R extends IResponse<M>, M extends Model> R setDataOnNoContent(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResponseEntity<?> response) {
+	private <R extends IResponse<M>, M extends Model> R setDataOnServerDown(Class<R> responseClass, Class<M> modelClass, String requestPath, HttpEntity<?> httpEntity, ResourceAccessException exception) {
 		R xResponse = null;
 		try {
 			xResponse = responseClass.getDeclaredConstructor().newInstance();
 			xResponse.setData(null);
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
-			xResponse.setResponseHeaders(response.getHeaders());
-			xResponse.setResponseStatusText(response.getStatusCode().getReasonPhrase());
-			xResponse.setResponseStatus(response.getStatusCode());
+			xResponse.setResponseHeaders(new HttpHeaders());
+			xResponse.setResponseStatusText(HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase());
+			xResponse.setResponseStatus(HttpStatus.SERVICE_UNAVAILABLE);
 
 			//Needed for determining the JSON/XML building
 			xResponse.setResponseClass(responseClass);
@@ -254,6 +279,7 @@ public class XPress {
 		}
 		return xResponse;
 	}
+
 
 	private <R extends IResponse<M>, M extends Model> void verifyRequestAndResponse(XRequest request, Class<R> responseClass, Class<M> modelClass) {
 		if(!request.getRequest().getPath().getResponseClass().equals(responseClass)) {
