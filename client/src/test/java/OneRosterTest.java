@@ -4,7 +4,6 @@ import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.core.Model;
 import org.ricone.library.client.oneroster.request.*;
-//import org.ricone.library.client.oneroster.response.Response;
 import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
