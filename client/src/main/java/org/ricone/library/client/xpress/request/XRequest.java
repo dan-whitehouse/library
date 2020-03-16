@@ -7,33 +7,36 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-/**
- * @author Dan Whitehouse <daniel.whitehouse@neric.org>
- * @version 2020.1
- * @since 2020-01-31
- */
 
 public class XRequest {
+	private XConfigurationBuilder configuration;
 	private XRequestBuilder request;
 	private XWithBuilder with;
 
 	public static Builder builder() {
 		return new Builder();
 	}
-
 	private XRequest() {
+		configuration = new XConfigurationBuilder();
 	}
 
-	XRequestBuilder getRequest() {
+	XConfigurationBuilder configuration() {
+		return configuration;
+	}
+	XRequestBuilder request() {
 		return request;
 	}
-
-	XWithBuilder getWith() {
+	XWithBuilder with() {
 		return with;
 	}
 
 	public static class Builder {
 		private XRequest instance = new XRequest();
+
+		public XConfigurationBuilder.Builder configuration() {
+			Consumer<XConfigurationBuilder> f = obj -> { instance.configuration = obj;};
+			return new XConfigurationBuilder.Builder(this, f);
+		}
 
 		public XRequestBuilder.Builder request() {
 			Consumer<XRequestBuilder> f = obj -> { instance.request = obj;};
@@ -46,50 +49,50 @@ public class XRequest {
 		}
 
 		public XRequest build() throws InvalidPathException {
-			validate();
+			//validate();
 			return instance;
 		}
 
 		private void validate() throws InvalidPathException {
 			if(isInvalidPath()) {
-				List<String> xPressRequestTypeValues = instance.request.getPath().getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
-				throw new InvalidPathException("ServicePath: " + instance.request.getPath() + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
+				List<String> xPressRequestTypeValues = instance.request.path().getXPressRequestTypes().stream().map(RequestType::getValue).collect(Collectors.toList());
+				throw new InvalidPathException("ServicePath: " + instance.request.path() + " does not work with " + this.getClass().getCanonicalName() + ". Try a different ServicePath or use one of the following classes: " + String.join(", ", xPressRequestTypeValues));
 			}
 
 			//Id Conflicts
 			if(isMissingId()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " isMissingId");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " isMissingId");
 			}
 
 			if(hasIdButShouldNot()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasIdButShouldNot");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasIdButShouldNot");
 			}
 
 			if(hasIdButWrongType()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasIdButWrongType ");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasIdButWrongType ");
 			}
 
 			//Paging Conflicts
 			if(hasPagingButShouldNot()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasPagingButShouldNot");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasPagingButShouldNot");
 			}
 
 			//ChangesSince Conflicts
 			if(hasChangesSinceButShouldNot()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasChangesSinceButShouldNot");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasChangesSinceButShouldNot");
 			}
 
 			if(hasChangesSinceAndAUPP()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasChangesSinceAndAUPP");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasChangesSinceAndAUPP");
 			}
 
 			if(hasSchoolYearButShouldNot()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasSchoolYearButShouldNot");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasSchoolYearButShouldNot");
 			}
 
 			//AUPP
 			if(hasAUPPButShouldNot()) {
-				throw new IllegalArgumentException("ServicePath: " + instance.request.getPath() + " hasAUPPButShouldNot");
+				throw new IllegalArgumentException("ServicePath: " + instance.request.path() + " hasAUPPButShouldNot");
 			}
 		}
 
@@ -123,7 +126,7 @@ public class XRequest {
 		}
 
 		boolean hasAUPPButShouldNot() {
-			return (hasAUPP() && !instance.request.getPath().equals(ServicePath.GET_XSTAFFS_BY_XSCHOOL_REFID)) || (hasAUPP() && !instance.request.getPath().equals(ServicePath.GET_XSTUDENTS_BY_XSCHOOL_REFID));
+			return (hasAUPP() && !instance.request.path().equals(ServicePath.GET_XSTAFFS_BY_XSCHOOL_REFID)) || (hasAUPP() && !instance.request.path().equals(ServicePath.GET_XSTUDENTS_BY_XSCHOOL_REFID));
 		}
 
 		boolean hasSchoolYearButShouldNot() {
@@ -133,17 +136,17 @@ public class XRequest {
 
 		//Validation Helpers
 		boolean hasId() {
-			if(instance.request.getId() == null) {
+			if(instance.request.id() == null) {
 				return false;
 			}
-			return StringUtils.hasText(instance.request.getId());
+			return StringUtils.hasText(instance.request.id());
 		}
 
 		boolean hasIdType(IdType idType) {
-			if(instance.request.getId() == null) {
+			if(instance.request.id() == null) {
 				return false;
 			}
-			return instance.request.getIdType().equals(idType);
+			return instance.request.idType().equals(idType);
 		}
 
 		boolean hasPaging() {
@@ -178,56 +181,56 @@ public class XRequest {
 			if(instance.request == null) {
 				return false;
 			}
-			return instance.request.getPath().getXPressRequestTypes().contains(requestType);
+			return instance.request.path().getXPressRequestTypes().contains(requestType);
 		}
 
 		boolean isServicePathType(ServicePathType servicePathType) {
-			if(instance.getRequest() == null || instance.request.getPath() == null) {
+			if(instance.request() == null || instance.request.path() == null) {
 				return false;
 			}
-			return instance.request.getPath().getServicePathType().equals(servicePathType);
+			return instance.request.path().getServicePathType().equals(servicePathType);
 		}
 	}
 
 	boolean hasId() {
-		if(getRequest() == null) {
+		if(request() == null) {
 			return false;
 		}
-		return StringUtils.hasText(getRequest().getId());
+		return StringUtils.hasText(request().id());
 	}
 
 	boolean hasIdType() {
-		if(getRequest() == null) {
+		if(request() == null) {
 			return false;
 		}
-		return getRequest().getIdType() != null;
+		return request().idType() != null;
 	}
 
 	boolean hasPaging() {
-		if(getWith() == null) {
+		if(with() == null) {
 			return false;
 		}
-		return getWith().paging() != null;
+		return with().paging() != null;
 	}
 
 	boolean hasSchoolYear() {
-		if(getWith() == null) {
+		if(with() == null) {
 			return false;
 		}
-		return getWith().schoolYear() != null;
+		return with().schoolYear() != null;
 	}
 
 	boolean hasAUPP() {
-		if(getWith() == null) {
+		if(with() == null) {
 			return false;
 		}
-		return getWith().isAccountProvisioning();
+		return with().isAccountProvisioning();
 	}
 
 	boolean hasChangesSince() {
-		if(getWith() == null) {
+		if(with() == null) {
 			return false;
 		}
-		return getWith().getChangesSince() != null;
+		return with().getChangesSince() != null;
 	}
 }

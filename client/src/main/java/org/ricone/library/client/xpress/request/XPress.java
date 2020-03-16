@@ -87,6 +87,30 @@ public class XPress {
 		return requestLastPageResponse(request);
 	}
 
+
+	public <R extends IResponse<M>, M extends Model> R request(XRequest request) {
+		switch(request.request().path().getResponseClass().getSimpleName()) {
+			case "XLeaResponse":  return (R) getXLea(request);
+			case "XLeasResponse":  return (R) getXLeas(request);
+			case "XSchoolResponse":  return (R) getXSchool(request);
+			case "XSchoolsResponse":  return (R) getXSchools(request);
+			case "XCalendarResponse":  return (R) getXCalendar(request);
+			case "XCalendarsResponse":  return (R) getXCalendars(request);
+			case "XCourseResponse":  return (R) getXCourse(request);
+			case "XCoursesResponse":  return (R) getXCourses(request);
+			case "XRosterResponse":  return (R) getXRoster(request);
+			case "XRostersResponse":  return (R) getXRosters(request);
+			case "XStaffResponse":  return (R) getXStaff(request);
+			case "XStaffsResponse":  return (R) getXStaffs(request);
+			case "XStudentResponse":  return (R) getXStudent(request);
+			case "XStudentsResponse":  return (R) getXStudents(request);
+			case "XContactResponse":  return (R) getXContact(request);
+			case "XContactsResponse":  return (R) getXContacts(request);
+			case "XLastPageResponse":  return (R) requestLastPageResponse(request);
+			default: return null;
+		}
+	}
+
 	/* PRIVATE REQUEST */
 	private <R extends IResponse<M>, M extends Model> R request(XRequest request, Class<R> responseClass, Class<M> modelClass) {
 		//Before doing anything, make sure that the request path can return the response object.
@@ -172,23 +196,38 @@ public class XPress {
 	/* GET URL */
 	private String getRequestPath(XRequest request) {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(endpoint.getHref());
-		if(!request.getRequest().getPath().getServicePathType().equals(ServicePathType.OBJECT)) {
-			if(request.getRequest().getIdType().equals(IdType.RefId)) {
-				builder.path(StringUtils.replace(request.getRequest().getPath().getValue(), "{refId}", request.getRequest().getId()));
+		if(!request.request().path().getServicePathType().equals(ServicePathType.OBJECT)) {
+			if(request.request().idType().equals(IdType.RefId)) {
+				builder.path(StringUtils.replace(request.request().path().getValue(), "{refId}", request.request().id()));
 			}
 			else {
-				builder.path(StringUtils.replace(request.getRequest().getPath().getValue(), "{id}", request.getRequest().getId()));
+				builder.path(StringUtils.replace(request.request().path().getValue(), "{id}", request.request().id()));
 			}
 		}
 		else {
-			builder.path(request.getRequest().getPath().getValue());
+			builder.path(request.request().path().getValue());
 		}
 
 		if(request.hasAUPP()) {
 			builder.queryParam("getUsers", true);
 		}
 		else if(request.hasChangesSince()) {
-			builder.queryParam("changesSinceMarker", request.getWith().getChangesSince().iso8601());
+			builder.queryParam("changesSinceMarker", request.with().getChangesSince().iso8601());
+		}
+
+		if(request.configuration().withAsQueryParameters()) {
+			if(request.hasIdType() && !request.request().idType().equals(IdType.RefId)) {
+				builder.queryParam("idType", request.request().idType().getValue());
+			}
+
+			if(request.hasPaging()) {
+				builder.queryParam("navigationPage", String.valueOf(request.with().paging().getPage()));
+				builder.queryParam("navigationPageSize", String.valueOf(request.with().paging().getSize()));
+			}
+
+			if(request.hasSchoolYear()) {
+				builder.queryParam("SchoolYear", request.with().schoolYear().toString());
+			}
 		}
 
 		return builder.build().toUriString();
@@ -201,17 +240,19 @@ public class XPress {
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 		headers.set("Authorization", "Bearer " + this.endpoint.getDecodedToken().getToken());
 
-		if(request.hasIdType() && !request.getRequest().getIdType().equals(IdType.RefId)) {
-			headers.set("IdType", request.getRequest().getIdType().getValue());
-		}
+		if(request.configuration().withAsHeaders()) {
+			if(request.hasIdType() && !request.request().idType().equals(IdType.RefId)) {
+				headers.set("IdType", request.request().idType().getValue());
+			}
 
-		if(request.hasPaging()) {
-			headers.set("navigationPage", String.valueOf(request.getWith().paging().getPage()));
-			headers.set("navigationPageSize", String.valueOf(request.getWith().paging().getSize()));
-		}
+			if(request.hasPaging()) {
+				headers.set("navigationPage", String.valueOf(request.with().paging().getPage()));
+				headers.set("navigationPageSize", String.valueOf(request.with().paging().getSize()));
+			}
 
-		if(request.hasSchoolYear()) {
-			headers.set("SchoolYear", request.getWith().schoolYear().toString());
+			if(request.hasSchoolYear()) {
+				headers.set("SchoolYear", request.with().schoolYear().toString());
+			}
 		}
 		return new HttpEntity<>(headers);
 	}
@@ -221,7 +262,7 @@ public class XPress {
 		R xResponse = null;
 		try {
 			xResponse = responseClass.getDeclaredConstructor().newInstance();
-			xResponse.setData(null);
+			xResponse.setData(modelClass.getDeclaredConstructor().newInstance());
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
 			xResponse.setResponseHeaders(response.getHeaders());
@@ -242,7 +283,7 @@ public class XPress {
 		R xResponse = null;
 		try {
 			xResponse = responseClass.getDeclaredConstructor().newInstance();
-			xResponse.setData(null);
+			xResponse.setData(modelClass.getDeclaredConstructor().newInstance());
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
 			xResponse.setResponseHeaders(exception.getResponseHeaders());
@@ -263,7 +304,7 @@ public class XPress {
 		R xResponse = null;
 		try {
 			xResponse = responseClass.getDeclaredConstructor().newInstance();
-			xResponse.setData(null);
+			xResponse.setData(modelClass.getDeclaredConstructor().newInstance());
 			xResponse.setRequestPath(requestPath);
 			xResponse.setRequestHeaders(httpEntity.getHeaders());
 			xResponse.setResponseHeaders(new HttpHeaders());
@@ -282,8 +323,8 @@ public class XPress {
 
 
 	private <R extends IResponse<M>, M extends Model> void verifyRequestAndResponse(XRequest request, Class<R> responseClass, Class<M> modelClass) {
-		if(!request.getRequest().getPath().getResponseClass().equals(responseClass)) {
-			throw new IllegalArgumentException("ServicePath: " + request.getRequest().getPath() + " requires that the response return: " + request.getRequest().getPath().getResponseClass().getCanonicalName()
+		if(!request.request().path().getResponseClass().equals(responseClass)) {
+			throw new IllegalArgumentException("ServicePath: " + request.request().path() + " requires that the response return: " + request.request().path().getResponseClass().getCanonicalName()
 					+ ", however the response will return: " + responseClass.getCanonicalName());
 		}
 	}

@@ -18,7 +18,6 @@ final class XWithBuilder {
 	public static Builder builder() {
 		return new XWithBuilder.Builder();
 	}
-
 	private XWithBuilder() {
 		accountProvisioning = false;
 	}

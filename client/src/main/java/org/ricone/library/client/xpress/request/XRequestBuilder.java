@@ -4,7 +4,6 @@ package org.ricone.library.client.xpress.request;
 import java.util.function.Consumer;
 
 final class XRequestBuilder {
-
 	private ServicePath path;
 	private String id;
 	private IdType idType;
@@ -17,15 +16,15 @@ final class XRequestBuilder {
 		this.idType = IdType.RefId;
 	}
 
-	ServicePath getPath() {
+	ServicePath path() {
 		return path;
 	}
 
-	String getId() {
+	String id() {
 		return id;
 	}
 
-	IdType getIdType() {
+	IdType idType() {
 		return idType;
 	}
 
@@ -63,6 +62,6 @@ final class XRequestBuilder {
 			callback.accept(instance);
 			return parentBuilder;
 		}
-		
-	}		
+
+	}
 }
