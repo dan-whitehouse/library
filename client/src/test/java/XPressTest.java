@@ -23,7 +23,8 @@ public class XPressTest {
     private static final int SCHOOL_YEAR = 2020;
     private static final LocalDateTime CHANGES_SINCE = LocalDateTime.now();
     private static final String DISTRICT_ID = "530501";
-    private static final String FORMAT = "| %-113s | %-11s | %-7s | %-8s | %-10s | %-6s | %-9s | %-18s |%n";
+    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s |%n";
+    //private static final String FORMAT = "| %-113s | %-11s | %-7s | %-8s | %-10s | %-6s | %-9s | %-18s |%n";
     private static final Random random = new Random();
     private static final int randomNumber = 0; //random.nextInt(((SIZE - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
 
@@ -219,16 +220,20 @@ public class XPressTest {
 
     private static void runTests(XPress xPress) throws InvalidPathException {
         printTableBorder();
-        System.out.format("| Request                                                                                                           | School Year | Page    | PageSize | LastPage   | Status | Size      | Total Record Count |%n");
+        //System.out.format("| Request                                                                                                           | School Year | Page    | PageSize | LastPage   | Status | Size      | Total Record Count |%n");
+        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count |%n");
         printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
+            /* The Type of Request - Requires RefId, LocalId, or StateId */
+            IdType type = servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId;
+
             /* Request - No Features */
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
                 IResponse<? extends Model> responseNoFeatures = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getObject(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getObject(servicePath), type), type)
                     .end()
                     .build());
                 printTableRow(responseNoFeatures);
@@ -245,7 +250,7 @@ public class XPressTest {
                 IResponse<? extends Model> responseNoFeatures = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getPredicate(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getPredicate(servicePath), type), type)
                     .end()
                 .build());
                 printTableRow(responseNoFeatures);
@@ -256,7 +261,7 @@ public class XPressTest {
                 IResponse<? extends Model> responseFieldSelection = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getObject(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getObject(servicePath), type), type)
                     .end()
                     .with()
                         .schoolYear(SCHOOL_YEAR)
@@ -285,7 +290,7 @@ public class XPressTest {
                 IResponse<? extends Model> responseFieldSelection = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getPredicate(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getPredicate(servicePath), type), type)
                     .end()
                     .with()
                         .schoolYear(SCHOOL_YEAR)
@@ -303,7 +308,7 @@ public class XPressTest {
                 IResponse<? extends Model> responsePaging = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getObject(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getObject(servicePath), type), type)
                     .end()
                     .with()
                         .paging()
@@ -338,7 +343,7 @@ public class XPressTest {
                 IResponse<? extends Model> responsePaging = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getPredicate(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getPredicate(servicePath), type), type)
                     .end()
                     .with()
                         .paging()
@@ -358,7 +363,7 @@ public class XPressTest {
                 IResponse<? extends Model> responseFiltering = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getObject(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getObject(servicePath), type), type)
                     .end()
                     .with()
                         .changesSince(CHANGES_SINCE)
@@ -381,7 +386,7 @@ public class XPressTest {
                 IResponse<? extends Model> responseFiltering = xPress.request(XRequest.builder()
                     .request()
                         .path(servicePath)
-                        .id(getId(getPredicate(servicePath)), servicePath.getXPressRequestTypes().contains(RequestType.ID) ? IdType.Local : IdType.RefId)
+                        .id(getId(getPredicate(servicePath), type), type)
                     .end()
                     .with()
                         .changesSince(CHANGES_SINCE)
@@ -401,11 +406,12 @@ public class XPressTest {
     }
 
     private static void printTableBorder() {
-        System.out.format("+-------------------------------------------------------------------------------------------------------------------+-------------+---------+----------+------------+--------+-----------+--------------------+%n");
+        //System.out.format("+-------------------------------------------------------------------------------------------------------------------+-------------+---------+----------+------------+--------+-----------+--------------------+%n");
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
-        System.out.format(FORMAT,
+        /*System.out.format(FORMAT,
             trimUrl(response.getRequestPath()),
             response.getResponseHeaders().getFirst("SchoolYear"),
             response.getResponseHeaders().getFirst("NavigationPage"),
@@ -414,6 +420,8 @@ public class XPressTest {
             response.getResponseStatus(),
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
             formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
+        */
+        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
     }
 
     private static String trimUrl(String url) {
@@ -459,7 +467,7 @@ public class XPressTest {
         return array[3];
     }
 
-    private static String getId(String predicateObject) {
+    private static String getId(String predicateObject, IdType type) {
         //final int min = 0;
         //final int max = LIMIT - 1;
         //Random random = new Random();
@@ -468,10 +476,24 @@ public class XPressTest {
         switch(predicateObject) {
             case "XLEA":
             case "XLEAS":
-                return xLeas.get(randomNumber).getRefId();
+                switch (type) {
+                    case RefId:
+                        return xLeas.get(randomNumber).getRefId();
+                    case Local:
+                        return xLeas.get(randomNumber).getLocalId();
+                    case State:
+                        return xLeas.get(randomNumber).getStateProvinceId();
+                }
             case "XSCHOOL":
             case "XSCHOOLS":
-                return xSchools.get(randomNumber).getRefId();
+                switch (type) {
+                    case RefId:
+                        return xSchools.get(randomNumber).getRefId();
+                    case Local:
+                        return xSchools.get(randomNumber).getLocalId();
+                    case State:
+                        return xSchools.get(randomNumber).getStateProvinceId();
+                }
             case "XCALENDAR":
             case "XCALENDARS":
                 return xCalendars.get(randomNumber).getRefId();

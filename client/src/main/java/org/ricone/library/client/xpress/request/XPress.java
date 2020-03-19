@@ -226,7 +226,7 @@ public class XPress {
 			}
 
 			if(request.hasSchoolYear()) {
-				builder.queryParam("SchoolYear", request.with().schoolYear().toString());
+				builder.queryParam("schoolYear", request.with().schoolYear().toString());
 			}
 		}
 
