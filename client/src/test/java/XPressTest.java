@@ -23,7 +23,7 @@ public class XPressTest {
     private static final int SCHOOL_YEAR = 2020;
     private static final LocalDateTime CHANGES_SINCE = LocalDateTime.now();
     private static final String DISTRICT_ID = "530501";
-    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s |%n";
+    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s | %-9s |%n";
     //private static final String FORMAT = "| %-113s | %-11s | %-7s | %-8s | %-10s | %-6s | %-9s | %-18s |%n";
     private static final Random random = new Random();
     private static final int randomNumber = 0; //random.nextInt(((SIZE - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
@@ -221,7 +221,7 @@ public class XPressTest {
     private static void runTests(XPress xPress) throws InvalidPathException {
         printTableBorder();
         //System.out.format("| Request                                                                                                           | School Year | Page    | PageSize | LastPage   | Status | Size      | Total Record Count |%n");
-        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count |%n");
+        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count | Duration  |%n");
         printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
@@ -407,7 +407,7 @@ public class XPressTest {
 
     private static void printTableBorder() {
         //System.out.format("+-------------------------------------------------------------------------------------------------------------------+-------------+---------+----------+------------+--------+-----------+--------------------+%n");
-        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+-----------+%n");
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
@@ -421,7 +421,7 @@ public class XPressTest {
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
             formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
         */
-        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
+        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")), response.getResponseHeaders().getFirst("X-Duration"));
     }
 
     private static String trimUrl(String url) {
