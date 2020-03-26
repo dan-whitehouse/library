@@ -411,17 +411,13 @@ public class XPressTest {
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
-        /*System.out.format(FORMAT,
-            trimUrl(response.getRequestPath()),
-            response.getResponseHeaders().getFirst("SchoolYear"),
-            response.getResponseHeaders().getFirst("NavigationPage"),
-            response.getResponseHeaders().getFirst("NavigationPageSize"),
-            response.getResponseHeaders().getFirst("NavigationLastPage"),
+        System.out.format(FORMAT,
+            response.getRequestPath(),
             response.getResponseStatus(),
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
-            formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
-        */
-        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")), response.getResponseHeaders().getFirst("X-Duration"));
+            formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")),
+            response.getResponseHeaders().getFirst("X-Duration")
+        );
     }
 
     private static String trimUrl(String url) {

@@ -18,9 +18,9 @@ import java.util.Random;
 public class OneRosterTest {
     private static final int LIMIT = 10;
     private static final String DISTRICT_ID = "530501";
-    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s |%n";
+    private static final String FORMAT = "| %-200s | %-6s | %-9s | %-18s | %-9s |%n";
     private static final Random random = new Random();
-    private static final int randomNumber = random.nextInt(((LIMIT - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
+    private static final int randomNumber = 0; //random.nextInt(((LIMIT - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
 
     private static List<Org> orgs = new ArrayList<>();
     private static List<Org> schools = new ArrayList<>();
@@ -101,7 +101,11 @@ public class OneRosterTest {
                     .field(Field.sourcedId)
                     .orderBy(SortOrder.ASC)
                 .end()
-                .filtering().filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID).end()
+                .filtering()
+                    .filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID)
+                    .and()
+                    .filter(Field.Orgs.type, Predicate.Equals, "school")
+                .end()
             .end()
         .build());
 
@@ -145,7 +149,11 @@ public class OneRosterTest {
                     .field(Field.sourcedId)
                     .orderBy(SortOrder.ASC)
                 .end()
-                .filtering().filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID).end()
+                .filtering()
+                    .filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID)
+                    .and()
+                    .filter(Field.AcademicSessions.type, Predicate.Equals, "term")
+                .end()
             .end()
         .build());
 
@@ -255,7 +263,11 @@ public class OneRosterTest {
                     .field(Field.sourcedId)
                     .orderBy(SortOrder.ASC)
                 .end()
-                .filtering().filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID).end()
+                .filtering()
+                    .filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID)
+                    .and()
+                    .filter(Field.Users.role, Predicate.Equals, "teacher")
+                .end()
             .end()
         .build());
 
@@ -277,7 +289,11 @@ public class OneRosterTest {
                     .field(Field.sourcedId)
                     .orderBy(SortOrder.ASC)
                 .end()
-                .filtering().filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID).end()
+                .filtering()
+                    .filter(Field.Metadata.ricone_districtId, Predicate.Equals, DISTRICT_ID)
+                    .and()
+                    .filter(Field.Users.role, Predicate.Equals, "student")
+                .end()
             .end()
         .build());
 
@@ -311,7 +327,7 @@ public class OneRosterTest {
     private static void runTests(OneRoster oneRoster) throws InvalidPathException {
 
         printTableBorder();
-        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count |%n");
+        System.out.format("| Request                                                                                                                                                                                                  | Status | Size      | Total Record Count | Duration  |%n");
         printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
@@ -554,11 +570,17 @@ public class OneRosterTest {
     }
 
     private static void printTableBorder() {
-        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+%n");
+        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+-----------+%n");
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
-        System.out.format(FORMAT, trimUrl(response.getRequestPath()), response.getResponseStatus(), byteCount(response.getResponseHeaders().getFirst("Content-Length")), formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")));
+        System.out.format(FORMAT,
+            response.getRequestPath(),
+            response.getResponseStatus(),
+            byteCount(response.getResponseHeaders().getFirst("Content-Length")),
+            formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")),
+            response.getResponseHeaders().getFirst("X-Duration")
+        );
     }
 
     private static String trimUrl(String url) {
