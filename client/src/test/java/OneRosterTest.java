@@ -578,7 +578,7 @@ public class OneRosterTest {
             response.getRequestPath(),
             response.getResponseStatus(),
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
-            formatNumber(response.getResponseHeaders().getFirst("X-Total-Count")),
+            formatNumber(response.getResponseHeaders().getFirst("X-Record-Count")),
             response.getResponseHeaders().getFirst("X-Duration")
         );
     }

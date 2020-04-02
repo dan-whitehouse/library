@@ -18,8 +18,7 @@ final class WithBuilder {
 		return new WithBuilder.Builder();
 	}
 
-	private WithBuilder() {
-	}
+	private WithBuilder() { }
 
 	public PagingBuilder paging() {
 		return paging;
@@ -42,8 +41,7 @@ final class WithBuilder {
 		private Request.Builder parentBuilder;
 		private Consumer<WithBuilder> callback;
 
-		public Builder() {
-		}
+		public Builder() { }
 
 		public Builder(Request.Builder b, Consumer<WithBuilder> f) {
 			this.parentBuilder = b;

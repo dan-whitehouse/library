@@ -30,8 +30,7 @@ public class Org extends Base implements Serializable {
 	/**
 	 * No args constructor for use in serialization
 	 */
-	public Org() {
-	}
+	public Org() { }
 
 	/**
 	 * @param name
