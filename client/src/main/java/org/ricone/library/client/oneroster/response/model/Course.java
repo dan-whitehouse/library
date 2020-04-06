@@ -45,22 +45,8 @@ public class Course extends Base implements Serializable {
 	@JacksonXmlElementWrapper(localName = "resources") @JacksonXmlProperty(localName = "resource")
 	private List<GUIDRef> resources = new ArrayList<>();
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public Course() {
-	}
+	public Course() { }
 
-	/**
-	 * @param schoolYear
-	 * @param resources
-	 * @param title
-	 * @param subjectCodes
-	 * @param subjects
-	 * @param org
-	 * @param grades
-	 * @param courseCode
-	 */
 	public Course(String title, GUIDRef schoolYear, String courseCode, List<String> grades, List<String> subjects, GUIDRef org, List<String> subjectCodes, List<GUIDRef> resources) {
 		super();
 		this.title = title;

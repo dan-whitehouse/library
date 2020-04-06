@@ -14,7 +14,7 @@ public class Util {
     }
 
     public static String getResponseJson(IResponse<? extends Model> response) {
-        return response.getJSON().replaceAll("(?m)^", "\t\t");
+        return response.getJSON().replaceAll("(?m)^", "\t\t") + "\n";
     }
 
 

@@ -1,5 +1,7 @@
 package org.ricone.library.client.oneroster.request;
 
+import org.ricone.library.client.oneroster.response.model.Type;
+
 import java.util.Objects;
 
 /**
@@ -17,6 +19,12 @@ public class Filter {
         this.field = field;
         this.predicate = predicate;
         this.value = value;
+    }
+
+    public Filter(IField field, Predicate predicate, Type type) {
+        this.field = field;
+        this.predicate = predicate;
+        this.value = type.getValue();
     }
 
     public IField getField() {

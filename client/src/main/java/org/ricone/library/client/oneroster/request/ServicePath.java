@@ -31,7 +31,7 @@ public enum ServicePath {
 	GET_Classes("classes", ServicePathType.OBJECT,  ClassesResponse.class, FieldType.Classes),
 	GET_Classes_By_School_SourcedId("schools/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
 	GET_Classes_By_Term_SourcedId("terms/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
-	GET_Classes_By_Course_SourcedId("terms/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
+	GET_Classes_By_Course_SourcedId("courses/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
 	GET_Classes_By_Teacher_SourcedId("teachers/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
 	GET_Classes_By_Student_SourcedId("students/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
 	GET_Classes_By_User_SourcedId("users/{id}/classes", ServicePathType.PREDICATE,  ClassesResponse.class, FieldType.Classes),
