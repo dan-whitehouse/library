@@ -35,14 +35,18 @@ public class TestPlan {
 
             //Courses
             TestPlanClasses testPlanClasses = new TestPlanClasses(true,true,true,false);
-            testPlanClasses.run(oneRoster);
+            //testPlanClasses.run(oneRoster);
+
+            TestPlanEnrollments testPlanEnrollments = new TestPlanEnrollments(true,true,true,false);
+            testPlanEnrollments.run(oneRoster);
 
             //Results of Each
             System.out.println("-----------------------------------------------");
             //testPlanOrgs.results();
             //testPlanAcademicSessions.results();
             //testPlanCourses.results();
-            testPlanClasses.results();
+            //testPlanClasses.results();
+            testPlanEnrollments.results();
         }
     }
 }

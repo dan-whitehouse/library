@@ -29,21 +29,8 @@ public class Enrollment extends Base implements Serializable {
 	@JsonProperty("endDate")
 	private LocalDate endDate;
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public Enrollment() {
-	}
+	public Enrollment() { }
 
-	/**
-	 * @param school
-	 * @param _class
-	 * @param primary
-	 * @param role
-	 * @param endDate
-	 * @param beginDate
-	 * @param user
-	 */
 	public Enrollment(RoleType role, Boolean primary, GUIDRef user, GUIDRef _class, GUIDRef school, LocalDate beginDate, LocalDate endDate) {
 		super();
 		this.role = role;
