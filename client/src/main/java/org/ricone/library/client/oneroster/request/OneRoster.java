@@ -343,10 +343,12 @@ public class OneRoster {
 
 		int next_offset = 0;
 
-		while(last_offset != next_offset) {
-			next_offset = (currentPage + 1) * limit;
-			list.add(next_offset);
-			currentPage++;
+		if(totalRecords != 0) {
+			while(last_offset != next_offset) {
+				next_offset = (currentPage + 1) * limit;
+				list.add(next_offset);
+				currentPage++;
+			}
 		}
 		return list.stream().mapToInt(i->i).toArray();
 	}

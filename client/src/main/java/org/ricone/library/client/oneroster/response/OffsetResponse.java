@@ -32,6 +32,10 @@ public class OffsetResponse extends Response<Offset> implements Iterator<Integer
     @JsonIgnore
     private HttpHeaders responseHeaders;
 
+    public OffsetResponse() {
+        this.offset = new Offset();
+    }
+
     public OffsetResponse(int[] data) {
         this.offset = new Offset(data);
     }

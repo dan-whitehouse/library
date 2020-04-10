@@ -4,15 +4,13 @@ import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.core.Model;
 import org.ricone.library.client.oneroster.request.*;
+import org.ricone.library.client.oneroster.response.OffsetResponse;
 import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class OneRosterTest {
@@ -331,9 +329,11 @@ public class OneRosterTest {
         printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
-            /* Request - No Features */
+
+            /** Request - No Features **/
+            IResponse<? extends Model> responseNoFeatures;
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
+                responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getObject(servicePath))).end()
@@ -342,7 +342,7 @@ public class OneRosterTest {
                 printTableRow(responseNoFeatures);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
+                responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                     .end()
@@ -350,7 +350,7 @@ public class OneRosterTest {
                 printTableRow(responseNoFeatures);
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
+                responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids().id(getId(getPredicate(servicePath))).end()
@@ -360,7 +360,7 @@ public class OneRosterTest {
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                IResponse<? extends Model> responseNoFeatures = oneRoster.request(Request.builder()
+                responseNoFeatures = oneRoster.request(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -371,117 +371,177 @@ public class OneRosterTest {
                 .build());
                 printTableRow(responseNoFeatures);
             }
+            responseNoFeatures = null; //Clean Up?
 
-            /* Request - Field Selection */
+            /** Request - Field Selection **/
+            for(IField field : getFields(servicePath)) {
+                IResponse<? extends Model> responseFieldSelection;
+                if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
+                    responseFieldSelection = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(getObject(servicePath)))
+                            .end()
+                        .end()
+                        .with()
+                            .fieldSelection()
+                                .field(field)
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responseFieldSelection);
+                }
+
+                else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
+                    responseFieldSelection = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                        .end()
+                        .with()
+                            .fieldSelection()
+                                .field(field)
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responseFieldSelection);
+                }
+                else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
+                    responseFieldSelection = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(getPredicate(servicePath)))
+                            .end()
+                        .end()
+                        .with()
+                            .fieldSelection()
+                                .field(field)
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responseFieldSelection);
+                }
+                else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
+                    String[] predicates = getPredicates(servicePath);
+                    responseFieldSelection = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(predicates[0]))
+                                .id(getId(predicates[1]))
+                            .end()
+                        .end()
+                        .with()
+                            .fieldSelection()
+                                .field(field)
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responseFieldSelection);
+                }
+                responseFieldSelection = null;
+            }
+
+            /** Request - Paging **/
+            final int limit = 500;
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
+                OffsetResponse offset = oneRoster.getOffset(Request.builder()
                     .request()
                         .path(servicePath)
-                        .ids().id(getId(getObject(servicePath))).end()
+                        .ids()
+                            .id(getId(getObject(servicePath)))
+                        .end()
                     .end()
                     .with()
-                        .fieldSelection()
-                            .field(Field.sourcedId)
-                            .field(Field.dateLastModified)
+                        .paging()
+                            .limit(limit)
                         .end()
                     .end()
                 .build());
-                printTableRow(responseFieldSelection);
+
+                while(offset.hasNext()) {
+                    IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(getObject(servicePath)))
+                            .end()
+                        .end()
+                        .with()
+                            .paging()
+                                .limit(limit)
+                                .offset(offset.next())
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responsePaging);
+                }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
+                OffsetResponse offset = oneRoster.getOffset(Request.builder()
                     .request()
                         .path(servicePath)
-                    .end()
+                        .end()
                     .with()
-                        .fieldSelection()
-                            .field(Field.sourcedId)
-                            .field(Field.dateLastModified)
+                        .paging()
+                            .limit(limit)
                         .end()
                     .end()
                 .build());
-                printTableRow(responseFieldSelection);
+
+                while(offset.hasNext()) {
+                    IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                        .end()
+                        .with()
+                            .paging()
+                                .limit(limit)
+                                .offset(offset.next())
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responsePaging);
+                }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
-                    .request()
-                        .path(servicePath)
-                        .ids().id(getId(getPredicate(servicePath))).end()
-                    .end()
-                    .with()
-                        .fieldSelection()
-                            .field(Field.sourcedId)
-                            .field(Field.dateLastModified)
-                        .end()
-                    .end()
-                .build());
-                printTableRow(responseFieldSelection);
-            }
-            else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
-                String[] predicates = getPredicates(servicePath);
-                IResponse<? extends Model> responseFieldSelection = oneRoster.request(Request.builder()
+                OffsetResponse offset = oneRoster.getOffset(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
-                            .id(getId(predicates[0]))
-                            .id(getId(predicates[1]))
+                            .id(getId(getPredicate(servicePath)))
                         .end()
                     .end()
                     .with()
-                        .fieldSelection()
-                            .field(Field.sourcedId)
-                            .field(Field.dateLastModified)
+                        .paging()
+                            .limit(limit)
                         .end()
                     .end()
                 .build());
-                printTableRow(responseFieldSelection);
-            }
 
-            /* Request - Paging */
-            if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
-                    .request()
-                        .path(servicePath)
-                        .ids().id(getId(getObject(servicePath))).end()
-                    .end()
-                    .with()
-                        .paging()
-                            .limit(100)
+                while(offset.hasNext()) {
+                    IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(getPredicate(servicePath)))
+                            .end()
                         .end()
-                    .end()
-                .build());
-                printTableRow(responsePaging);
-            }
-            else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
-                    .request()
-                        .path(servicePath)
-                    .end()
-                    .with()
-                        .paging()
-                            .limit(100)
+                        .with()
+                            .paging()
+                                .limit(limit)
+                                .offset(offset.next())
+                            .end()
                         .end()
-                    .end()
-                .build());
-                printTableRow(responsePaging);
-            }
-            else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
-                    .request()
-                        .path(servicePath)
-                        .ids().id(getId(getPredicate(servicePath))).end()
-                    .end()
-                    .with()
-                        .paging()
-                            .limit(100)
-                        .end()
-                    .end()
-                .build());
-                printTableRow(responsePaging);
+                    .build());
+                    printTableRow(responsePaging);
+                }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
-                IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
+
+                OffsetResponse offset = oneRoster.getOffset(Request.builder()
                     .request()
                         .path(servicePath)
                         .ids()
@@ -491,14 +551,32 @@ public class OneRosterTest {
                     .end()
                     .with()
                         .paging()
-                            .limit(100)
+                            .limit(limit)
                         .end()
                     .end()
                 .build());
-                printTableRow(responsePaging);
+
+                while(offset.hasNext()) {
+                    IResponse<? extends Model> responsePaging = oneRoster.request(Request.builder()
+                        .request()
+                            .path(servicePath)
+                            .ids()
+                                .id(getId(predicates[0]))
+                                .id(getId(predicates[1]))
+                            .end()
+                        .end()
+                        .with()
+                            .paging()
+                                .limit(limit)
+                                .offset(offset.next())
+                            .end()
+                        .end()
+                    .build());
+                    printTableRow(responsePaging);
+                }
             }
 
-            /* Request - Filtering */
+            /** Request - Filtering **/
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
                 IResponse<? extends Model> responseFiltering = oneRoster.request(Request.builder()
                     .request()
@@ -662,4 +740,49 @@ public class OneRosterTest {
             default: return "NO_ID_FOUND";
         }
     }
+
+    private static List<IField> getFields(ServicePath servicePath) {
+        List<IField> fields = new ArrayList<>();
+        fields.add(Field.sourcedId);
+        fields.add(Field.dateLastModified);
+
+        if(FieldType.Orgs.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Orgs.values()));
+            fields.addAll(Arrays.asList(Field.Orgs.Parent.values()));
+            fields.addAll(Arrays.asList(Field.Orgs.Children.values()));
+        }
+        else if(FieldType.AcademicSessions.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.AcademicSessions.values()));
+            fields.addAll(Arrays.asList(Field.AcademicSessions.Parent.values()));
+            fields.addAll(Arrays.asList(Field.AcademicSessions.Children.values()));
+        }
+        else if(FieldType.Courses.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Courses.values()));
+            fields.addAll(Arrays.asList(Field.Courses.Org.values()));
+            fields.addAll(Arrays.asList(Field.Courses.SchoolYear.values()));
+        }
+        else if(FieldType.Classes.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Classes.values()));
+            fields.addAll(Arrays.asList(Field.Classes.Course.values()));
+            fields.addAll(Arrays.asList(Field.Classes.School.values()));
+            fields.addAll(Arrays.asList(Field.Classes.Terms.values()));
+        }
+        else if(FieldType.Enrollments.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Enrollments.values()));
+            fields.addAll(Arrays.asList(Field.Enrollments.School.values()));
+            fields.addAll(Arrays.asList(Field.Enrollments.Clazz.values()));
+            fields.addAll(Arrays.asList(Field.Enrollments.User.values()));
+        }
+        else if(FieldType.Users.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Users.values()));
+            fields.addAll(Arrays.asList(Field.Users.Agents.values()));
+            fields.addAll(Arrays.asList(Field.Users.Orgs.values()));
+            fields.addAll(Arrays.asList(Field.Users.UserIds.values()));
+        }
+        else if(FieldType.Demographics.equals(servicePath.getFieldType())) {
+            fields.addAll(Arrays.asList(Field.Demographics.values()));
+        }
+        return fields;
+    }
+
 }

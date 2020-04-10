@@ -6,7 +6,7 @@ package org.ricone.library.client.oneroster.request;
  * @since 2020-01-30
  */
 
-enum FieldType  {
+public enum FieldType  {
 	All,
 	Orgs,
 	AcademicSessions,
