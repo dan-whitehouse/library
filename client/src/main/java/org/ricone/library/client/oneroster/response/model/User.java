@@ -52,29 +52,8 @@ public class User extends Base implements Serializable {
 	@JsonProperty("password")
 	private String password;
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public User() {
-	}
+	public User() { }
 
-	/**
-	 * @param orgs
-	 * @param middleName
-	 * @param phone
-	 * @param enabledUser
-	 * @param agents
-	 * @param familyName
-	 * @param givenName
-	 * @param sms
-	 * @param password
-	 * @param username
-	 * @param email
-	 * @param userIds
-	 * @param role
-	 * @param grades
-	 * @param identifier
-	 */
 	public User(String username, List<UserId> userIds, Boolean enabledUser, String givenName, String familyName, String middleName, RoleType role, String identifier, String email, String sms, String phone, List<GUIDRef> agents, List<GUIDRef> orgs, List<String> grades, String password) {
 		super();
 		this.username = username;

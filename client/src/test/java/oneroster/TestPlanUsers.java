@@ -3,19 +3,23 @@ package oneroster;
 import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.oneroster.request.*;
 import org.ricone.library.client.oneroster.response.model.*;
-import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.exception.InvalidPathException;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TestPlanEnrollments {
+public class TestPlanUsers {
     private final boolean showResponseDetails, showTestResults, showTypes, showJson;
-    private boolean c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14;
+    private boolean c1, c2, c3, c4, c5, c6,
+        c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20, c21, c22, c23, c24,
+        c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38, c39, c40, c41, c42
+    ;
 
-    public TestPlanEnrollments(boolean showResponseDetails, boolean showTestResults, boolean showTypes, boolean showJson) {
+    public TestPlanUsers(boolean showResponseDetails, boolean showTestResults, boolean showTypes, boolean showJson) {
         this.showResponseDetails = showResponseDetails;
         this.showTestResults = showTestResults;
         this.showTypes = showTypes;
@@ -24,46 +28,94 @@ public class TestPlanEnrollments {
 
     public void run(OneRoster oneRoster) throws InvalidPathException {
         final int LIMIT = 5;
-        final String ENROLLMENT_SOURCED_ID = "036000F7-C377-4158-A715-2B22CA8CECCE";
-        final String SCHOOL_SOURCED_ID = "E54E9D1F-7F2B-4B60-9CC7-AAD883614135"; //TODO Check Id, getting 204's
-        final String CLASS_SOURCED_ID = "1EED1C72-997C-49DD-8F90-151060BCF52C"; //TODO Check Id, getting 204's
+        final String USER_SOURCED_ID = "8BA06EA6-58FC-45D2-A6A3-8C2A34A7C82F";
+        final String SCHOOL_SOURCED_ID = "78C72FBF-8C29-4107-BF2B-E3BA9F9849C5";
+        final String SCHOOL_SOURCED_ID_PREDICATES = "E54E9D1F-7F2B-4B60-9CC7-AAD883614135";
+        final String TEACHER_SOURCED_ID = "8BA06EA6-58FC-45D2-A6A3-8C2A34A7C82F";
+        final String CLASS_SOURCED_ID = "1EED1C72-997C-49DD-8F90-151060BCF52C";
+        final String STUDENT_SOURCED_ID = "9852E65B-FDB7-4C2B-9545-ABD33CF8E9C8";
 
-        //All
-        c1 = testAll(oneRoster, ServicePath.GET_Enrollments);
-        c2 = testAllWithPaging(oneRoster, ServicePath.GET_Enrollments, LIMIT);
-        c3 = testAllWithPagingAndSorting(oneRoster, ServicePath.GET_Enrollments, LIMIT, Field.Enrollments.School.sourcedId, SortOrder.DESC);
-        c4 = testAllWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Enrollments, LIMIT, new Filter(Field.Enrollments.role, Predicate.Equals, "student"));
 
-        //By Id
-        c5 = testById(oneRoster, ServicePath.GET_Enrollment_By_SourcedId, ENROLLMENT_SOURCED_ID);
-        c6 = testByIdWithFieldSelection(oneRoster, ServicePath.GET_Enrollment_By_SourcedId, ENROLLMENT_SOURCED_ID);
 
-        //Enrollments By School
-        c7 = testAllByPredicate(oneRoster, ServicePath.GET_Enrollments_By_School_SourcedId, SCHOOL_SOURCED_ID);
-        c8 = testAllByPredicateWithPaging(oneRoster, ServicePath.GET_Enrollments_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT);
-        c9 = testAllByPredicateWithPagingAndSorting(oneRoster, ServicePath.GET_Enrollments_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, Field.Enrollments.School.sourcedId, SortOrder.DESC);
-        c10 = testAllByPredicateWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Enrollments_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, new Filter(Field.Enrollments.role, Predicate.Equals, "student"));
+        //All - Users
+        c1 = testAll(oneRoster, ServicePath.GET_Users);
+        c2 = testAllWithPaging(oneRoster, ServicePath.GET_Users, LIMIT);
+        c3 = testAllWithPagingAndSorting(oneRoster, ServicePath.GET_Users, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c4 = testAllWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Users, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Smith"));
 
-        //Enrollments By School and Class
-        c11 = testAllByPredicates(oneRoster, ServicePath.GET_Enrollments_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID);
-        c12 = testAllByPredicatesWithPaging(oneRoster, ServicePath.GET_Enrollments_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID, LIMIT);
-        c13 = testAllByPredicatesWithPagingAndSorting(oneRoster, ServicePath.GET_Enrollments_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID, LIMIT, Field.Enrollments.School.sourcedId, SortOrder.DESC);
-        c14 = testAllByPredicatesWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Enrollments_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID, LIMIT, new Filter(Field.Enrollments.role, Predicate.Equals, "student"));
+        //By Id - Users
+        c5 = testById(oneRoster, ServicePath.GET_User_By_SourcedId, USER_SOURCED_ID);
+        c6 = testByIdWithFieldSelection(oneRoster, ServicePath.GET_User_By_SourcedId, USER_SOURCED_ID);
+
+        //All - Teachers
+        c7 = testAll(oneRoster, ServicePath.GET_Teachers);
+        c8 = testAllWithPaging(oneRoster, ServicePath.GET_Teachers, LIMIT);
+        c9 = testAllWithPagingAndSorting(oneRoster, ServicePath.GET_Teachers, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c10 = testAllWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Teachers, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Guzek"));
+
+        //By Id - Teachers
+        c11 = testById(oneRoster, ServicePath.GET_Teacher_By_SourcedId, USER_SOURCED_ID);
+        c12 = testByIdWithFieldSelection(oneRoster, ServicePath.GET_Teacher_By_SourcedId, USER_SOURCED_ID);
+
+        //Teachers By School
+        c13 = testAllByPredicate(oneRoster, ServicePath.GET_Teachers_By_School_SourcedId, SCHOOL_SOURCED_ID);
+        c14 = testAllByPredicateWithPaging(oneRoster, ServicePath.GET_Teachers_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT);
+        c15 = testAllByPredicateWithPagingAndSorting(oneRoster, ServicePath.GET_Teachers_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c16 = testAllByPredicateWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Teachers_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Guzek"));
+
+        //Teachers By Class
+        c17 = testAllByPredicate(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId, CLASS_SOURCED_ID);
+        c18 = testAllByPredicateWithPaging(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT);
+        c19 = testAllByPredicateWithPagingAndSorting(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c20 = testAllByPredicateWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Dvorscak"));
+
+        //Teachers By School and Class
+        c21 = testAllByPredicates(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES);
+        c22 = testAllByPredicatesWithPaging(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT);
+        c23 = testAllByPredicatesWithPagingAndSorting(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c24 = testAllByPredicatesWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Teachers_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Dvorscak"));
+
+        //All - Students
+        c25 = testAll(oneRoster, ServicePath.GET_Students);
+        c26 = testAllWithPaging(oneRoster, ServicePath.GET_Students, LIMIT);
+        c27 = testAllWithPagingAndSorting(oneRoster, ServicePath.GET_Students, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c28 = testAllWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Students, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Colon"));
+
+        //By Id - Students
+        c29 = testById(oneRoster, ServicePath.GET_Student_By_SourcedId, STUDENT_SOURCED_ID);
+        c30 = testByIdWithFieldSelection(oneRoster, ServicePath.GET_Student_By_SourcedId, STUDENT_SOURCED_ID);
+
+        //Students By School
+        c31 = testAllByPredicate(oneRoster, ServicePath.GET_Students_By_School_SourcedId, SCHOOL_SOURCED_ID);
+        c32 = testAllByPredicateWithPaging(oneRoster, ServicePath.GET_Students_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT);
+        c33 = testAllByPredicateWithPagingAndSorting(oneRoster, ServicePath.GET_Students_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c34 = testAllByPredicateWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Students_By_School_SourcedId, SCHOOL_SOURCED_ID, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Colon"));
+
+        //Students By Class
+        c35 = testAllByPredicate(oneRoster, ServicePath.GET_Students_By_Class_SourcedId, CLASS_SOURCED_ID);
+        c36 = testAllByPredicateWithPaging(oneRoster, ServicePath.GET_Students_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT);
+        c37 = testAllByPredicateWithPagingAndSorting(oneRoster, ServicePath.GET_Students_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c38 = testAllByPredicateWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Students_By_Class_SourcedId, CLASS_SOURCED_ID, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Colon"));
+
+        //Students By School and Class
+        c39 = testAllByPredicates(oneRoster, ServicePath.GET_Students_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES);
+        c40 = testAllByPredicatesWithPaging(oneRoster, ServicePath.GET_Students_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT);
+        c41 = testAllByPredicatesWithPagingAndSorting(oneRoster, ServicePath.GET_Students_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT, Field.Users.givenName, SortOrder.DESC);
+        c42 = testAllByPredicatesWithPagingAndFilteringAndFieldSelection(oneRoster, ServicePath.GET_Students_By_Class_SourcedId_With_School_SourcedId, CLASS_SOURCED_ID, SCHOOL_SOURCED_ID_PREDICATES, LIMIT, new Filter(Field.Users.familyName, Predicate.Equals, "Colon"));
     }
 
     public void results() {
         boolean testsPassed = (
-            c1 && c2 && c3 && c4
-            && c5 && c6
-            && c7 && c8 && c9 && c10
-            && c11 && c12 && c13 && c14
+            c1 && c2 && c3 && c4 && c5 && c6 //User Tests
+            && c7 && c8 && c9 && c10 && c11 && c12 && c13 && c14 && c15 && c16 && c17 && c18 && c19 && c20 && c21 && c22 && c23 && c24 //Teacher Tests
+            && c25 && c26 && c27 && c28 && c29 && c30 && c31 && c32 && c33 && c34 && c35 && c36 && c37 && c38 && c39 && c40 && c41 && c42 //Student Tests
         );
-        System.out.println("All Enrollment Tests Passed: " + testsPassed);
+        System.out.println("All Users Tests Passed: " + testsPassed);
     }
 
     /** All **/
     private boolean testAll(OneRoster oneRoster, ServicePath servicePath) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
             .end()
@@ -82,7 +134,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllWithPaging(OneRoster oneRoster, ServicePath servicePath, int limit) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
             .end()
@@ -107,7 +159,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllWithPagingAndSorting(OneRoster oneRoster, ServicePath servicePath, int limit, IField field, SortOrder order) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
             .end()
@@ -137,7 +189,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllWithPagingAndFilteringAndFieldSelection(OneRoster oneRoster, ServicePath servicePath, int limit, Filter filter) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
             .end()
@@ -150,9 +202,10 @@ public class TestPlanEnrollments {
                 .end()
                 .fieldSelection()
                     .field(Field.sourcedId)
-                    .field(Field.Enrollments.role)
-                    .field(Field.Enrollments.Clazz.sourcedId)
-                    .field(Field.Enrollments.School.sourcedId)
+                    .field(Field.Users.role)
+                    .field(Field.Users.givenName)
+                    .field(Field.Users.middleName)
+                    .field(Field.Users.familyName)
                 .end()
             .end()
         .build());
@@ -162,7 +215,7 @@ public class TestPlanEnrollments {
         boolean containsFilterValue = isFilter(response.getData(), filter.getValue());
         boolean isFieldSelectionOnly = true;
 
-        for(Enrollment i : response.getData().getEnrollments()) {
+        for(User i : response.getData().getUsers()) {
             if(!isFieldSelectionOnly(i)) {
                 isFieldSelectionOnly = false;
             }
@@ -181,7 +234,7 @@ public class TestPlanEnrollments {
 
     /** By Id **/
     private boolean testById(OneRoster oneRoster, ServicePath servicePath, String id) throws InvalidPathException {
-        IResponse<Enrollment> response = oneRoster.request(Request.builder()
+        IResponse<User> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -204,7 +257,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testByIdWithFieldSelection(OneRoster oneRoster, ServicePath servicePath, String id) throws InvalidPathException {
-        IResponse<Enrollment> response = oneRoster.request(Request.builder()
+        IResponse<User> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -214,9 +267,10 @@ public class TestPlanEnrollments {
             .with()
                 .fieldSelection()
                     .field(Field.sourcedId)
-                    .field(Field.Enrollments.role)
-                    .field(Field.Enrollments.Clazz.sourcedId)
-                    .field(Field.Enrollments.School.sourcedId)
+                    .field(Field.Users.role)
+                    .field(Field.Users.givenName)
+                    .field(Field.Users.middleName)
+                    .field(Field.Users.familyName)
                 .end()
             .end()
         .build());
@@ -242,7 +296,7 @@ public class TestPlanEnrollments {
 
     /** By Predicate **/
     private boolean testAllByPredicate(OneRoster oneRoster, ServicePath servicePath, String id) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -264,7 +318,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicateWithPaging(OneRoster oneRoster, ServicePath servicePath, String id, int limit) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -292,7 +346,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicateWithPagingAndSorting(OneRoster oneRoster, ServicePath servicePath, String id, int limit, IField field, SortOrder order) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -325,7 +379,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicateWithPagingAndFilteringAndFieldSelection(OneRoster oneRoster, ServicePath servicePath, String id, int limit, Filter filter) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -341,9 +395,10 @@ public class TestPlanEnrollments {
                 .end()
                 .fieldSelection()
                     .field(Field.sourcedId)
-                    .field(Field.Enrollments.role)
-                    .field(Field.Enrollments.Clazz.sourcedId)
-                    .field(Field.Enrollments.School.sourcedId)
+                    .field(Field.Users.role)
+                    .field(Field.Users.givenName)
+                    .field(Field.Users.middleName)
+                    .field(Field.Users.familyName)
                 .end()
             .end()
         .build());
@@ -353,7 +408,7 @@ public class TestPlanEnrollments {
         boolean containsFilterValue = isFilter(response.getData(), filter.getValue());
         boolean isFieldSelectionOnly = true;
 
-        for(Enrollment i : response.getData().getEnrollments()) {
+        for(User i : response.getData().getUsers()) {
             if(!isFieldSelectionOnly(i)) {
                 isFieldSelectionOnly = false;
             }
@@ -372,7 +427,7 @@ public class TestPlanEnrollments {
 
     /** By Predicates **/
     private boolean testAllByPredicates(OneRoster oneRoster, ServicePath servicePath, String id, String id2) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -395,7 +450,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicatesWithPaging(OneRoster oneRoster, ServicePath servicePath, String id, String id2, int limit) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -424,7 +479,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicatesWithPagingAndSorting(OneRoster oneRoster, ServicePath servicePath, String id, String id2, int limit, IField field, SortOrder order) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -458,7 +513,7 @@ public class TestPlanEnrollments {
     }
 
     private boolean testAllByPredicatesWithPagingAndFilteringAndFieldSelection(OneRoster oneRoster, ServicePath servicePath, String id, String id2, int limit, Filter filter) throws InvalidPathException {
-        IResponse<Enrollments> response = oneRoster.request(Request.builder()
+        IResponse<Users> response = oneRoster.request(Request.builder()
             .request()
                 .path(servicePath)
                 .ids()
@@ -475,9 +530,10 @@ public class TestPlanEnrollments {
                 .end()
                 .fieldSelection()
                     .field(Field.sourcedId)
-                    .field(Field.Enrollments.role)
-                    .field(Field.Enrollments.Clazz.sourcedId)
-                    .field(Field.Enrollments.School.sourcedId)
+                    .field(Field.Users.role)
+                    .field(Field.Users.givenName)
+                    .field(Field.Users.middleName)
+                    .field(Field.Users.familyName)
                 .end()
             .end()
         .build());
@@ -487,7 +543,7 @@ public class TestPlanEnrollments {
         boolean containsFilterValue = isFilter(response.getData(), filter.getValue());
         boolean isFieldSelectionOnly = true;
 
-        for(Enrollment i : response.getData().getEnrollments()) {
+        for(User i : response.getData().getUsers()) {
             if(!isFieldSelectionOnly(i)) {
                 isFieldSelectionOnly = false;
             }
@@ -505,18 +561,18 @@ public class TestPlanEnrollments {
     }
 
     /** Test Methods **/
-    private boolean hasData(Enrollment instance) {
+    private boolean hasData(User instance) {
         return instance != null && instance.hasData();
     }
 
-    private boolean hasData(Enrollments instance) {
-        return instance != null && !instance.getEnrollments().isEmpty();
+    private boolean hasData(Users instance) {
+        return instance != null && !instance.getUsers().isEmpty();
     }
 
-    private int[] typeCount(Enrollments instance) {
+    private int[] typeCount(Users instance) {
         int student = 0, teacher =  0, other = 0;
 
-        for(Enrollment i : instance.getEnrollments()) {
+        for(User i : instance.getUsers()) {
             if(RoleType.student.equals(i.getRole())) {
                student++;
             }
@@ -530,7 +586,7 @@ public class TestPlanEnrollments {
         return new int[]{student, teacher, other};
     }
 
-    private int[] typeCount(Enrollment instance) {
+    private int[] typeCount(User instance) {
         int student = 0, teacher =  0, other = 0;
 
         if(RoleType.student.equals(instance.getRole())) {
@@ -545,61 +601,50 @@ public class TestPlanEnrollments {
         return new int[]{student, teacher, other};
     }
 
-    private boolean isCorrectSourcedId(Enrollment instance, String sourcedId) {
+    private boolean isCorrectSourcedId(User instance, String sourcedId) {
         return sourcedId.equalsIgnoreCase(instance.getSourcedId());
     }
 
-    private boolean isFilter(Enrollments instance, String filterValue) {
-        for(Enrollment i : instance.getEnrollments()) {
-            if(!filterValue.equalsIgnoreCase(i.getRole().getValue())) {
+    private boolean isFilter(Users instance, String filterValue) {
+        for(User i : instance.getUsers()) {
+            if(!filterValue.equalsIgnoreCase(i.getFamilyName())) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isFieldSelectionOnly(Enrollment instance) {
+    private boolean isFieldSelectionOnly(User instance) {
         return Stream.of(
                 instance.getStatus(),
                 instance.getDateLastModified(),
                 instance.getMetadata(),
-                instance.getPrimary(),
-                instance.getUser(),
-                instance.getBeginDate(),
-                instance.getEndDate()
-            ).allMatch(Objects::isNull) &&
-            Stream.of(
-                instance.getClass_().getHref(),
-                instance.getClass_().getType()
-            ).allMatch(Objects::isNull) &&
-            Stream.of(
-                    instance.getSchool().getHref(),
-                    instance.getSchool().getType()
+                instance.getUsername(),
+                instance.getEnabledUser(),
+                instance.getIdentifier(),
+                instance.getEmail(),
+                instance.getSms(),
+                instance.getPhone(),
+                instance.getPassword()
             ).allMatch(Objects::isNull)
+                && instance.getUserIds().isEmpty()
+                && instance.getAgents().isEmpty()
+                && instance.getOrgs().isEmpty()
+                && instance.getGrades().isEmpty()
         ;
     }
 
-    private boolean isListOrdered(Enrollments instance, IField sortField) {
+    private boolean isListOrdered(Users instance, IField sortField) {
         List<String> originalRefIds = new LinkedList<>();
         List<String> manuallySortedRefIds = new LinkedList<>();
 
-        if(sortField.equals(Field.Enrollments.School.sourcedId)) {
-            instance.getEnrollments().forEach(i -> originalRefIds.add(i.getSchool().getSourcedId())); //Take the refIds of the list
-            manuallySortedRefIds = instance.getEnrollments().stream().sorted(Comparator.comparing(enrollment -> enrollment.getSchool().getSourcedId(), String::compareToIgnoreCase)).map(i -> i.getSchool().getSourcedId()).collect(Collectors.toList());
-            manuallySortedRefIds.sort(Collections.reverseOrder());
-        }
-        else if(sortField.equals(Field.Enrollments.Clazz.sourcedId)) {
-            instance.getEnrollments().forEach(i -> originalRefIds.add(i.getClass_().getSourcedId())); //Take the refIds of the list
-            manuallySortedRefIds = instance.getEnrollments().stream().sorted(Comparator.comparing(enrollment -> enrollment.getClass_().getSourcedId(), String::compareToIgnoreCase)).map(i -> i.getClass_().getSourcedId()).collect(Collectors.toList());
-            manuallySortedRefIds.sort(Collections.reverseOrder());
-        }
-        else {
-            return false;
-        }
+        instance.getUsers().forEach(i -> originalRefIds.add(i.getGivenName())); //Take the refIds of the list
+        manuallySortedRefIds = instance.getUsers().stream().sorted(Comparator.comparing(User::getGivenName, String::compareToIgnoreCase).reversed()).map(User::getGivenName).collect(Collectors.toList());
+
         return originalRefIds.equals(manuallySortedRefIds);
     }
 
-    private boolean isCountLimited(Enrollments instance, int limit) {
-        return instance.getEnrollments().size() <= limit;
+    private boolean isCountLimited(Users instance, int limit) {
+        return instance.getUsers().size() <= limit;
     }
 }

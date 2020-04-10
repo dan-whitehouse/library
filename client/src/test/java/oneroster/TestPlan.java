@@ -38,7 +38,13 @@ public class TestPlan {
             //testPlanClasses.run(oneRoster);
 
             TestPlanEnrollments testPlanEnrollments = new TestPlanEnrollments(true,true,true,false);
-            testPlanEnrollments.run(oneRoster);
+            //testPlanEnrollments.run(oneRoster);
+
+            TestPlanUsers testPlanUsers = new TestPlanUsers(true,true,true,false);
+            //testPlanUsers.run(oneRoster);
+
+            TestPlanDemographics testPlanDemographics = new TestPlanDemographics(true,true,true,false);
+            testPlanDemographics.run(oneRoster);
 
             //Results of Each
             System.out.println("-----------------------------------------------");
@@ -46,7 +52,9 @@ public class TestPlan {
             //testPlanAcademicSessions.results();
             //testPlanCourses.results();
             //testPlanClasses.results();
-            testPlanEnrollments.results();
+            //testPlanEnrollments.results();
+            //testPlanUsers.results();
+            testPlanDemographics.results();
         }
     }
 }

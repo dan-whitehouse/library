@@ -54,8 +54,8 @@ public enum ServicePath {
 	GET_Students_By_Class_SourcedId_With_School_SourcedId("schools/{id}/classes/{id}/students", ServicePathType.PREDICATES,  UsersResponse.class, FieldType.Users),
 	GET_Students_By_Class_SourcedId("classes/{id}/students", ServicePathType.PREDICATE,  UsersResponse.class, FieldType.Users),
 
-	GET_Demographic_By_SourcedId("demographics/{id}", ServicePathType.SINGLE,  DemographicResponse.class, FieldType.Users),
-	GET_Demographics("demographics", ServicePathType.OBJECT,  DemographicsResponse.class, FieldType.Users);
+	GET_Demographic_By_SourcedId("demographics/{id}", ServicePathType.SINGLE,  DemographicResponse.class, FieldType.Demographics),
+	GET_Demographics("demographics", ServicePathType.OBJECT,  DemographicsResponse.class, FieldType.Demographics);
 
 	private final String value;
 	private ServicePathType servicePathType;
