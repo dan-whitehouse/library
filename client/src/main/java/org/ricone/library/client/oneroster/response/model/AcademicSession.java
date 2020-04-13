@@ -18,44 +18,24 @@ import java.util.stream.Stream;
 @JsonPropertyOrder({"sourcedId", "status", "dateLastModified", "metadata", "title", "startDate", "endDate", "type", "parent", "children", "schoolYear"})
 public class AcademicSession extends Base implements Serializable {
 	private final static long serialVersionUID = 5476752215341220106L;
-
 	@JsonProperty("title")
 	private String title;
-
 	@JsonProperty("startDate")
 	private LocalDate startDate;
-
 	@JsonProperty("endDate")
 	private LocalDate endDate;
-
 	@JsonProperty("type")
 	private SessionType type;
-
 	@JsonProperty("parent")
 	private GUIDRef parent;
-
 	@JsonProperty("children")
 	@JacksonXmlElementWrapper(localName = "children") @JacksonXmlProperty(localName = "child")
 	private List<GUIDRef> children = new ArrayList<>();
-
 	@JsonProperty("schoolYear")
 	private Integer schoolYear;
 
-	/**
-	 * No args constructor for use in serialization
-	 */
-	public AcademicSession() {
-	}
+	public AcademicSession() { }
 
-	/**
-	 * @param schoolYear
-	 * @param startDate
-	 * @param title
-	 * @param children
-	 * @param parent
-	 * @param endDate
-	 * @param type
-	 */
 	public AcademicSession(String title, LocalDate startDate, LocalDate endDate, SessionType type, GUIDRef parent, List<GUIDRef> children, Integer schoolYear) {
 		super();
 		this.title = title;

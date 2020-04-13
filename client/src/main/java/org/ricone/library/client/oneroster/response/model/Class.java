@@ -17,51 +17,38 @@ import java.util.stream.Stream;
 @JsonPropertyOrder({"sourcedId", "status", "dateLastModified", "metadata", "title", "classCode", "classType", "location", "grades", "subjects", "course", "school", "terms", "subjectCodes", "periods", "resources"})
 public class Class extends Base implements Serializable {
 	private final static long serialVersionUID = -6826277327573344241L;
-
 	@JsonProperty("title")
 	private String title;
-
 	@JsonProperty("classCode")
 	private String classCode;
-
 	@JsonProperty("classType")
 	private ClassType classType;
-
 	@JsonProperty("location")
 	private String location;
-
 	@JsonProperty("grades")
 	@JacksonXmlElementWrapper(localName = "grades") @JacksonXmlProperty(localName = "grade")
 	private List<String> grades = new ArrayList<>();
-
 	@JsonProperty("subjects")
 	@JacksonXmlElementWrapper(localName = "subjects") @JacksonXmlProperty(localName = "subject")
 	private List<String> subjects = new ArrayList<>();
-
 	@JsonProperty("course")
 	private GUIDRef course;
-
 	@JsonProperty("school")
 	private GUIDRef school;
-
 	@JsonProperty("terms")
 	@JacksonXmlElementWrapper(localName = "terms") @JacksonXmlProperty(localName = "term")
 	private List<GUIDRef> terms = new ArrayList<>();
-
 	@JsonProperty("subjectCodes")
 	@JacksonXmlElementWrapper(localName = "subjectCodes") @JacksonXmlProperty(localName = "subjectCode")
 	private List<String> subjectCodes = new ArrayList<>();
-
 	@JsonProperty("periods")
 	@JacksonXmlElementWrapper(localName = "periods") @JacksonXmlProperty(localName = "period")
 	private List<String> periods = new ArrayList<>();
-
 	@JsonProperty("resources")
 	@JacksonXmlElementWrapper(localName = "resources") @JacksonXmlProperty(localName = "resource")
 	private List<GUIDRef> resources = new ArrayList<>();
 
-	public Class() {
-	}
+	public Class() { }
 
 	public Class(String title, String classCode, ClassType classType, String location, List<String> grades, List<String> subjects, GUIDRef course, GUIDRef school, List<GUIDRef> terms, List<String> subjectCodes, List<String> periods, List<GUIDRef> resources) {
 		super();

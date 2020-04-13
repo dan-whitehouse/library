@@ -19,28 +19,21 @@ public class Course extends Base implements Serializable {
 	private final static long serialVersionUID = 6014301965221202137L;
 	@JsonProperty("title")
 	private String title;
-
 	@JsonProperty("schoolYear")
 	private GUIDRef schoolYear;
-
 	@JsonProperty("courseCode")
 	private String courseCode;
-
 	@JsonProperty("grades")
 	@JacksonXmlElementWrapper(localName = "grades") @JacksonXmlProperty(localName = "grade")
 	private List<String> grades = new ArrayList<>();
-
 	@JsonProperty("subjects")
 	@JacksonXmlElementWrapper(localName = "subjects") @JacksonXmlProperty(localName = "subject")
 	private List<String> subjects = new ArrayList<>();
-
 	@JsonProperty("org")
 	private GUIDRef org;
-
 	@JsonProperty("subjectCodes")
 	@JacksonXmlElementWrapper(localName = "subjectCodes") @JacksonXmlProperty(localName = "subjectCode")
 	private List<String> subjectCodes = new ArrayList<>();
-
 	@JsonProperty("resources")
 	@JacksonXmlElementWrapper(localName = "resources") @JacksonXmlProperty(localName = "resource")
 	private List<GUIDRef> resources = new ArrayList<>();
