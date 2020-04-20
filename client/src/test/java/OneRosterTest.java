@@ -4,12 +4,14 @@ import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.core.Model;
 import org.ricone.library.client.oneroster.request.*;
+import org.ricone.library.client.oneroster.request.FieldClassType;
 import org.ricone.library.client.oneroster.response.*;
 import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @SuppressWarnings("deprecation")
@@ -653,70 +655,74 @@ public class OneRosterTest {
             for(IField field : getFields(servicePath)) { //Field
                 for(Predicate predicate : Predicate.values()) { //Predicates
                     IResponse<? extends Model> responseFiltering;
-                    Filter filter = new Filter(field, predicate, getFieldValue(field, servicePath.getFieldType()));
 
-                    if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
-                        responseFiltering = oneRoster.request(Request.builder()
-                            .request()
-                                .path(servicePath)
-                                .ids()
-                                    .id(getId(getObject(servicePath)))
+                    boolean isTestable = isFilterPredicateTestable(field, predicate);
+                    if(isTestable) {
+                        Filter filter = new Filter(field, predicate, getFieldValue(field, predicate, servicePath.getFieldType()));
+
+                        if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
+                            responseFiltering = oneRoster.request(Request.builder()
+                                .request()
+                                    .path(servicePath)
+                                    .ids()
+                                        .id(getId(getObject(servicePath)))
+                                    .end()
                                 .end()
-                            .end()
-                            .with()
-                                .filtering()
-                                    .filter(filter)
+                                .with()
+                                    .filtering()
+                                        .filter(filter)
+                                    .end()
                                 .end()
-                            .end()
-                        .build());
-                        printTableRow(responseFiltering);
-                    }
-                    else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
-                        responseFiltering = oneRoster.request(Request.builder()
-                            .request()
-                                .path(servicePath)
-                            .end()
-                            .with()
-                                .filtering()
-                                    .filter(filter)
-                                .end()
-                            .end()
-                        .build());
-                        printTableRow(responseFiltering);
-                    }
-                    else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
-                        responseFiltering = oneRoster.request(Request.builder()
-                            .request()
-                                .path(servicePath)
-                                .ids()
-                                    .id(getId(getPredicate(servicePath)))
-                                .end()
-                            .end()
-                            .with()
-                                .filtering()
-                                    .filter(filter)
-                                .end()
-                            .end()
-                        .build());
-                        printTableRow(responseFiltering);
-                    }
-                    else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
-                        String[] predicates = getPredicates(servicePath);
-                        responseFiltering = oneRoster.request(Request.builder()
-                            .request()
-                                .path(servicePath)
-                                .ids()
-                                    .id(getId(predicates[0]))
-                                    .id(getId(predicates[1]))
-                                .end()
-                            .end()
-                            .with()
-                                .filtering()
-                                    .filter(filter)
-                                .end()
-                            .end()
                             .build());
-                        printTableRow(responseFiltering);
+                            printTableRow(responseFiltering);
+                        }
+                        else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
+                            responseFiltering = oneRoster.request(Request.builder()
+                                .request()
+                                    .path(servicePath)
+                                .end()
+                                .with()
+                                    .filtering()
+                                    .   filter(filter)
+                                    .end()
+                                .end()
+                            .build());
+                            printTableRow(responseFiltering);
+                        }
+                        else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
+                            responseFiltering = oneRoster.request(Request.builder()
+                                .request()
+                                    .path(servicePath)
+                                    .ids()
+                                        .id(getId(getPredicate(servicePath)))
+                                    .end()
+                                .end()
+                                .with()
+                                    .filtering()
+                                        .filter(filter)
+                                    .end()
+                                .end()
+                            .build());
+                            printTableRow(responseFiltering);
+                        }
+                        else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
+                            String[] predicates = getPredicates(servicePath);
+                            responseFiltering = oneRoster.request(Request.builder()
+                                .request()
+                                    .path(servicePath)
+                                    .ids()
+                                        .id(getId(predicates[0]))
+                                        .id(getId(predicates[1]))
+                                    .end()
+                                .end()
+                                .with()
+                                    .filtering()
+                                        .filter(filter)
+                                    .end()
+                                .end()
+                            .build());
+                            printTableRow(responseFiltering);
+                        }
                     }
                 }
             }
@@ -868,6 +874,52 @@ public class OneRosterTest {
         }
         return fields;
     }
+
+    private static String getFieldValue(IField field, Predicate predicate, FieldType fieldType) {
+
+        if(predicate.equals(Predicate.Equals) || predicate.equals(Predicate.Contains)) {
+            return getFieldValue(field, fieldType);
+        }
+        else if(predicate.equals(Predicate.NotEquals)) {
+            if(field.getFieldClassType().equals(FieldClassType.Number)) {
+                return "0";
+            }
+            else if(field.getFieldClassType().equals(FieldClassType.Date)) {
+                return LocalDateTime.now().toString();
+            }
+            else if(field.getFieldClassType().equals(FieldClassType.Boolean)) {
+                return "false";
+            }
+            else {
+                return "NOT_THIS_VALUE";
+            }
+        }
+        else if(predicate.equals(Predicate.GreaterThan) || predicate.equals(Predicate.GreaterThanOrEqual) || predicate.equals(Predicate.LessThan) || predicate.equals(Predicate.LessThanOrEqual)) {
+            if(field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date)) {
+                return getFieldValue(field, fieldType);
+            }
+            else {
+                return "PREDICATE_NOT_ALLOWED_ON_FIELD";
+            }
+        }
+        else {
+            return "_HUH_";
+        }
+    }
+
+    private static boolean isFilterPredicateTestable(IField field, Predicate predicate) {
+        if(predicate.equals(Predicate.Equals) || predicate.equals(Predicate.NotEquals)) {
+            return true;
+        }
+        if(predicate.equals(Predicate.Contains)) {
+            return field.getFieldClassType().equals(FieldClassType.String) || field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Boolean);
+        }
+        else if(predicate.equals(Predicate.GreaterThan) || predicate.equals(Predicate.GreaterThanOrEqual) || predicate.equals(Predicate.LessThan) || predicate.equals(Predicate.LessThanOrEqual)) {
+            return field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date);
+        }
+        return false;
+    }
+
 
     public static String getFieldValue(IField field, FieldType fieldType) {
         String value = "NO_VALUE";

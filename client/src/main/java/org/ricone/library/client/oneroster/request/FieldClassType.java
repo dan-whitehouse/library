@@ -6,8 +6,9 @@ package org.ricone.library.client.oneroster.request;
  * @since 2020-01-30
  */
 
-public interface IField {
-	String getValue();
-	FieldType getType();
-	FieldClassType getFieldClassType();
+public enum FieldClassType {
+	String,
+	Number,
+	Date,
+	Boolean;
 }
