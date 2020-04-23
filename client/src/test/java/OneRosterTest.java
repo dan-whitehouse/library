@@ -8,17 +8,26 @@ import org.ricone.library.client.oneroster.request.FieldClassType;
 import org.ricone.library.client.oneroster.response.*;
 import org.ricone.library.client.oneroster.response.model.Class;
 import org.ricone.library.client.oneroster.response.model.*;
+import org.ricone.library.client.oneroster.response.model.Error;
 import org.ricone.library.exception.InvalidPathException;
+import org.springframework.cglib.core.Local;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class OneRosterTest {
     private static final int LIMIT = 10;
     private static final String DISTRICT_ID = "530501";
-    private static final String FORMAT = "| %-260s | %-6s | %-9s | %-18s | %-9s |%n";
+    private static final String FORMAT = "| %-250s | %-6s | %-9s | %-12s | %-9s | %-300s %n";
     private static final Random random = new Random();
     private static final int randomNumber = 0; //random.nextInt(((LIMIT - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
 
@@ -36,8 +45,14 @@ public class OneRosterTest {
 
     private static HashMap<ServicePath, List<String>> pathRefIds = new HashMap<>();
 
+    /* Stats */
+    private static LocalDateTime start;
+    private static LocalDateTime end;
+    private static int requestCount = 0;
+
 
     public static void main(String[] args) throws InvalidPathException {
+
         Authenticator authenticator = Authenticator.builder()
             .url(System.getenv("url")).api(API.OneRoster)
             .credentials(System.getenv("username"), System.getenv("password"))
@@ -51,8 +66,13 @@ public class OneRosterTest {
             //Add values to the lists, so subsequent calls can be made using their ids.
             loadLists(oneRoster);
 
+            start = LocalDateTime.now();
             runTests(oneRoster);
+            end = LocalDateTime.now();
         }
+
+        System.out.println("Request Count: " + requestCount);
+        System.out.println("Total Duration: " + Util.formatDuration(Duration.between(start, end).toMillis()));
     }
 
     private static void loadLists(OneRoster oneRoster) throws InvalidPathException {
@@ -328,12 +348,16 @@ public class OneRosterTest {
     }
 
     private static void runTests(OneRoster oneRoster) throws InvalidPathException {
-
         printTableBorder();
-        System.out.format("| Request                                                                                                                                                                                                                                                              | Status | Size      | Total Record Count | Duration  |%n");
+        printTableHeader();
         printTableBorder();
 
         for(ServicePath servicePath : ServicePath.values()) {
+            //Used only if we want to  test a specific service by field type
+            /*if(servicePath.getFieldType() != FieldType.Demographics) {
+                continue;
+            }*/
+
             /** Request - No Features **/
             IResponse<? extends Model> responseNoFeatures;
             if (servicePath.getServicePathType().equals(ServicePathType.SINGLE)) {
@@ -344,6 +368,7 @@ public class OneRosterTest {
                     .end()
                     .build());
                 printTableRow(responseNoFeatures);
+                requestCount++;
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
                 responseNoFeatures = oneRoster.request(Request.builder()
@@ -352,6 +377,7 @@ public class OneRosterTest {
                     .end()
                 .build());
                 printTableRow(responseNoFeatures);
+                requestCount++;
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
                 responseNoFeatures = oneRoster.request(Request.builder()
@@ -361,6 +387,7 @@ public class OneRosterTest {
                     .end()
                 .build());
                 printTableRow(responseNoFeatures);
+                requestCount++;
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                 String[] predicates = getPredicates(servicePath);
@@ -374,6 +401,7 @@ public class OneRosterTest {
                     .end()
                 .build());
                 printTableRow(responseNoFeatures);
+                requestCount++;
             }
 
             /** Request - Sorting **/
@@ -396,6 +424,7 @@ public class OneRosterTest {
                             .end()
                         .build());
                         printTableRow(responseFieldSelection);
+                        requestCount++;
                     }
                     else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
                         responseFieldSelection = oneRoster.request(Request.builder()
@@ -410,6 +439,7 @@ public class OneRosterTest {
                             .end()
                         .build());
                         printTableRow(responseFieldSelection);
+                        requestCount++;
                     }
                     else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
                         responseFieldSelection = oneRoster.request(Request.builder()
@@ -427,6 +457,7 @@ public class OneRosterTest {
                             .end()
                         .build());
                         printTableRow(responseFieldSelection);
+                        requestCount++;
                     }
                     else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                         String[] predicates = getPredicates(servicePath);
@@ -446,6 +477,7 @@ public class OneRosterTest {
                             .end()
                         .build());
                         printTableRow(responseFieldSelection);
+                        requestCount++;
                     }
                 }
             }
@@ -468,6 +500,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responseFieldSelection);
+                    requestCount++;
                 }
                 else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
                     responseFieldSelection = oneRoster.request(Request.builder()
@@ -481,6 +514,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responseFieldSelection);
+                    requestCount++;
                 }
                 else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
                     responseFieldSelection = oneRoster.request(Request.builder()
@@ -497,6 +531,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responseFieldSelection);
+                    requestCount++;
                 }
                 else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                     String[] predicates = getPredicates(servicePath);
@@ -515,6 +550,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responseFieldSelection);
+                    requestCount++;
                 }
             }
 
@@ -551,6 +587,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responsePaging);
+                    requestCount++;
                 }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
@@ -578,6 +615,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responsePaging);
+                    requestCount++;
                 }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
@@ -611,6 +649,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responsePaging);
+                    requestCount++;
                 }
             }
             else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
@@ -648,6 +687,7 @@ public class OneRosterTest {
                         .end()
                     .build());
                     printTableRow(responsePaging);
+                    requestCount++;
                 }
             }
 
@@ -675,6 +715,7 @@ public class OneRosterTest {
                                 .end()
                             .build());
                             printTableRow(responseFiltering);
+                            requestCount++;
                         }
                         else if (servicePath.getServicePathType().equals(ServicePathType.OBJECT)) {
                             responseFiltering = oneRoster.request(Request.builder()
@@ -688,6 +729,7 @@ public class OneRosterTest {
                                 .end()
                             .build());
                             printTableRow(responseFiltering);
+                            requestCount++;
                         }
                         else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATE)) {
                             responseFiltering = oneRoster.request(Request.builder()
@@ -704,6 +746,7 @@ public class OneRosterTest {
                                 .end()
                             .build());
                             printTableRow(responseFiltering);
+                            requestCount++;
                         }
                         else if (servicePath.getServicePathType().equals(ServicePathType.PREDICATES)) {
                             String[] predicates = getPredicates(servicePath);
@@ -722,6 +765,7 @@ public class OneRosterTest {
                                 .end()
                             .build());
                             printTableRow(responseFiltering);
+                            requestCount++;
                         }
                     }
                 }
@@ -737,18 +781,62 @@ public class OneRosterTest {
         System.out.println("Request: " + response.getRequestPath() + " | Status: " + response.getResponseStatus() + " | HasData: " + response.getData().hasData() + " | Response Headers: " + response.getResponseHeaders());
     }
 
+    private static void printTableHeader() {
+        System.out.format("| Request                                                                                                                                                                                                                                                    | Status | Size      | Record Count | Duration  | Warning/Error %n");
+    }
+
     private static void printTableBorder() {
-        System.out.format("+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------------+-----------+%n");
+        System.out.format("+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------+-----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------%n");
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
         System.out.format(FORMAT,
-            response.getRequestPath(),
+            trimUrl(response.getRequestPath()),
             response.getResponseStatus(),
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
             formatNumber(response.getResponseHeaders().getFirst("X-Record-Count")),
-            response.getResponseHeaders().getFirst("X-Duration")
+            response.getResponseHeaders().getFirst("X-Duration"),
+            getWarning(response)
         );
+    }
+
+    private static String getWarning(IResponse<? extends Model> response) {
+        if(response.getResponseStatus().isError()) {
+            return "error - " + response.getResponseStatusText();
+        }
+
+        List<Error> warnings = getWarnings(response);
+        if(warnings == null) {
+            warnings = new ArrayList<>();
+        }
+
+        if(warnings.size() >= 1) {
+            Error warning =   warnings.get(0);
+            return "warning - " + warning.getDescription();
+        }
+        else {
+            return "N/A";
+        }
+    }
+
+    private static List<Error> getWarnings(IResponse<? extends Model> response) {
+        switch(response.getClass().getSimpleName()) {
+            case "OrgResponse": return ((OrgResponse)response).getWarnings();
+            case "OrgsResponse": return ((OrgsResponse)response).getWarnings();
+            case "AcademicSessionResponse": return ((AcademicSessionResponse)response).getWarnings();
+            case "AcademicSessionsResponse": return ((AcademicSessionsResponse)response).getWarnings();
+            case "CourseResponse": return ((CourseResponse)response).getWarnings();
+            case "CoursesResponse": return ((CoursesResponse)response).getWarnings();
+            case "ClassResponse": return ((ClassResponse)response).getWarnings();
+            case "ClassesResponse": return ((ClassesResponse)response).getWarnings();
+            case "EnrollmentResponse": return ((EnrollmentResponse)response).getWarnings();
+            case "EnrollmentsResponse": return ((EnrollmentsResponse)response).getWarnings();
+            case "UserResponse": return ((UserResponse)response).getWarnings();
+            case "UsersResponse": return ((UsersResponse)response).getWarnings();
+            case "DemographicResponse": return ((DemographicResponse)response).getWarnings();
+            case "DemographicsResponse": return ((DemographicsResponse)response).getWarnings();
+            default: return new ArrayList<>();
+        }
     }
 
     private static String trimUrl(String url) {
@@ -875,7 +963,7 @@ public class OneRosterTest {
         return fields;
     }
 
-    private static String getFieldValue(IField field, Predicate predicate, FieldType fieldType) {
+    private static String getFieldValue(IField field, Predicate predicate, FieldType fieldType)  {
 
         if(predicate.equals(Predicate.Equals) || predicate.equals(Predicate.Contains)) {
             return getFieldValue(field, fieldType);
@@ -885,7 +973,10 @@ public class OneRosterTest {
                 return "0";
             }
             else if(field.getFieldClassType().equals(FieldClassType.Date)) {
-                return LocalDateTime.now().toString();
+                return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+            else if(field.getFieldClassType().equals(FieldClassType.DateTime)) {
+                return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
             }
             else if(field.getFieldClassType().equals(FieldClassType.Boolean)) {
                 return "false";
@@ -895,7 +986,7 @@ public class OneRosterTest {
             }
         }
         else if(predicate.equals(Predicate.GreaterThan) || predicate.equals(Predicate.GreaterThanOrEqual) || predicate.equals(Predicate.LessThan) || predicate.equals(Predicate.LessThanOrEqual)) {
-            if(field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date)) {
+            if(field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date) || field.getFieldClassType().equals(FieldClassType.DateTime)) {
                 return getFieldValue(field, fieldType);
             }
             else {
@@ -915,7 +1006,7 @@ public class OneRosterTest {
             return field.getFieldClassType().equals(FieldClassType.String) || field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Boolean);
         }
         else if(predicate.equals(Predicate.GreaterThan) || predicate.equals(Predicate.GreaterThanOrEqual) || predicate.equals(Predicate.LessThan) || predicate.equals(Predicate.LessThanOrEqual)) {
-            return field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date);
+            return field.getFieldClassType().equals(FieldClassType.Number) || field.getFieldClassType().equals(FieldClassType.Date) || field.getFieldClassType().equals(FieldClassType.DateTime);
         }
         return false;
     }
@@ -932,7 +1023,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -990,7 +1081,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1051,7 +1142,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1119,7 +1210,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1185,7 +1276,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1267,7 +1358,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1371,7 +1462,7 @@ public class OneRosterTest {
             }
             else if(field.equals(Field.dateLastModified)) {
                 if(instance.getDateLastModified() != null) {
-                    value = instance.getDateLastModified().toString();
+                    value = instance.getDateLastModified().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
                 }
             }
             else if(field.equals(Field.status)) {
@@ -1385,52 +1476,52 @@ public class OneRosterTest {
                 }
             }
             else if(field.equals(Field.Demographics.sex)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getSex() != null) {
                     value = instance.getSex().getValue();
                 }
             }
             else if(field.equals(Field.Demographics.americanIndianOrAlaskaNative)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getAmericanIndianOrAlaskaNative() != null) {
                     value = instance.getAmericanIndianOrAlaskaNative().toString();
                 }
             }
             else if(field.equals(Field.Demographics.asian)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getAsian() != null) {
                     value = instance.getAsian().toString();
                 }
             }
             else if(field.equals(Field.Demographics.blackOrAfricanAmerican)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getBlackOrAfricanAmerican() != null) {
                     value = instance.getBlackOrAfricanAmerican().toString();
                 }
             }
             else if(field.equals(Field.Demographics.nativeHawaiianOrOtherPacificIslander)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getNativeHawaiianOrOtherPacificIslander() != null) {
                     value = instance.getNativeHawaiianOrOtherPacificIslander().toString();
                 }
             }
             else if(field.equals(Field.Demographics.white)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getWhite() != null) {
                     value = instance.getWhite().toString();
                 }
             }
             else if(field.equals(Field.Demographics.demographicRaceTwoOrMoreRaces)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getDemographicRaceTwoOrMoreRaces() != null) {
                     value = instance.getDemographicRaceTwoOrMoreRaces().toString();
                 }
             }
             else if(field.equals(Field.Demographics.hispanicOrLatinoEthnicity)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getHispanicOrLatinoEthnicity() != null) {
                     value = instance.getHispanicOrLatinoEthnicity().toString();
                 }
             }
             else if(field.equals(Field.Demographics.countryOfBirthCode)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getCountryOfBirthCode() != null) {
                     value = instance.getCountryOfBirthCode();
                 }
             }
             else if(field.equals(Field.Demographics.stateOfBirthAbbreviation)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getStateOfBirthAbbreviation() != null) {
                     value = instance.getStateOfBirthAbbreviation();
                 }
             }
@@ -1440,13 +1531,19 @@ public class OneRosterTest {
                 }
             }
             else if(field.equals(Field.Demographics.publicSchoolResidenceStatus)) {
-                if(instance.getBirthDate() != null) {
+                if(instance.getPublicSchoolResidenceStatus() != null) {
                     value = instance.getPublicSchoolResidenceStatus();
                 }
             }
         }
+
+        if(value != null & field.getFieldClassType().equals(FieldClassType.String)) {
+            try {
+                return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return value;
     }
-
-
 }

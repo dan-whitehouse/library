@@ -9,7 +9,7 @@ package org.ricone.library.client.oneroster.request;
 public enum Field implements IField {
 	sourcedId("sourcedId", FieldType.All, FieldClassType.String),
 	status("status", FieldType.All, FieldClassType.String),
-	dateLastModified("dateLastModified", FieldType.All, FieldClassType.Date);
+	dateLastModified("dateLastModified", FieldType.All, FieldClassType.DateTime);
 
 	private final String value;
 	private final FieldType type;
@@ -86,7 +86,7 @@ public enum Field implements IField {
 		public enum Parent implements IField {
 			href("parent.href", FieldType.Orgs, FieldClassType.String),
 			sourcedId("parent.sourcedId", FieldType.Orgs, FieldClassType.String),
-			type("parent.identifier", FieldType.Orgs, FieldClassType.String);
+			type("parent.type", FieldType.Orgs, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -112,7 +112,7 @@ public enum Field implements IField {
 		public enum Children implements IField {
 			href("children.href", FieldType.Orgs, FieldClassType.String),
 			sourcedId("children.sourcedId", FieldType.Orgs, FieldClassType.String),
-			type("children.identifier", FieldType.Orgs, FieldClassType.String);
+			type("children.type", FieldType.Orgs, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -166,7 +166,7 @@ public enum Field implements IField {
 		public enum Parent implements IField {
 			href("parent.href", FieldType.AcademicSessions, FieldClassType.String),
 			sourcedId("parent.sourcedId", FieldType.AcademicSessions, FieldClassType.String),
-			type("parent.identifier", FieldType.AcademicSessions, FieldClassType.String);
+			type("parent.type", FieldType.AcademicSessions, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -192,7 +192,7 @@ public enum Field implements IField {
 		public enum Children implements IField {
 			href("children.href", FieldType.AcademicSessions, FieldClassType.String),
 			sourcedId("children.sourcedId", FieldType.AcademicSessions, FieldClassType.String),
-			type("children.identifier", FieldType.AcademicSessions, FieldClassType.String);
+			type("children.type", FieldType.AcademicSessions, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -248,7 +248,7 @@ public enum Field implements IField {
 		public enum SchoolYear implements IField {
 			href("schoolYear.href", FieldType.Courses, FieldClassType.String),
 			sourcedId("schoolYear.sourcedId", FieldType.Courses, FieldClassType.String),
-			type("schoolYear.identifier", FieldType.Courses, FieldClassType.String);
+			type("schoolYear.type", FieldType.Courses, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -274,7 +274,7 @@ public enum Field implements IField {
 		public enum Org implements IField {
 			href("org.href", FieldType.Courses, FieldClassType.String),
 			sourcedId("org.sourcedId", FieldType.Courses, FieldClassType.String),
-			type("org.identifier", FieldType.Courses, FieldClassType.String);
+			type("org.type", FieldType.Courses, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -329,7 +329,7 @@ public enum Field implements IField {
 		public enum Course implements IField {
 			href("course.href", FieldType.Classes, FieldClassType.String),
 			sourcedId("course.sourcedId", FieldType.Classes, FieldClassType.String),
-			type("course.identifier", FieldType.Classes, FieldClassType.String);
+			type("course.type", FieldType.Classes, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -353,7 +353,7 @@ public enum Field implements IField {
 		public enum School implements IField {
 			href("school.href", FieldType.Classes, FieldClassType.String),
 			sourcedId("school.sourcedId", FieldType.Classes, FieldClassType.String),
-			type("school.identifier", FieldType.Classes, FieldClassType.String);
+			type("school.type", FieldType.Classes, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -377,7 +377,7 @@ public enum Field implements IField {
 		public enum Terms implements IField {
 			href("terms.href", FieldType.Classes, FieldClassType.String),
 			sourcedId("terms.sourcedId", FieldType.Classes, FieldClassType.String),
-			type("terms.identifier", FieldType.Classes, FieldClassType.String);
+			type("terms.type", FieldType.Classes, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -428,7 +428,7 @@ public enum Field implements IField {
 		public enum User implements IField {
 			href("user.href", FieldType.Enrollments, FieldClassType.String),
 			sourcedId("user.sourcedId", FieldType.Enrollments, FieldClassType.String),
-			type("user.identifier", FieldType.Enrollments, FieldClassType.String);
+			type("user.type", FieldType.Enrollments, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -454,7 +454,7 @@ public enum Field implements IField {
 		public enum Clazz implements IField {
 			href("class.href", FieldType.Enrollments, FieldClassType.String),
 			sourcedId("class.sourcedId", FieldType.Enrollments, FieldClassType.String),
-			type("class.identifier", FieldType.Enrollments, FieldClassType.String);
+			type("class.type", FieldType.Enrollments, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -480,7 +480,7 @@ public enum Field implements IField {
 		public enum School implements IField {
 			href("school.href", FieldType.Enrollments, FieldClassType.String),
 			sourcedId("school.sourcedId", FieldType.Enrollments, FieldClassType.String),
-			type("school.identifier", FieldType.Enrollments, FieldClassType.String);
+			type("school.type", FieldType.Enrollments, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -566,7 +566,7 @@ public enum Field implements IField {
 		public enum Agents implements IField {
 			href("agents.href", FieldType.Users, FieldClassType.String),
 			sourcedId("agents.sourcedId", FieldType.Users, FieldClassType.String),
-			type("agents.identifier", FieldType.Users, FieldClassType.String);
+			type("agents.type", FieldType.Users, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;
@@ -592,7 +592,7 @@ public enum Field implements IField {
 		public enum Orgs implements IField {
 			href("orgs.href", FieldType.Users, FieldClassType.String),
 			sourcedId("orgs.sourcedId", FieldType.Users, FieldClassType.String),
-			type("orgs.identifier", FieldType.Users, FieldClassType.String);
+			type("orgs.type", FieldType.Users, FieldClassType.String);
 
 			private final String value;
 			private final FieldType type2;

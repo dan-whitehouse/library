@@ -11,12 +11,16 @@ public enum CodeMinor {
 	invalid_sort_field("invalid_sort_field"),
 	invalid_blank_selection_field("invalid_ blank_selection _field"),
 	invalid_filter_field("invalid_filter_field"),
-	invalid_selection_field("invalid_selection_field");
+	invalid_selection_field("invalid_selection_field"),
+	internal_server_error("internal_server_error"), //Custom
+	unsupported_feature("unsupported_feature"); //Custom
 
 	private final String label;
+
 	CodeMinor(String label) {
 		this.label = label;
 	}
+
 	@JsonValue
 	public String getLabel() {
 		return label;

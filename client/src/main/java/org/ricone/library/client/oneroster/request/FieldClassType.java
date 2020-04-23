@@ -10,5 +10,6 @@ public enum FieldClassType {
 	String,
 	Number,
 	Date,
+	DateTime,
 	Boolean;
 }

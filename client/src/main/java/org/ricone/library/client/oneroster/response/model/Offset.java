@@ -15,7 +15,7 @@ public class Offset extends Model implements Iterator<Integer>  {
 	private int[] offsets;
 
 	public Offset() {
-		this.offsets = new int[]{-1};
+		this.offsets = new int[]{0};
 	}
 
 	public Offset(int[] offsets) {
