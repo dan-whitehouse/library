@@ -9,7 +9,10 @@ package org.ricone.library.client.oneroster.request;
 public enum Field implements IField {
 	sourcedId("sourcedId", FieldType.All, FieldClassType.String),
 	status("status", FieldType.All, FieldClassType.String),
-	dateLastModified("dateLastModified", FieldType.All, FieldClassType.DateTime);
+	dateLastModified("dateLastModified", FieldType.All, FieldClassType.DateTime),
+
+	BLANK_FIELD("", FieldType.All, FieldClassType.String),
+	FAKE_FIELD("fakeString", FieldType.All, FieldClassType.String);
 
 	private final String value;
 	private final FieldType type;

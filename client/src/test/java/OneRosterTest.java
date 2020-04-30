@@ -1,16 +1,18 @@
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 import org.ricone.library.authentication.API;
 import org.ricone.library.authentication.Authenticator;
 import org.ricone.library.authentication.Endpoint;
 import org.ricone.library.client.core.IResponse;
 import org.ricone.library.client.core.Model;
 import org.ricone.library.client.oneroster.request.*;
-import org.ricone.library.client.oneroster.request.FieldClassType;
 import org.ricone.library.client.oneroster.response.*;
 import org.ricone.library.client.oneroster.response.model.Class;
-import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.client.oneroster.response.model.Error;
+import org.ricone.library.client.oneroster.response.model.*;
 import org.ricone.library.exception.InvalidPathException;
-import org.springframework.cglib.core.Local;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -25,9 +27,10 @@ import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class OneRosterTest {
+    private static Logger logger = LoggerFactory.getLogger(OneRosterTest.class);
     private static final int LIMIT = 10;
     private static final String DISTRICT_ID = "530501";
-    private static final String FORMAT = "| %-250s | %-6s | %-9s | %-12s | %-9s | %-300s %n";
+    private static final String FORMAT = "| %-250s | %-6s | %-9s | %-12s | %-9s | %-300s";
     private static final Random random = new Random();
     private static final int randomNumber = 0; //random.nextInt(((LIMIT - 1) - 0 + 1) + 0); // 0 = min, LIMIT = max
 
@@ -52,7 +55,6 @@ public class OneRosterTest {
 
 
     public static void main(String[] args) throws InvalidPathException {
-
         Authenticator authenticator = Authenticator.builder()
             .url(System.getenv("url")).api(API.OneRoster)
             .credentials(System.getenv("username"), System.getenv("password"))
@@ -71,8 +73,8 @@ public class OneRosterTest {
             end = LocalDateTime.now();
         }
 
-        System.out.println("Request Count: " + requestCount);
-        System.out.println("Total Duration: " + Util.formatDuration(Duration.between(start, end).toMillis()));
+        logger.info("Request Count: " + requestCount);
+        logger.info("Total Duration: " + Util.formatDuration(Duration.between(start, end).toMillis()));
     }
 
     private static void loadLists(OneRoster oneRoster) throws InvalidPathException {
@@ -778,26 +780,26 @@ public class OneRosterTest {
 
     //Helper Methods
     private static void showResults(IResponse<? extends Model> response) {
-        System.out.println("Request: " + response.getRequestPath() + " | Status: " + response.getResponseStatus() + " | HasData: " + response.getData().hasData() + " | Response Headers: " + response.getResponseHeaders());
+        logger.info("Request: " + response.getRequestPath() + " | Status: " + response.getResponseStatus() + " | HasData: " + response.getData().hasData() + " | Response Headers: " + response.getResponseHeaders());
     }
 
     private static void printTableHeader() {
-        System.out.format("| Request                                                                                                                                                                                                                                                    | Status | Size      | Record Count | Duration  | Warning/Error %n");
+        logger.info("| Request                                                                                                                                                                                                                                                    | Status | Size      | Record Count | Duration  | Warning/Error                                                                                                                                                                                                                                                                                            |");
     }
 
     private static void printTableBorder() {
-        System.out.format("+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------+-----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------%n");
+        logger.info("+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-----------+--------------+-----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+");
     }
 
     private static void printTableRow(IResponse<? extends Model> response) {
-        System.out.format(FORMAT,
+        logger.info(String.format(FORMAT,
             trimUrl(response.getRequestPath()),
             response.getResponseStatus(),
             byteCount(response.getResponseHeaders().getFirst("Content-Length")),
             formatNumber(response.getResponseHeaders().getFirst("X-Record-Count")),
             response.getResponseHeaders().getFirst("X-Duration"),
             getWarning(response)
-        );
+        ));
     }
 
     private static String getWarning(IResponse<? extends Model> response) {
