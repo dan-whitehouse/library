@@ -14,7 +14,7 @@
 
     <properties>
         <spring.version>5.0.7.RELEASE</spring.version>
-        <fasterxml.version>2.9.6</fasterxml.version>
+        <fasterxml.version>2.13.4.1</fasterxml.version>
     </properties>
 
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
